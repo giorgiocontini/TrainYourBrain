@@ -6,7 +6,6 @@ import HomePage from "../pages/HomePage/HomePage";
 import {createBrowserRouter, createRoutesFromElements, Route} from "react-router-dom";
 import RootLayout from "./RootLayout";
 import {AuthContext} from "../AuthContext";
-import {AppContext} from "../AppContext";
 
 export const routes = createBrowserRouter(
     createRoutesFromElements(
@@ -33,6 +32,7 @@ export const useHeaderRoutes = () => {
      * Detect language change in AppContext and react to it.
      */
     useEffect(() => {
+        // @ts-ignore
         setHeaderRoutesArr(genHeaderRoutesArr());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     //}, [langForText]);

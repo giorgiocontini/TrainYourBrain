@@ -1,0 +1,80 @@
+/**
+ * SCSS styles for NavDropdown.tsx
+ */
+.NavDropdown {
+  position: relative;
+  z-index: 1;
+}
+
+.NavDropdown__btn {
+  color: #ffffff;
+  text-decoration: none;
+  width: 160px;
+  padding: 0px 12px 0px 6px;
+  text-align: center;
+  border-radius: 6px;
+  font-weight: 700;
+  position: relative;
+}
+
+.NavDropdown__btn.hover {
+  color: inherit;
+  cursor: pointer;
+}
+
+.NavDropdown__btn-arrow {
+  position: absolute;
+  top: 2px;
+  right: 6px;
+}
+
+.NavDropdown__menu-wrapper {
+  display: none;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding-top: 10px;
+  transform: translateY(100%) rotateX(-15deg);
+}
+
+.NavDropdown__menu-wrapper.visible {
+  display: block;
+  transform: translateY(100%) rotateX(0deg);
+}
+
+.NavDropdown__menu-underline {
+  background-color: #ffffff;
+  height: 6px;
+  width: 100%;
+  border-radius: 2px 2px 0px 0px;
+  border-bottom: 1px solid rgb(0 0 0 / 20%);
+}
+
+.NavDropdown__menu {
+  background-color: #e2f0fe;
+  width: 300px;
+  border-radius: 0px 0px 2px 2px;
+  box-shadow: 0px 6px 6px 4px rgb(0 0 0 / 20%);
+  padding: 10px;
+}
+
+.NavDropdown__menu-btn {
+  padding: 4px;
+  border-bottom: 2px solid white;
+}
+
+.NavDropdown__menu-btn:hover {
+  color: inherit;
+  cursor: pointer;
+}
+
+.NavDropdown__menu-btn a {
+  text-decoration: none;
+  color: #445970;
+  padding: 0px 0px 0px 6px;
+  font-weight: 400;
+}
+
+.NavDropdown__menu-btn a:hover {
+  color: #445970;
+}

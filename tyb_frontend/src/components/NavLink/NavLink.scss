@@ -1,0 +1,41 @@
+/**
+ * SCSS styles for NavLink.tsx
+ */
+.NavLink {
+  display: flex;
+  position: relative;
+  max-width: 160px;
+  align-items: center;
+  height: 100%;
+}
+
+.NavLink a {
+  border-radius: 6px;
+  color: #ffffff;
+  display: block;
+  padding: 6px;
+  text-decoration: none;
+  text-align: center;
+  width: 100%;
+  line-height: 18px;
+}
+
+.NavLink a:hover {
+  color: inherit;
+  cursor: pointer;
+}
+
+.NavLink::after {
+  content: "";
+  background-color: white;
+  border-radius: 2px 2px 2px 2px;
+  bottom: 0px;
+  height: 6px;
+  position: absolute;
+  visibility: hidden;
+  width: 100%;
+}
+
+.NavLink:hover::after {
+  visibility: visible;
+}

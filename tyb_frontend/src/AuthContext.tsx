@@ -12,7 +12,7 @@ type TUser = {
     firstName: string | undefined;
     lastName: string | undefined;
     userId: number | undefined;
-    role:string | undefined;
+    role: string | undefined;
 };
 
 /**
@@ -40,18 +40,17 @@ const AuthContext = createContext<any | null>(null);
  * @param {*} props
  * @returns
  */
-const AuthContextProvider = ({ children }: TAuthContextProvider) => {
+const AuthContextProvider = ({children}: TAuthContextProvider) => {
 
-    const [userState, setUserState] = useState<TUser >({
+    const [userState, setUserState] = useState<TUser>({
         firstName: "",
         lastName: "",
         userId: undefined,
-        role:""
+        role: ""
     });
 
 
-
-    const _initUserState = (userData: TUser)  => {
+    const _initUserState = (userData: TUser) => {
         // Guard: if field does not exist, return.
         if (typeof userData.userId === "undefined") {
             return null;
@@ -61,7 +60,7 @@ const AuthContextProvider = ({ children }: TAuthContextProvider) => {
             firstName: userData.firstName,
             lastName: userData.lastName,
             userId: userData.userId,
-            role:userData.role
+            role: userData.role
         };
         return user;
     };
@@ -75,6 +74,7 @@ const AuthContextProvider = ({ children }: TAuthContextProvider) => {
      * @access public
      */
     const isInRole = (role: string) => {
+        debugger
         return userState.role === role;
     };
 
@@ -82,7 +82,11 @@ const AuthContextProvider = ({ children }: TAuthContextProvider) => {
      * Call the AuthService on component load
      */
     useEffect(() => {
-
+debugger
+        setUserState({firstName: "Giorgio",
+            lastName: "",
+            userId: 0,
+            role:"A"})
         //TODO chiamare il servizio be che recupera i dati dell'user loggato
         //const UserDetailsObservable = AuthService.userDetails({})
         //    .pipe(
@@ -131,4 +135,4 @@ const AuthContextProvider = ({ children }: TAuthContextProvider) => {
 };
 
 export default AuthContextProvider;
-export { AuthContext };
+export {AuthContext};
