@@ -14,12 +14,11 @@ import AuthContextProvider from "./AuthContext";
 export const routes = createBrowserRouter(
     createRoutesFromElements(
         <Route>
-            <Route path="" Component={RootLayout}>
-                <Route path="/" Component={LoginPage}/>
-                <Route path="/login" Component={LoginPage}/>
-                <Route path="/home" Component={HomePage}/>
-                <Route path="/welcome/:userId" Component={WelcomePage}/>
-                <Route path="/*" Component={ErrorPage}/>
+            <Route path="/" Component={RootLayout}>
+                <Route path="login" Component={LoginPage}/>
+                <Route path="home" Component={HomePage}/>
+                <Route path="welcome/:userId" Component={WelcomePage}/>
+                <Route path="*" Component={ErrorPage}/>
             </Route>
 
         </Route>

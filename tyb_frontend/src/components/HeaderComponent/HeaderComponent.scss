@@ -3,12 +3,45 @@
   .primary-header {
     height: 48px;
     color: white;
-    background-color: #242a84;
+    background-color: rgb(10, 52, 190);
   }
 
   .secondary-header {
-    height: 48px;
-    color: white !important;
-    background-color: #0c34e8;
+    background: var(--bs-primary);
+    color: white;
+    height: 60px;
+
+    .nav-ul {
+      display: flex;
+      list-style-type: none;
+      /* reset default field in "ul" tag */
+      padding-inline-start: 0;
+      /* overwrite bootstrap's "_reboot.scss" */
+      margin-bottom: 0;
+      height: 60px;
+      align-items: center;
+
+      .a {
+        display: block;
+        font-weight: 700;
+        padding: 13px 24px;
+        color: white;
+        text-decoration: none;
+        border-width: 0 !important;
+      }
+      .a:hover {
+        cursor: pointer;
+        color: inherit;
+      }
+    }
   }
+
+
+
+
+
+
+
+
+
 }
