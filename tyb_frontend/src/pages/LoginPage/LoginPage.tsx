@@ -20,7 +20,7 @@ import UserService from "../../service/API/User/UserService";
 
     //metodo di gestione degli errori
      function handleError(error:any) {
-         console.log(error)
+         console.log(error?.response?.data?.message)
      }
 
      function loginFunction() {
@@ -35,7 +35,7 @@ import UserService from "../../service/API/User/UserService";
 
 
         //Chiamo il servizio da be
-        UserService.getUserData()
+        UserService.getUserDataParam(loginState.userId)
             //chiamato quando si ottengono le risposte dal web service
             .then(response =>{
                 console.log(response)

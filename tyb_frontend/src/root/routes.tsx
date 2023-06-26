@@ -22,7 +22,6 @@ export const useHeaderRoutes = () => {
 
     //Metodo che definisce le voci dell'headers in base al ruolo dell'utente loggato
     function genHeaderRoutesArr() {
-        debugger
         const headerRoutesArrStudents = [
             {type: "nav-link", label: "Home", path: "/home"},
             {type: "nav-link", label: "Login", path: "/login"},

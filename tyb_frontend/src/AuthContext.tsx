@@ -74,7 +74,6 @@ const AuthContextProvider = ({children}: TAuthContextProvider) => {
      * @access public
      */
     const isInRole = (role: string) => {
-        debugger
         return userState.role === role;
     };
 
@@ -82,7 +81,6 @@ const AuthContextProvider = ({children}: TAuthContextProvider) => {
      * Call the AuthService on component load
      */
     useEffect(() => {
-debugger
         setUserState({firstName: "Giorgio",
             lastName: "",
             userId: 0,
