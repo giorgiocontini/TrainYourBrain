@@ -1,6 +1,6 @@
 package com.tyb.tyb_backend;
 
-import com.tyb.tyb_backend.controller.rest.DataController;
+import com.tyb.tyb_backend.controller.rest.UserController;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -12,7 +12,7 @@ class TybBackendApplicationTests {
 
 	private void initTestController(){
 		testClient = WebTestClient.bindToController(
-						new DataController())
+						new UserController())
 				.build();
 
 	}
@@ -23,7 +23,7 @@ class TybBackendApplicationTests {
 		this.initTestController();
 		//Unit test con Web-flux
 		//in questo metodo possiamo controllare la risposta ottenuta dal nostro endpoint
-		testClient.get().uri("/api/manageData")
+		testClient.get().uri("/api/manage-user")
 				.exchange()
 				.expectStatus().isOk()
 				.expectBody()
@@ -36,7 +36,7 @@ class TybBackendApplicationTests {
 		this.initTestController();
 		//Unit test con Web-flux
 		//in questo metodo possiamo controllare la risposta ottenuta dal nostro endpoint
-		testClient.get().uri("/api/manageData/Giorgio")
+		testClient.get().uri("/api/manage-user/Giorgio")
 				.exchange()
 				.expectStatus().isOk()
 				.expectBody()

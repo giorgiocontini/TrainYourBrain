@@ -6,20 +6,30 @@ import NavLink from "../NavLink/NavLink";
 import {Link} from "react-router-dom";
 import {AuthContext} from "../../AuthContext";
 
-interface HeaderComponentProps {}
+interface HeaderComponentProps {
+}
 
 
-const HeaderComponent = ({}:HeaderComponentProps) => {
+const HeaderComponent = ({}: HeaderComponentProps) => {
     const [headerRoutesArr] = useHeaderRoutes();
     const {user, isInRole} = useContext(AuthContext);
 
 
-
     return <div className="flex-container HeaderComponent">
-        <div className="primary-header d-flex flex-row ">TrainYourBrain - {user.role}</div>
+        <div className="primary-header d-flex flex-row ">
+            <div className="container">
+
+                <div className="d-flex flex-row">
+                    <span className="me-auto">TrainYourBrain - {user.role}</span>
+
+                    <div>u</div>
+                </div>
+
+            </div>
+        </div>
         <div className="nav secondary-header">
             <div className="container">
-                <div className="navbar-toggler" aria-controls="basic-navbar-nav" />
+                <div className="navbar-toggler" aria-controls="basic-navbar-nav"/>
                 <ul className="nav-ul">
                     {headerRoutesArr.map((header: any, idx: number) => {
                         if (header.type === "nav-link") {
@@ -49,6 +59,7 @@ const HeaderComponent = ({}:HeaderComponentProps) => {
                 </ul>
             </div>
         </div>
+
     </div>
 }
 

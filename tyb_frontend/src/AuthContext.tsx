@@ -1,4 +1,6 @@
 import {createContext, useEffect, useState} from "react";
+import {TUser} from "./types/types";
+import userService from "./services/API/User/UserService";
 
 type TAuthContextProvider = {
     children: React.ReactNode;
@@ -8,12 +10,6 @@ type TAuthState = {
     containerStatus: number;
 };
 
-type TUser = {
-    firstName: string | undefined;
-    lastName: string | undefined;
-    userId: number | undefined;
-    role: string | undefined;
-};
 
 /**
  * Local Enums
@@ -42,49 +38,37 @@ const AuthContext = createContext<any | null>(null);
  */
 const AuthContextProvider = ({children}: TAuthContextProvider) => {
 
-    const [userState, setUserState] = useState<TUser>({
-        firstName: "",
-        lastName: "",
-        userId: undefined,
-        role: ""
-    });
-
-
-    const _initUserState = (userData: TUser) => {
-        // Guard: if field does not exist, return.
-        if (typeof userData.userId === "undefined") {
-            return null;
-        }
-
+    const initUserState = () => {
         const user: TUser = {
-            firstName: userData.firstName,
-            lastName: userData.lastName,
-            userId: userData.userId,
-            role: userData.role
+            firstName: "",
+            lastName:"",
+            userId: undefined,
+            role: ""
         };
         return user;
     };
 
-    /**
-     * Returns a boolean value indicating whether the current user is in the specified role.
-     * The function is only intended to work with values from the enumeration `ENUM_ROLES` from AuthContext.
-     *
-     * @param {ENUM_ROLES} role The name of the role to search for.
-     * @returns {Boolean} if the current user is in the specified role returns `true`; otherwise, returns `false`.
-     * @access public
-     */
+    const [userState, setUserState] = useState<TUser>(initUserState);
+
     const isInRole = (role: string) => {
         return userState.role === role;
     };
+
+    const isUserLogged =()=>{
+        if (userState.userId){
+            return true
+        }
+        return  false;
+    }
 
     /**
      * Call the AuthService on component load
      */
     useEffect(() => {
-        setUserState({firstName: "Giorgio",
-            lastName: "",
-            userId: 0,
-            role:"A"})
+       //setUserState({firstName: "Giorgio",
+       //    lastName: "",
+       //    userId: 0,
+       //    role:"A"})
         //TODO chiamare il servizio be che recupera i dati dell'user loggato
         //const UserDetailsObservable = AuthService.userDetails({})
         //    .pipe(
@@ -124,7 +108,8 @@ const AuthContextProvider = ({children}: TAuthContextProvider) => {
         <AuthContext.Provider
             value={{
                 user: userState,
-                isInRole: isInRole
+                isInRole: isInRole,
+                isUserLogged: isUserLogged
             }}
         >
             {children}

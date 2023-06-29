@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 
 interface FooterComponentProps {}
 
-const FooterComponent: FC<FooterComponentProps> = () => (
+const FooterComponent= ({}:FooterComponentProps) => (
   <div>
     FooterComponent Component
   </div>

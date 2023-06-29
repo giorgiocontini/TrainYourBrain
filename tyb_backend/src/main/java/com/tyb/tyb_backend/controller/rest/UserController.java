@@ -1,13 +1,26 @@
 package com.tyb.tyb_backend.controller.rest;
 
+import com.tyb.tyb_backend.entities.User;
+import com.tyb.tyb_backend.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/manageData")
+@RequestMapping("/api/manage-user")
 @CrossOrigin("http://localhost:3000")  //protocollo e indirizzo della nostra web API
-public class DataController {
+public class UserController {
+
+
+    @Autowired
+    UserService userService;
+
+    @PostMapping("/create")
+    public String createUser(@RequestBody User user){
+        userService.createUser(user);
+        return "Utente correttamente creato";
+    }
 
     //utilizza l'endpoint di base del controller
     @GetMapping

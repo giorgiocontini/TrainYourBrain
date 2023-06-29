@@ -1,6 +1,7 @@
 import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import React from 'react';
+import "react-icons/fa";
+import React, {useContext} from 'react';
 import AppContextProvider from "./AppContext";
 import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} from "react-router-dom";
 import RootLayout from "./root/RootLayout";
@@ -9,7 +10,6 @@ import HomePage from "./pages/HomePage/HomePage";
 import WelcomePage from "./pages/WelcomePage/WelcomePage";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import AuthContextProvider from "./AuthContext";
-
 
 export const routes = createBrowserRouter(
     createRoutesFromElements(
@@ -20,9 +20,9 @@ export const routes = createBrowserRouter(
                 <Route path="welcome/:userId" Component={WelcomePage}/>
                 <Route path="*" Component={ErrorPage}/>
             </Route>
-
         </Route>
     ))
+
 
 const App = () => {
 

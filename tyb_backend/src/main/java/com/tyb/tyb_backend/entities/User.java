@@ -1,7 +1,6 @@
 package com.tyb.tyb_backend.entities;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -11,8 +10,6 @@ public class User {
 
 //@Field serve per mappare campi con nomi diversi tra db e java
 
-    @Id
-    private Integer id;
 
     @Field(name = "username")
     private String username;
@@ -62,7 +59,6 @@ public class User {
     //costruttore per la persistence
     @PersistenceCreator
     public User(Integer id, String username, String name, String surname, String role) {
-        this.id = id;
         this.username = username;
         this.name = name;
         this.surname = surname;
