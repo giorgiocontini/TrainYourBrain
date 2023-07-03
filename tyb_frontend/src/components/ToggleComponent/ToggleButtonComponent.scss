@@ -1,0 +1,88 @@
+/**
+ * SCSS styles for ToggleButton.tsx
+ */
+
+
+.col-3 {
+  width: max-content !important;
+}
+
+.ToggleButton {
+  .choice-selector-container {
+    width: 100%;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.005);
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    padding: 1.5px;
+    height: 48px;
+  }
+
+  .choice-selector-nav {
+    position: relative;
+    display: flex;
+    height: 100%;
+
+    label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      width: 100%;
+      z-index: 1;
+      position: relative;
+      cursor: pointer;
+      text-align: center;
+      margin: 0;
+
+      p {
+        z-index: -1;
+        position: relative;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 500;
+        transition: color 0.4s ease;
+        color: rgba(0, 0, 0, 0.5);
+        margin: 0 1.1em;
+        white-space: nowrap;
+        width: 8em;
+      }
+    }
+
+    .tab {
+      position: absolute;
+      height: 100%;
+      width: 50%;
+      left: 0;
+      bottom: 0;
+      background: #0D6EFDFF;
+      border-radius: 5px;
+      transition: 0.6s cubic-bezier(1, -0.15, 0.165, 1.25);
+    }
+  }
+
+  .choice-selector-nav #option1:checked ~ label.option1 p {
+    color: #ffffff;
+    font-weight: bold;
+  }
+
+  .choice-selector-nav #option2:checked ~ label.option2 p {
+    color: #ffffff;
+    font-weight: bold;
+  }
+
+  .choice-selector-nav #option2:checked ~ .tab {
+    left: 50%;
+  }
+
+  .choice-selector-nav input {
+    display: none;
+  }
+
+  div[aria-disabled="true"] {
+    pointer-events: none;
+    opacity: 0.6;
+    background: rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.1);
+  }
+}

@@ -1,6 +1,7 @@
 import {createContext, useEffect, useState} from "react";
 import {TUser} from "./types/types";
-import userService from "./services/API/User/UserService";
+import UserService from "./services/API/User/UserService";
+import {useLocalStorage} from "./hooks/useLocalStorage";
 
 type TAuthContextProvider = {
     children: React.ReactNode;
@@ -38,11 +39,14 @@ const AuthContext = createContext<any | null>(null);
  */
 const AuthContextProvider = ({children}: TAuthContextProvider) => {
 
+    const { getItem, removeItem} = useLocalStorage();
+
     const initUserState = () => {
         const user: TUser = {
-            firstName: "",
-            lastName:"",
-            userId: undefined,
+            password: "",
+            name: "",
+            surname: "",
+            username: "",
             role: ""
         };
         return user;
@@ -54,62 +58,21 @@ const AuthContextProvider = ({children}: TAuthContextProvider) => {
         return userState.role === role;
     };
 
-    const isUserLogged =()=>{
-        if (userState.userId){
-            return true
-        }
-        return  false;
-    }
-
     /**
      * Call the AuthService on component load
      */
     useEffect(() => {
-       //setUserState({firstName: "Giorgio",
-       //    lastName: "",
-       //    userId: 0,
-       //    role:"A"})
-        //TODO chiamare il servizio be che recupera i dati dell'user loggato
-        //const UserDetailsObservable = AuthService.userDetails({})
-        //    .pipe(
-        //        tap(() => {
-        //            setAuthStateContainerStatus(ENUM_CONTAINER_STATUS.LOADING);
-        //        }).
-        //        map((data) => {
-        //            const user: TUser | null = _initUserState(data);
-//
-        //            if (user === null) {
-        //                throw new Error(
-        //                    ErrorsMap[ErrorsEnum.AUTHENTICATION_FAILED].message
-        //                );
-        //            }
-        //            return user;
-        //        })
-        //    )
-        //    .subscribe({
-        //        next: (user) => {
-        //            setUserState(user);
-        //            setAuthStateContainerStatus(ENUM_CONTAINER_STATUS.SUCCESS);
-        //        },
-        //        error: (err) => {
-        //            debugConsoleLog(err.message);
-        //            setAuthStateContainerStatus(ENUM_CONTAINER_STATUS.ERROR);
-        //        }
-        //    });
-//
-        //return () => {
-        //    UserDetailsObservable.unsubscribe();
-        //};
+        console.log(userState)
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        isInRole("S")
+    }, [userState]);
 
     return (
         <AuthContext.Provider
             value={{
-                user: userState,
-                isInRole: isInRole,
-                isUserLogged: isUserLogged
+                user: undefined,
+                setUser:setUserState,
+                isInRole:()=>{}
             }}
         >
             {children}

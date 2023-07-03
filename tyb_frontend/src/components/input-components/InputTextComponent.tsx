@@ -14,7 +14,6 @@ interface InputTextComponentProps {
 
 const InputTextComponent= ({name, label, type, disabled, value, setState}:InputTextComponentProps) => {
     const handleChange = (e: any) => {
-debugger
         //if (typeof onChange === "undefined") {
         //    return;
         //}
@@ -31,6 +30,7 @@ debugger
                    type={type}
                    name={name}
                    className="form-control"
+                   required={true}
                    disabled={disabled}/>
         </div>
 }

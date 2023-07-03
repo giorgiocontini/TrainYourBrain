@@ -12,7 +12,6 @@ interface HeaderComponentProps {
 
 const HeaderComponent = ({}: HeaderComponentProps) => {
     const [headerRoutesArr] = useHeaderRoutes();
-    const {user, isInRole} = useContext(AuthContext);
 
 
     return <div className="flex-container HeaderComponent">
@@ -20,7 +19,7 @@ const HeaderComponent = ({}: HeaderComponentProps) => {
             <div className="container">
 
                 <div className="d-flex flex-row">
-                    <span className="me-auto">TrainYourBrain - {user.role}</span>
+                    <span className="me-auto">TrainYourBrain </span>
 
                     <div>u</div>
                 </div>

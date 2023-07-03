@@ -6,18 +6,14 @@ import {AuthContext} from "../AuthContext";
 
 const RootLayout = () => {
 
-    const {user, isInRole, isUserLogged} = useContext(AuthContext);
-
-    {//TODO definire l'header e il footer per tutta l'applicazione
-    }
 
     return <div>
-        <HeaderComponent/>
-        <main className="container rounded shadow p-5">
-            <Outlet/>
-        </main>
-        <FooterComponent/>
-    </div>
+                <HeaderComponent/>
+                <main className="container rounded shadow p-5" style={{backgroundColor:"rgba(222,220,220,0.54)"}}>
+                    <Outlet/>
+                </main>
+                <FooterComponent/>
+            </div>
 }
 
 

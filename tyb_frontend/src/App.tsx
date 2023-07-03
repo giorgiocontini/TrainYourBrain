@@ -5,7 +5,7 @@ import React, {useContext} from 'react';
 import AppContextProvider from "./AppContext";
 import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} from "react-router-dom";
 import RootLayout from "./root/RootLayout";
-import LoginPage from "./pages/LoginPage/LoginPage";
+import LoginRegistrationPage from "./pages/LoginRegistrationPage/LoginRegistrationPage";
 import HomePage from "./pages/HomePage/HomePage";
 import WelcomePage from "./pages/WelcomePage/WelcomePage";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
@@ -15,9 +15,9 @@ export const routes = createBrowserRouter(
     createRoutesFromElements(
         <Route>
             <Route path="/" Component={RootLayout}>
-                <Route path="login" Component={LoginPage}/>
+                <Route path="login" Component={LoginRegistrationPage}/>
                 <Route path="home" Component={HomePage}/>
-                <Route path="welcome/:userId" Component={WelcomePage}/>
+                <Route path="welcome/:username" Component={WelcomePage}/>
                 <Route path="*" Component={ErrorPage}/>
             </Route>
         </Route>
