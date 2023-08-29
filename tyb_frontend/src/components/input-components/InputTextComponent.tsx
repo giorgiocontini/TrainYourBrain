@@ -1,18 +1,21 @@
 import React from 'react';
 import {handleFormFieldChange} from "../../utils/commonFunctions";
-
+import "./InputTextComponent.scss"
 
 interface InputTextComponentProps {
+    id?:string,
     name:string,
     label:string,
     type:string,
     value:string,
     setState:any,
-    disabled?:boolean
+    required?:boolean,
+    disabled?:boolean,
+    error?:boolean
 }
 
 
-const InputTextComponent= ({name, label, type, disabled, value, setState}:InputTextComponentProps) => {
+const InputTextComponent= ({id,name, label, type, disabled, value, setState, required, error}:InputTextComponentProps) => {
     const handleChange = (e: any) => {
         //if (typeof onChange === "undefined") {
         //    return;
@@ -23,16 +26,32 @@ const InputTextComponent= ({name, label, type, disabled, value, setState}:InputT
     };
 
 
-    return <div className="form-outline mb-4">
-            <label className="form-label  InputTextComponent_required" htmlFor="loginPassword">{label}</label>
-            <input onChange={(e) => handleChange(e)}
-                   value={value}
-                   type={type}
-                   name={name}
-                   className="form-control"
-                   required={true}
-                   disabled={disabled}/>
+    return (
+        <div className="InputTextComponent mb-2">
+            {label && (
+                <label
+                    htmlFor={id? id : name}
+                    className={"InputTextComponent__label " + (required ?  "required" : "")}>
+                    {label}
+                </label>
+            )}
+            <input
+                id={id? id : name}
+                value={value}
+                type={type}
+                disabled={disabled}
+                onChange={(e) => handleChange(e)}
+                className={error ? "error" : "border border-primary"}
+            />
+            {
+           //    error && (
+           //    <div className="Validation__errorMessage">
+           //        {MESSAGE_VALIDATION_FIELD[error.type.toUpperCase()]}
+           //    </div>
+           //)
+            }
         </div>
+    );
 }
 
 export default InputTextComponent;

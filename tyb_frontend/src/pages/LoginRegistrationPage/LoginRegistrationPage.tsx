@@ -7,13 +7,16 @@ import {TUser} from "../../types/types";
 import {AuthContext} from "../../AuthContext";
 import {useAuth} from "../../hooks/useAuth";
 import {debug} from "util";
+import {SiWalkman} from "react-icons/si";
+import {showDialogFailed} from "../../utils/DialogUtils";
+import {Spinner} from "react-bootstrap";
 
 const LoginRegistrationPage = () => {
 
     const {user, isInRole, setUser} = useContext(AuthContext);
 
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const [isLoading, setLoading] = useState(false)
 
     const initialLoginState = {
         form: {
@@ -50,9 +53,12 @@ const LoginRegistrationPage = () => {
 
     //metodo di gestione
     function handleResponse(response: any) {
+
         if (response && response.status===200) {
             setUser(response.data);
+            navigate("/home", { replace: true })
         }
+
     }
 
     function loginFunction() {
@@ -61,22 +67,17 @@ const LoginRegistrationPage = () => {
         UserService.getUser(loginState.form.fields)
             //chiamato quando si ottengono le risposte dal web service
             .then(response => {
-                    if (response != null) {
-                        //localStorage
-                       //login({
-                       //    name:response.data.name,
-                       //    username: response.data.username,
-                       //    role:response.data.role,
-                       //    password:response.data.password,
-                       //    surname:response.data.surname
-                       //})
+                //Posso gestire i dati recuperati
+                if (response != null) {
                         handleResponse(response)
                     }
-                    //Posso gestire i dati recuperati
                 }
+
             )
             //in caso di errore
             .catch(error => handleError(error))
+
+
     }
 
     const [isLogin, setLogin] = useState(true)
@@ -115,7 +116,6 @@ const LoginRegistrationPage = () => {
             password: undefined
         }
 
-        debugger
         UserService.getUser(payload)
             .then(response => {
                 console.log(response)
@@ -125,7 +125,9 @@ const LoginRegistrationPage = () => {
     }
 
 
-    return (<div className="row">
+    return (
+        isLoading===true ?  <Spinner />:
+    <div className="row">
         <div className="col-6">
             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
                  className="img-fluid" alt="image"/>
@@ -135,16 +137,18 @@ const LoginRegistrationPage = () => {
             <div className="tab-content">
                 <div className={"tab-pane fade show " + (isLogin ? "active" : "")}
                      id="pills-login" role="tabpanel" aria-labelledby="tab-login">
-                    <div className="form">
+                    <div className="form p-5">
                         <InputTextComponent
                             label="Username"
                             type="text"
                             value={loginState.form.fields.username}
                             name="username"
+                            required={true}
                             setState={setLoginState}/>
                         <InputTextComponent label="Password" type="password"
                                             value={loginState.form.fields.password}
                                             name="password"
+                                            required={true}
                                             setState={setLoginState}/>
                         <div className="flex-row mb-4">
                             <div className="d-flex justify-content-center">
@@ -156,7 +160,7 @@ const LoginRegistrationPage = () => {
                                 onClick={loginFunction}>Accedi
                         </button>
 
-                        <div className="text-center">
+                        <div className="text-center mt-3">
                             <p>Non sei registrato? <a className="fa-underline" style={{cursor: "pointer"}}
                                                       onClick={handleTabChanges}>Registrati</a></p>
                         </div>
@@ -164,11 +168,13 @@ const LoginRegistrationPage = () => {
                 </div>
                 <div className={"tab-pane fade show " + (!isLogin ? "active" : "")}
                      id="pills-register" role="tabpanel" aria-labelledby="tab-register">
-                    <div className="form">
-                        <InputTextComponent name="username" label="Username" type="text"
+                    <div className="form p-5">
+                        <InputTextComponent id="username_reg" name="username" label="Username" type="text"
                                             value={registrationState.form.fields.username}
+                                            required={true}
                                             setState={setRegistrationState}/>
                         <InputTextComponent name="email" label="Email" type="email"
+                                            required={true}
                                             value={registrationState.form.fields.email}
                                             setState={setRegistrationState}/>
                         <InputTextComponent name="name" label="Nome" type="text"
@@ -177,11 +183,12 @@ const LoginRegistrationPage = () => {
                         <InputTextComponent name="surname" label="Cognome" type="text"
                                             value={registrationState.form.fields.surname}
                                             setState={setRegistrationState}/>
-                        <InputTextComponent name="password" label="Password" type="password"
+                        <InputTextComponent id="password_reg" name="password" label="Password" type="password"
                                             value={registrationState.form.fields.password}
+                                            required={true}
                                             setState={setRegistrationState}/>
                         <button type="submit" onClick={addUserFunction}
-                                className="btn btn-primary btn-block mb-3">Conferma
+                                className="btn btn-primary btn-block mb-3 mt-5">Conferma
                         </button>
                     </div>
                 </div>

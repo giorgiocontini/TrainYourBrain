@@ -11,7 +11,9 @@ class UserService{
     }
 
     static getUser=(payload:TUser)=>{
-        return axios.post(`http://localhost:8080/api/manage-user/user`,payload);
+        return axios.post(`http://localhost:8080/api/manage-user/user`,payload).then(
+
+        );
     }
 }
 

@@ -1,5 +1,6 @@
 package com.tyb.tyb_backend.model;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class User implements Serializable {
    private String id;
 
     @Field(name = "username") //@Field serve per mappare campi con nomi diversi tra db e java
+    @NotBlank(message = "Inserire l'username")
     private String username;
 
     @Field(name = "name")
@@ -31,6 +33,7 @@ public class User implements Serializable {
     private String role;
 
     @Field(name = "password")
+    @NotBlank(message = "Inserire la password")
     private String password;
 
 }

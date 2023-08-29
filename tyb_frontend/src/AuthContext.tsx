@@ -52,27 +52,31 @@ const AuthContextProvider = ({children}: TAuthContextProvider) => {
         return user;
     };
 
-    const [userState, setUserState] = useState<TUser>(initUserState);
+    const [userState, setUserState] = useState<TUser | undefined>(undefined);
 
     const isInRole = (role: string) => {
-        return userState.role === role;
+        if (userState){
+            return userState.role === role;
+        }
     };
 
-    /**
-     * Call the AuthService on component load
-     */
     useEffect(() => {
-        console.log(userState)
-
-        isInRole("S")
-    }, [userState]);
+ //     if (userLogged){
+ //         setUserState((oldState) => {
+ //             let newState = { ...oldState };
+ //             newState=JSON.parse(userLogged);
+ //             return newState;
+ //         });
+ //         setUserState( JSON.parse(userLogged));
+ //     }
+    }, []);
 
     return (
         <AuthContext.Provider
             value={{
-                user: undefined,
+                user: userState,
                 setUser:setUserState,
-                isInRole:()=>{}
+                isInRole:isInRole
             }}
         >
             {children}

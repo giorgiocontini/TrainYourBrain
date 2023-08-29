@@ -6,7 +6,7 @@ import com.tyb.tyb_backend.model.User;
 
 public interface UserService {
 
-    void createUser(User user);
+    String createUser(User user);
 
     User getUser(CriteriRicercaUser criteri);
 

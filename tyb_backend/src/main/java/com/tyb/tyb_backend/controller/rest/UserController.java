@@ -27,8 +27,7 @@ public class UserController {
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public String createUser(@RequestBody User user){
         //LOG.info("**************** Inserimento Dati User ***************");
-        userService.createUser(user);
-        return "Utente correttamente creato";
+       return  userService.createUser(user);
     }
 
 
@@ -52,7 +51,7 @@ public class UserController {
         }
 
         //gestire messaggi di errore
-        return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR );
+        return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
 

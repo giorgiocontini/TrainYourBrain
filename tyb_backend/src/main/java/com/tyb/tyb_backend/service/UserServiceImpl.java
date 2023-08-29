@@ -14,8 +14,13 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void createUser(User user) {
-        userRepository.insert(user);
+    public String createUser(User user) {
+        //TODO inserire validazione sui campi notnull
+        if(!user.getUsername().isEmpty() && !user.getPassword().isEmpty()){
+            userRepository.insert(user);
+            return "Utente correttamente creato";
+        }
+        return "Inserire i dati obbligatori";
     }
 
     @Override

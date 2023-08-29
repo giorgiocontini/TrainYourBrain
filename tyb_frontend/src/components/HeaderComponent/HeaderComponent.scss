@@ -1,15 +1,17 @@
 .HeaderComponent{
 
   .primary-header {
-    height: 48px;
+    height: 60px;
     color: white;
     background-color: rgb(10, 52, 190);
+
+
   }
 
   .secondary-header {
     background: var(--bs-primary);
     color: white;
-    height: 60px;
+    height: 48px;
 
     .nav-ul {
       display: flex;
@@ -18,7 +20,7 @@
       padding-inline-start: 0;
       /* overwrite bootstrap's "_reboot.scss" */
       margin-bottom: 0;
-      height: 60px;
+      height: 48px;
       align-items: center;
 
       .a {
@@ -35,13 +37,5 @@
       }
     }
   }
-
-
-
-
-
-
-
-
 
 }

@@ -1,5 +1,7 @@
 import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 import "react-icons/fa";
 import React, {useContext} from 'react';
 import AppContextProvider from "./AppContext";
@@ -9,14 +11,19 @@ import LoginRegistrationPage from "./pages/LoginRegistrationPage/LoginRegistrati
 import HomePage from "./pages/HomePage/HomePage";
 import WelcomePage from "./pages/WelcomePage/WelcomePage";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
-import AuthContextProvider from "./AuthContext";
+import AuthContextProvider, {AuthContext} from "./AuthContext";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import ProtectedRoute from "./root/ProtectedRoute";
+
 
 export const routes = createBrowserRouter(
     createRoutesFromElements(
         <Route>
             <Route path="/" Component={RootLayout}>
+                <Route path="" Component={WelcomePage}/>
                 <Route path="login" Component={LoginRegistrationPage}/>
-                <Route path="home" Component={HomePage}/>
+                <Route path="profile" Component={ProfilePage}/>
+                <Route path="home" element={<ProtectedRoute allowedRoles={["A", "P", "S"]}><HomePage/></ProtectedRoute>}/>
                 <Route path="welcome/:username" Component={WelcomePage}/>
                 <Route path="*" Component={ErrorPage}/>
             </Route>
