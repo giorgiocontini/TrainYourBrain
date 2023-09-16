@@ -1,0 +1,35 @@
+.InputTextComponent__label {
+    font-weight: bold;
+    font-size: var(--x-font-size-m);
+    color: var(--x-text-color-primary);
+    padding: 0px 8px 0px 8px;
+}
+
+.InputTextComponent input {
+    width: 100%;
+    padding: 8px;
+    border: 0px;
+    border-bottom: 2px solid;
+    border-color: var(--x-text-color-primary);
+    color: black;
+    &.error {
+        border-color: red!important;
+    }
+}
+
+.InputTextComponent input:disabled {
+    cursor: not-allowed;
+    user-select: none;
+    background-color: rgb(231, 233, 242);
+    color: grey;
+    border: 0px;
+    border-bottom: 2px solid;
+    border-color: var(--x-text-color-primary);
+}
+
+.InputTextComponent__label.required::after {
+    content: "*";
+    color: red;
+    padding-left: 2px;
+    font-weight: bold;
+}

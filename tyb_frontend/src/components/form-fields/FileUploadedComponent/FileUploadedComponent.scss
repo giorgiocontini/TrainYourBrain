@@ -1,0 +1,35 @@
+.FileUploadedComponent div {
+    width: 100%;
+    padding: 8px;
+    border: 0px;
+    border-bottom: 2px solid;
+    border-color: var(--x-text-color-primary);
+    color: black;
+}
+
+.FileUploadedComponent__title {
+    font-weight: bold;
+    font-size: var(--x-font-size-m);
+    color: var(--x-text-color-primary);
+    padding: 0px 8px 0px 8px;
+}
+
+.FileUploadedComponent__icon {
+    color: red !important;
+    padding-left: 12px;
+    cursor: pointer;
+    font-size: 25px;
+}
+
+.FileUploadedComponent__labelFile {
+    padding: 3px;
+    border-radius: 10px;
+    background-color: rgb(231, 233, 242);
+}
+
+.FileUploadedComponent__title.required::after {
+    content: "*";
+    color: red;
+    padding-left: 2px;
+    font-weight: bold;
+}

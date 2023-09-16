@@ -1,0 +1,114 @@
+.SearchableSelect {
+  position: relative;
+  .error {
+    border-color: red!important;
+  }
+}
+
+.SearchableSelect__container {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  height: 45px;
+  border-bottom: 1px solid;
+  border-color: var(--x-text-color-primary);
+
+
+}
+
+.SearchableSelect__container.selected {
+  border-bottom: 2px #0066CC solid;
+}
+
+.SearchableSelect__select {
+  min-height: 2.5em;
+  border: none;
+  width: 100%;
+  margin-bottom: 2px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 6.75px;
+  outline: none;
+  color: black;
+  font-weight: bold;
+
+}
+
+.SearchableSelect__select:focus {
+  border: none !important;
+}
+
+.SearchableSelect__image {
+  font-size: var(--x-font-size-s);
+  font-weight: bold;
+}
+.disabled {
+  background-color: #E8E9F2 !important;
+  color: #808080;
+  pointer-events: none;
+}
+
+.SearchableSelect__ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+  border: 0.05em solid black;
+  border-radius: 0.25em;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  background-color: white;
+  z-index: 100;
+}
+
+.small-dropDown {
+  max-height: 7em;
+}
+
+.medium-dropDown {
+  max-height: 15em;
+}
+
+.SelectComponent__select__optionsUl-li {
+  padding: .25em .5em;
+  cursor: pointer;
+}
+
+
+
+.SearchableSelect__label {
+  font-weight: bold !important;
+  font-size: var(--x-font-size-m) !important;
+  color: var(--x-text-color-primary) !important;
+  padding: 0 8px 0 8px !important;
+}
+
+.SearchableSelect__label.required::after {
+  content: "*" !important;
+  color: red !important;
+  padding-left: 2px !important;
+  font-weight: bold !important;
+}
+
+.SelectComponent__disabled {
+  background-color: #E8E9F2 !important;
+  color: #808080 !important;
+  font-weight: bold !important;
+  pointer-events: none !important;
+}
+
+.SelectComponent__select-highlighted {
+  background-color: rgb(235, 235, 235);
+  // color: white;
+}
+
+.SelectComponent__select-selected {
+  // background-color: rgb(222, 222, 222);
+  background-color: var(--bs-primary);
+  color: white;
+}

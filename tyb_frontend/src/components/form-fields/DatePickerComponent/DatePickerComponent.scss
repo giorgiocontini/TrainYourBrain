@@ -1,0 +1,50 @@
+.DatePickerComponent .DatePickerComponent__labelIconWrapper {
+    display: flex;
+    align-items: center;
+
+    i{
+        position: relative;
+        left: -20px;
+    }
+
+    .react-datepicker-wrapper{
+        width: 100% !important;
+    }
+}
+
+
+.DatePickerComponent .DatePickerComponent__label {
+    font-weight: bold;
+    font-size: var(--x-font-size-m);
+    color: var(--x-text-color-primary);
+    padding-left: 8px;
+}
+
+.DatePickerComponent .react-datepicker-ignore-onclickoutside,
+.DatePickerComponent .react-datepicker__input-container input {
+    &:focus {
+        border-color: var(--x-text-color-primary);
+        box-shadow: none !important;
+    }
+    &.error {
+        border-color: red!important;
+    }
+}
+
+.DatePickerComponent .react-datepicker__triangle{
+    left: -15px !important;
+}
+
+ .react-datepicker__navigation--previous{
+    margin-top: 8px !important;
+}
+
+.react-datepicker__navigation--next{
+    margin-top: 8px !important;
+}
+.DatePickerComponent__label.required::after {
+    content: "*";
+    color: red;
+    padding-left: 2px;
+    font-weight: bold;
+}
