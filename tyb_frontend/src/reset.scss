@@ -1,0 +1,46 @@
+/**
+ * Remove focus styles for non-keyboard focus.
+ */
+a:focus:not(:focus-visible) {
+    /* The "!important" is really needed here, because bootstrap's focus needs to be overridden */
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+button:focus:not(:focus-visible) {
+    /* The "!important" is really needed here, because bootstrap's focus needs to be overridden */
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/**
+ * Remove focus styles for input focus.
+ */
+:focus:not(.focus--mouse),
+.form-check [type="checkbox"]:focus + label,
+.form-check [type="radio"]:focus + label,
+.toggles label input[type="checkbox"]:focus + .lever {
+    border-bottom: 2px solid;
+    border-color: var(--bs-primary) !important;
+    box-shadow: none !important;
+    outline: none !important;
+    &.error {
+        border-color: red !important;
+    }
+}
+
+/**
+ * class for error message to validation
+ */
+.Validation__errorMessage {
+    font-style: italic;
+    font-weight: 300;
+    color: #d83d3d;
+    padding-bottom: 5px;
+    font-size: 0.80rem;
+    height: 10px;
+
+    @media (max-width: 767px) {
+        height: 20px;
+    }
+}

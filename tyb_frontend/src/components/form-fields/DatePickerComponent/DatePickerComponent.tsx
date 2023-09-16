@@ -2,9 +2,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./DatePickerComponent.scss";
 import {useEffect, useState} from "react";
-import it from "date-fns/locale/it";
 import {FormikProps} from "formik";
-
 
 
 type DatePickerComponentPropsType = {
@@ -116,7 +114,6 @@ const DatePickerComponent = ({
                 }}
                 disabled={disabled}
                 shouldCloseOnSelect={true}
-                locale={lingua === "it" ? it : undefined}
                 className={fieldError ? " error " : ""}
             />
             <i className="bi bi-calendar4"></i>

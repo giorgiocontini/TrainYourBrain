@@ -60,11 +60,7 @@ const LoginRegistrationPage = () => {
 
     const handleTabChanges = () => {
         setLogin(!isLogin);
-        formik.setFormikState((oldState: any) => {
-            const newState = {...oldState};
-            newState.values = initialFormState;
-            return newState;
-        });
+        reset()
     }
 
     //Services-------------------------------
@@ -117,8 +113,9 @@ const LoginRegistrationPage = () => {
 
     const formik = useFormik({
         initialValues: initialFormState,
-        validationSchema: validationSchema, onSubmit: () => {
-            //TODO
+        validationSchema: validationSchema,
+        onSubmit: () => {
+            isLogin ? loginFunction() : addUserFunction()
         },
     });
 
@@ -126,12 +123,24 @@ const LoginRegistrationPage = () => {
         formik.setFormikState((oldState: any) => {
             const newState = {...oldState};
             //Todo vedere se passando l'initial state funziona correttamente, l'alternativa è passare l'oggetto con campi vuoti
-            newState.values = initialFormState;
+            newState.values = {
+                username: "",
+                name: "",
+                surname: "",
+                email: "",
+                password: "",
+            };
             return newState;
         });
 
         //Todo vedere se passando l'initial state funziona correttamente, l'alternativa è passare l'oggetto con campi vuoti
-        formik.setErrors(initialFormState)
+        formik.setErrors({
+            username: "",
+            name: "",
+            surname: "",
+            email: "",
+            password: "",
+        })
     };
 
     return (<div className="row">
@@ -160,7 +169,7 @@ const LoginRegistrationPage = () => {
                         </div>
 
                         <button type="submit" className="btn btn-primary btn-block mb-4"
-                                onClick={loginFunction}>Accedi
+                                onClick={()=>formik.handleSubmit}>Accedi
                         </button>
 
                         <div className="text-center mt-3">
@@ -185,7 +194,7 @@ const LoginRegistrationPage = () => {
                         <InputTextComponent name="password" label="Password" type="password"
                                             isRequired formik={formik}
                         />
-                        <button type="submit" onClick={addUserFunction}
+                        <button type="submit" onClick={()=>formik.handleSubmit}
                                 className="btn btn-primary btn-block mb-3 mt-5">Conferma
                         </button>
                     </div>

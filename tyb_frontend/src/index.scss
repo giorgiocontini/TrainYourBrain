@@ -1,0 +1,60 @@
+
+/**
+ * Libs
+ */
+@import "~bootstrap-italia/src/scss/bootstrap-italia.scss";
+@import "~bootstrap-icons/font/bootstrap-icons.scss";
+
+/**
+ * Overwrites
+ */
+@import "./reset.scss";
+
+/**
+ * Fonts
+ */
+@import "@fontsource/titillium-web/200.css";
+@import "@fontsource/titillium-web/300.css";
+@import "@fontsource/titillium-web/400.css";
+@import "@fontsource/titillium-web/600.css";
+@import "@fontsource/titillium-web/700.css";
+@import "@fontsource/titillium-web/900.css";
+
+/* root element
+* The fields bellow are global variables, which can be reused in css and scss files.
+*/
+:root {
+  --x-font-size-4xl: 5.61rem;
+  --x-font-size-3xl: 4.209rem;
+  --x-font-size-2xl: 3.157rem;
+  --x-font-size-xxl: 2.369rem;
+  --x-font-size-xl: 1.777rem;
+  --x-font-size-l: 1.333rem;
+  --x-font-size-m: 1rem;
+  --x-font-size-s: 0.75rem;
+  --x-font-size-xs: 0.563rem;
+  --x-text-color-primary: #445970;
+  --x-layout-background-color-variant-1: #e7e9f2;
+  --x-layout-background-color-variant-2: white;
+  --x-footer-nav-component-height: 80px;
+}
+
+/* html element
+* The fields bellow are defined for calculating "rem" units.
+* font-size: We define 18px default and use the typographic scale rule of "perfect fourth"
+*/
+html {
+  font-size: 18px;
+  min-width: 320px; /* The smallest phone screen we support */
+}
+
+body {
+  margin: 0;
+  font-family: "Titillium Web", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: "Courier New", monospace;
+}

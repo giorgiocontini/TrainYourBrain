@@ -71,10 +71,10 @@ const InputTextComponent = ({
     }, [formik?.errors]);
 
 
-    const handleOnChangeFormik = (name: string, value: string, upperCase: boolean = true) => {
+    const handleOnChangeFormik = (name: string, value: string) => {
         formik?.setFormikState((oldState: any) => {
             const newState = {...oldState};
-            newState.values[name] = upperCase ? value.toUpperCase() : value;
+            newState.values[name] = value;
             return newState;
         });
         formik?.setFieldError(name, "")
