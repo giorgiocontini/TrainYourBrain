@@ -14,6 +14,7 @@ type Props = {
     customStyle?: string;
     inlineWithField?: boolean;
     disabled?: boolean;
+    functionToReset?:Function
 };
 
 /**
@@ -29,13 +30,14 @@ const ToggleButtonComponent = ({
                                    option2,
                                    customStyle,
                                    inlineWithField,
-                                   disabled
+                                   disabled, functionToReset
                                }: Props): JSX.Element => {
     /**
      * Handle change
      */
     const handleChangeToggleButton = () => {
         setFlag(!flag);
+        functionToReset ? functionToReset(): null;
     };
 
     return (

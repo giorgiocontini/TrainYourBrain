@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import ToggleButtonComponent from "../../components/ToggleComponent/ToggleButtonComponent";
 import UserService from "../../services/API/User/UserService";
@@ -11,12 +11,12 @@ import InputTextComponent from "../../components/form-fields/InputTextComponent/
 
 const LoginRegistrationPage = () => {
 
-    const {user, isInRole, setUser} = useContext(AuthContext);
-
+    const {setUser} = useContext(AuthContext);
+    const [isLogin, setLogin] = useState(true)
     const navigate = useNavigate();
-    const [isLoading, setLoading] = useState(false)
 
-    const initialFormState= {
+
+    const initialFormState = {
         username: "",
         name: "",
         surname: "",
@@ -31,7 +31,6 @@ const LoginRegistrationPage = () => {
 
     //metodo di gestione
     function handleResponse(response: any) {
-
         if (response && response.status === 200) {
             setUser(response.data);
             navigate("/home", {replace: true})
@@ -39,28 +38,9 @@ const LoginRegistrationPage = () => {
 
     }
 
-    function loginFunction() {
-
-        //Chiamo il servizio da be
-        UserService.getUser(initialFormState)
-            //chiamato quando si ottengono le risposte dal web service
-            .then(response => {
-                //Posso gestire i dati recuperati
-                if (response != null) {
-                    handleResponse(response)
-                }
-            })
-            //in caso di errore
-            .catch(error => handleError(error))
-
-
-    }
-
-    const [isLogin, setLogin] = useState(true)
-
     const handleTabChanges = () => {
+        resetFormikForm();
         setLogin(!isLogin);
-        reset()
     }
 
     //Services-------------------------------
@@ -81,7 +61,6 @@ const LoginRegistrationPage = () => {
             console.log(err)
         })
     }
-
     function getUserFunction() {
 
         const payload: TUser = {
@@ -99,18 +78,31 @@ const LoginRegistrationPage = () => {
             console.log(err)
         })
     }
+    function loginFunction() {
 
+        debugger
+        //Chiamo il servizio da be
+        UserService.getUser(initialFormState)
+            //chiamato quando si ottengono le risposte dal web service
+            .then(response => {
+                //Posso gestire i dati recuperati
+                if (response != null) {
+                    handleResponse(response)
+                }
+            })
+            //in caso di errore
+            .catch(error => handleError(error))
+
+
+    }
     //---------------------------------------
 
 
-
+    //Formik----------------------------------
     const validationSchema = Yup.object().shape({
         username: Yup.string()
-            .required('Campo obbligatorio'),
-        password: Yup.string()
             .required('Campo obbligatorio')
     })
-
     const formik = useFormik({
         initialValues: initialFormState,
         validationSchema: validationSchema,
@@ -118,30 +110,16 @@ const LoginRegistrationPage = () => {
             isLogin ? loginFunction() : addUserFunction()
         },
     });
-
-    const reset = () => {
+    const resetFormikForm = () => {
         formik.setFormikState((oldState: any) => {
             const newState = {...oldState};
-            //Todo vedere se passando l'initial state funziona correttamente, l'alternativa è passare l'oggetto con campi vuoti
-            newState.values = {
-                username: "",
-                name: "",
-                surname: "",
-                email: "",
-                password: "",
-            };
+            newState.values = initialFormState;
             return newState;
         });
 
-        //Todo vedere se passando l'initial state funziona correttamente, l'alternativa è passare l'oggetto con campi vuoti
-        formik.setErrors({
-            username: "",
-            name: "",
-            surname: "",
-            email: "",
-            password: "",
-        })
+        formik.setErrors(initialFormState)
     };
+    //----------------------------------------
 
     return (<div className="row">
         <div className="col-6">
@@ -149,7 +127,7 @@ const LoginRegistrationPage = () => {
                  className="img-fluid" alt="image"/>
         </div>
         <div className="col-6 p-4">
-            <ToggleButtonComponent flag={isLogin} setFlag={setLogin} option1={"Accedi"} option2={"Registrati"}/>
+            <ToggleButtonComponent flag={isLogin} setFlag={setLogin} option1={"Accedi"} option2={"Registrati"} functionToReset={resetFormikForm}/>
             <div className="tab-content">
                 <div className={"tab-pane fade show " + (isLogin ? "active" : "")}
                      id="pills-login" role="tabpanel" aria-labelledby="tab-login">
@@ -169,7 +147,7 @@ const LoginRegistrationPage = () => {
                         </div>
 
                         <button type="submit" className="btn btn-primary btn-block mb-4"
-                                onClick={()=>formik.handleSubmit}>Accedi
+                                onClick={() => formik.handleSubmit}>Accedi
                         </button>
 
                         <div className="text-center mt-3">
@@ -181,7 +159,7 @@ const LoginRegistrationPage = () => {
                 <div className={"tab-pane fade show " + (!isLogin ? "active" : "")}
                      id="pills-register" role="tabpanel" aria-labelledby="tab-register">
                     <div className="form p-5">
-                        <InputTextComponent name="username" label="Username" type="text"
+                        <InputTextComponent id="username_reg" name="username" label="Username" type="text"
                                             formik={formik}
                                             isRequired/>
                         <InputTextComponent name="email" label="Email" type="email"
@@ -191,10 +169,10 @@ const LoginRegistrationPage = () => {
                         <InputTextComponent name="surname" label="Cognome" type="text"
                                             formik={formik}
                         />
-                        <InputTextComponent name="password" label="Password" type="password"
+                        <InputTextComponent id="password_reg" name="password" label="Password" type="password"
                                             isRequired formik={formik}
                         />
-                        <button type="submit" onClick={()=>formik.handleSubmit}
+                        <button type="submit" onClick={() => formik.handleSubmit}
                                 className="btn btn-primary btn-block mb-3 mt-5">Conferma
                         </button>
                     </div>

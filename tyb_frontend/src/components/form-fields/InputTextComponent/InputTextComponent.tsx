@@ -3,6 +3,7 @@ import "./InputTextComponent.scss";
 import {FormikProps} from 'formik';
 
 type InputTextComponentPropsType = {
+    id?: string,
     name: string;
     label?: string;
     placeholder?: string;
@@ -54,12 +55,13 @@ enum TInputType {
  * @returns {JSX.Element}
  */
 const InputTextComponent = ({
-                                name, label, value, placeholder, type = "text", acceptFile = "*", disabled = false,
+                                id, name, label, value, placeholder, type = "text", acceptFile = "*", disabled = false,
                                 onChange, maxLength, error, isRequired, formik
                             }: InputTextComponentPropsType): JSX.Element => {
 
     //Gestione errori formik
     const [fieldError, setFieldError] = useState(error)
+
     const getFieldError = (form: FormikProps<any>, fieldName: string): string => {
         return (form.errors as any)[fieldName] || "";
     };
@@ -115,7 +117,7 @@ const InputTextComponent = ({
             {label &&
                 <label htmlFor={label} className={classNames["InputTextComponent__label"].join(" ")}>{label}</label>}
             <input
-                id={label}
+                id={id ? id :name}
                 value={formik ? formik.values[name] : value}
                 placeholder={placeholder}
                 type={type}
