@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
 
-@Document
+@Document(collection = "answer")
 @Data //genera automaticamente i getter e i setter
 @AllArgsConstructor //crea un costruttore
 @NoArgsConstructor //crea un costruttore
@@ -17,8 +17,8 @@ public class Answer implements Serializable {
     //senza id perchè questa verrà utilizzata
     //all'interno di un'altra classe come
     //documento interno
-    @Field(name = "answer")
-    private String answer;
+    @Field(name = "description")
+    private String description;
 
     @Field(name = "isCorrect")
     private Boolean isCorrect;

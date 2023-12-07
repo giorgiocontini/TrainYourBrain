@@ -39,7 +39,7 @@ const AuthContext = createContext<any | null>(null);
  */
 const AuthContextProvider = ({children}: TAuthContextProvider) => {
 
-    const { getItem, removeItem} = useLocalStorage();
+    //const { getItem, removeItem} = useLocalStorage();
 
     const initUserState = () => {
         const user: TUser = {
@@ -54,6 +54,7 @@ const AuthContextProvider = ({children}: TAuthContextProvider) => {
 
     const [userState, setUserState] = useState<TUser | undefined>(undefined);
 
+
     const isInRole = (role: string) => {
         if (userState){
             return userState.role === role;
@@ -61,15 +62,15 @@ const AuthContextProvider = ({children}: TAuthContextProvider) => {
     };
 
     useEffect(() => {
- //     if (userLogged){
- //         setUserState((oldState) => {
- //             let newState = { ...oldState };
- //             newState=JSON.parse(userLogged);
- //             return newState;
- //         });
- //         setUserState( JSON.parse(userLogged));
- //     }
-    }, []);
+     //if (userState){
+     //    setUserState((oldState) => {
+     //        let newState = { ...oldState };
+     //        newState=JSON.parse(userLogged);
+     //        return newState;
+     //    });
+     //    setUserState( JSON.parse(userLogged));
+     //}
+    }, [userState]);
 
     return (
         <AuthContext.Provider

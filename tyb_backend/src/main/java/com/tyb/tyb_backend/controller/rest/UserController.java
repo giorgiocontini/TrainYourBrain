@@ -6,10 +6,10 @@ import com.tyb.tyb_backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.logging.Logger;
 
 import java.util.Objects;
 
@@ -26,7 +26,7 @@ public class UserController {
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public String createUser(@RequestBody User user){
-        //LOG.info("**************** Inserimento Dati User ***************");
+        Logger.getGlobal().info("**************** Inserimento Dati User ***************");
        return  userService.createUser(user);
     }
 
@@ -45,14 +45,16 @@ public class UserController {
 
     @PostMapping(value = "/user",  produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getUserFromId(@RequestBody @Valid CriteriRicercaUser criteri){
-        User resp = userService.getUser(criteri);
-        if(resp!=null){
-            return new ResponseEntity<>(userService.getUser(criteri), HttpStatus.OK );
+        try{
+            User resp = userService.getUser(criteri);
+            if(resp!=null){
+                return new ResponseEntity<>(resp, HttpStatus.OK );
+            }
+        }catch (Exception e){
+            Logger.getGlobal().info("Utente non trovato");
         }
 
-        //gestire messaggi di errore
-        return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR);
-
+        return null;
     }
 
 

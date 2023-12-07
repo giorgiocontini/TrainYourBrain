@@ -15,8 +15,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String createUser(User user) {
-        //TODO inserire validazione sui campi notnull
-        if(!user.getUsername().isEmpty() && !user.getPassword().isEmpty()){
+        if(!user.getUsername().isEmpty()
+                && !user.getPassword().isEmpty()){
             userRepository.insert(user);
             return "Utente correttamente creato";
         }

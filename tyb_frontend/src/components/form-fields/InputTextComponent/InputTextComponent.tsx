@@ -113,9 +113,9 @@ const InputTextComponent = ({
     }
 
     return (
-        <div className="InputTextComponent">
+        <div className="InputTextComponent mb-2">
             {label &&
-                <label htmlFor={label} className={classNames["InputTextComponent__label"].join(" ")}>{label}</label>}
+                <label htmlFor={id ? id :name} className={classNames["InputTextComponent__label"].join(" ")}>{label}</label>}
             <input
                 id={id ? id :name}
                 value={formik ? formik.values[name] : value}

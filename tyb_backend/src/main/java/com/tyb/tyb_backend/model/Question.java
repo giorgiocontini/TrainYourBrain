@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-@Document(collection = "questions")
 @Data //genera automaticamente i getter e i setter
 @AllArgsConstructor //crea un costruttore
 @NoArgsConstructor //crea un costruttore
@@ -19,8 +18,11 @@ public class Question implements Serializable {
     @Id
     private String Id;
 
-    @Field(name = "question")
-    private String question;
+    @Field(name = "description")
+    private String description;
+
+    @Field(name ="topic")
+    private String topic;
 
     @Field(name = "answers")
     private ArrayList<Answer> answers;

@@ -15,13 +15,8 @@ const LoginRegistrationPage = () => {
     const [isLogin, setLogin] = useState(true)
     const navigate = useNavigate();
 
-
     const initialFormState = {
-        username: "",
-        name: "",
-        surname: "",
-        email: "",
-        password: "",
+        username: "", name: "", surname: "", email: "", password: ""
     }
 
     //metodo di gestione degli errori
@@ -29,21 +24,22 @@ const LoginRegistrationPage = () => {
         console.log(error?.response?.data?.message)
     }
 
-    //metodo di gestione
+    //metodo di gestione della response
     function handleResponse(response: any) {
+
         if (response && response.status === 200) {
             setUser(response.data);
             navigate("/home", {replace: true})
         }
-
     }
 
+    //metodo di gestione dei tab (log/reg)
     const handleTabChanges = () => {
         resetFormikForm();
         setLogin(!isLogin);
     }
 
-    //Services-------------------------------
+    //Services
     function addUserFunction() {
 
         const payload: TUser = {
@@ -57,59 +53,41 @@ const LoginRegistrationPage = () => {
         UserService.createUser(payload)
             .then(response => {
                 console.log(response)
+                //riporto l'utente alla finestra di login per fare l'accesso
+                handleTabChanges();
             }).catch(err => {
             console.log(err)
         })
     }
-    function getUserFunction() {
 
-        const payload: TUser = {
-            name: undefined,
-            surname: undefined,
-            username: formik.values.username,
-            role: undefined,
-            password: undefined
-        }
-
-        UserService.getUser(payload)
-            .then(response => {
-                console.log(response)
-            }).catch(err => {
-            console.log(err)
-        })
-    }
     function loginFunction() {
-
-        debugger
         //Chiamo il servizio da be
-        UserService.getUser(initialFormState)
+        UserService.getUser(formik.values)
             //chiamato quando si ottengono le risposte dal web service
             .then(response => {
                 //Posso gestire i dati recuperati
                 if (response != null) {
                     handleResponse(response)
                 }
+
             })
             //in caso di errore
             .catch(error => handleError(error))
 
-
     }
-    //---------------------------------------
 
-
-    //Formik----------------------------------
     const validationSchema = Yup.object().shape({
         username: Yup.string()
-            .required('Campo obbligatorio')
+            .required('Campo obbligatorio'),
+        password: Yup.string().required('Campo obbligatorio')
     })
+
     const formik = useFormik({
-        initialValues: initialFormState,
-        validationSchema: validationSchema,
-        onSubmit: () => {
+        initialValues: initialFormState, validationSchema: validationSchema, onSubmit: () => {
             isLogin ? loginFunction() : addUserFunction()
-        },
+        }
     });
+
     const resetFormikForm = () => {
         formik.setFormikState((oldState: any) => {
             const newState = {...oldState};
@@ -119,7 +97,6 @@ const LoginRegistrationPage = () => {
 
         formik.setErrors(initialFormState)
     };
-    //----------------------------------------
 
     return (<div className="row">
         <div className="col-6">
@@ -127,7 +104,8 @@ const LoginRegistrationPage = () => {
                  className="img-fluid" alt="image"/>
         </div>
         <div className="col-6 p-4">
-            <ToggleButtonComponent flag={isLogin} setFlag={setLogin} option1={"Accedi"} option2={"Registrati"} functionToReset={resetFormikForm}/>
+            <ToggleButtonComponent flag={isLogin} setFlag={setLogin} option1={"Accedi"} option2={"Registrati"}
+                                   functionToReset={resetFormikForm}/>
             <div className="tab-content">
                 <div className={"tab-pane fade show " + (isLogin ? "active" : "")}
                      id="pills-login" role="tabpanel" aria-labelledby="tab-login">
@@ -147,7 +125,9 @@ const LoginRegistrationPage = () => {
                         </div>
 
                         <button type="submit" className="btn btn-primary btn-block mb-4"
-                                onClick={() => formik.handleSubmit}>Accedi
+                                onClick={() => {
+                                    formik.handleSubmit()
+                                }}>Accedi
                         </button>
 
                         <div className="text-center mt-3">
@@ -172,7 +152,7 @@ const LoginRegistrationPage = () => {
                         <InputTextComponent id="password_reg" name="password" label="Password" type="password"
                                             isRequired formik={formik}
                         />
-                        <button type="submit" onClick={() => formik.handleSubmit}
+                        <button type="submit" onClick={() => formik.handleSubmit()}
                                 className="btn btn-primary btn-block mb-3 mt-5">Conferma
                         </button>
                     </div>
