@@ -1,0 +1,76 @@
+openapi: 3.0.3
+info:
+  title: TrainYourBrain
+  description: TYB reference for developers
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/
+    description: Inferred Url
+tags:
+  - name: TrainYourBrainInterface
+    description: Servizi di TYB
+paths:
+  /manage-user/user:
+    get:
+      tags:
+        - Auth
+      summary: >-
+        Auth desc
+      operationId: userUsingGET
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultUserResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultUserResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultUserResponse'
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string
+        role:
+          type: string
+    ResultUserResponse:
+      type: object
+      required:
+        - esito
+        - result
+      properties:
+        esito:
+          type: string
+        result:
+            $ref: '#/components/schemas/User'
+
+
+
+
+

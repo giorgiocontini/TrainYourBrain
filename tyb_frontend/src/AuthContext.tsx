@@ -2,29 +2,12 @@ import {createContext, useEffect, useState} from "react";
 import {TUser} from "./types/types";
 import UserService from "./services/API/User/UserService";
 import {useLocalStorage} from "./hooks/useLocalStorage";
+import {User} from "./services/API/openapicode_tyb_user";
 
 type TAuthContextProvider = {
     children: React.ReactNode;
 };
 
-type TAuthState = {
-    containerStatus: number;
-};
-
-
-/**
- * Local Enums
- */
-const ErrorsEnum: { [key: string]: string } = {
-    AUTHENTICATION_FAILED: "AUTHENTICATION_FAILED"
-};
-
-const ErrorsMap: any = {
-    [ErrorsEnum.AUTHENTICATION_FAILED]: {
-        key: [ErrorsEnum.AUTHENTICATION_FAILED],
-        message: "User authentication failed"
-    }
-};
 
 /**
  * Create initial empty context
@@ -41,18 +24,8 @@ const AuthContextProvider = ({children}: TAuthContextProvider) => {
 
     //const { getItem, removeItem} = useLocalStorage();
 
-    const initUserState = () => {
-        const user: TUser = {
-            password: "",
-            name: "",
-            surname: "",
-            username: "",
-            role: ""
-        };
-        return user;
-    };
 
-    const [userState, setUserState] = useState<TUser | undefined>(undefined);
+    const [userState, setUserState] = useState<User | undefined>(undefined);
 
 
     const isInRole = (role: string) => {
@@ -60,17 +33,6 @@ const AuthContextProvider = ({children}: TAuthContextProvider) => {
             return userState.role === role;
         }
     };
-
-    useEffect(() => {
-     //if (userState){
-     //    setUserState((oldState) => {
-     //        let newState = { ...oldState };
-     //        newState=JSON.parse(userLogged);
-     //        return newState;
-     //    });
-     //    setUserState( JSON.parse(userLogged));
-     //}
-    }, [userState]);
 
     return (
         <AuthContext.Provider

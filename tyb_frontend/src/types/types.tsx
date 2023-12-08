@@ -8,11 +8,12 @@ export type TUser = {
 };
 
 export type TAnswer = {
-    answer: string | undefined,
+    description: string | undefined,
     isCorrect:boolean | undefined
 }
 
 export type TQuestion = {
-    question: string | undefined,
-    answers: TAnswer[]
+    description: string,
+    answers: TAnswer[],
+    topic:string
 };
