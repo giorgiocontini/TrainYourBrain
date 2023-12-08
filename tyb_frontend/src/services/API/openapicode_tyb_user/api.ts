@@ -78,23 +78,29 @@ export interface User {
      * @memberof User
      */
     'role'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    'email'?: string;
 }
 
 /**
- * AuthApi - axios parameter creator
+ * UserApi - axios parameter creator
  * @export
  */
-export const AuthApiAxiosParamCreator = function (configuration?: Configuration) {
+export const UserApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Auth desc
+         * @summary Permette di creare un nuovo utente
          * @param {User} [user] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        userUsingGET: async (user?: User, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/manage-user/user`;
+        createUserUsingPOST: async (user?: User, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/create`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -102,7 +108,41 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(user, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Recupera un utente in base ai dati inseriti
+         * @param {User} [user] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        recuperateUserByUsernameAndPasswordUsingGET: async (user?: User, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/user`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -124,63 +164,96 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
 };
 
 /**
- * AuthApi - functional programming interface
+ * UserApi - functional programming interface
  * @export
  */
-export const AuthApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration)
+export const UserApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = UserApiAxiosParamCreator(configuration)
     return {
         /**
          * 
-         * @summary Auth desc
+         * @summary Permette di creare un nuovo utente
          * @param {User} [user] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async userUsingGET(user?: User, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResultUserResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.userUsingGET(user, options);
+        async createUserUsingPOST(user?: User, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResultUserResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createUserUsingPOST(user, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Recupera un utente in base ai dati inseriti
+         * @param {User} [user] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async recuperateUserByUsernameAndPasswordUsingGET(user?: User, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResultUserResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.recuperateUserByUsernameAndPasswordUsingGET(user, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
 };
 
 /**
- * AuthApi - factory interface
+ * UserApi - factory interface
  * @export
  */
-export const AuthApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = AuthApiFp(configuration)
+export const UserApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = UserApiFp(configuration)
     return {
         /**
          * 
-         * @summary Auth desc
+         * @summary Permette di creare un nuovo utente
          * @param {User} [user] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        userUsingGET(user?: User, options?: any): AxiosPromise<ResultUserResponse> {
-            return localVarFp.userUsingGET(user, options).then((request) => request(axios, basePath));
+        createUserUsingPOST(user?: User, options?: any): AxiosPromise<ResultUserResponse> {
+            return localVarFp.createUserUsingPOST(user, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Recupera un utente in base ai dati inseriti
+         * @param {User} [user] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        recuperateUserByUsernameAndPasswordUsingGET(user?: User, options?: any): AxiosPromise<ResultUserResponse> {
+            return localVarFp.recuperateUserByUsernameAndPasswordUsingGET(user, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * AuthApi - object-oriented interface
+ * UserApi - object-oriented interface
  * @export
- * @class AuthApi
+ * @class UserApi
  * @extends {BaseAPI}
  */
-export class AuthApi extends BaseAPI {
+export class UserApi extends BaseAPI {
     /**
      * 
-     * @summary Auth desc
+     * @summary Permette di creare un nuovo utente
      * @param {User} [user] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AuthApi
+     * @memberof UserApi
      */
-    public userUsingGET(user?: User, options?: AxiosRequestConfig) {
-        return AuthApiFp(this.configuration).userUsingGET(user, options).then((request) => request(this.axios, this.basePath));
+    public createUserUsingPOST(user?: User, options?: AxiosRequestConfig) {
+        return UserApiFp(this.configuration).createUserUsingPOST(user, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Recupera un utente in base ai dati inseriti
+     * @param {User} [user] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public recuperateUserByUsernameAndPasswordUsingGET(user?: User, options?: AxiosRequestConfig) {
+        return UserApiFp(this.configuration).recuperateUserByUsernameAndPasswordUsingGET(user, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

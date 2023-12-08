@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import ToggleButtonComponent from "../../components/ToggleComponent/ToggleButtonComponent";
 import UserService from "../../services/API/User/UserService";
@@ -7,16 +7,21 @@ import {AuthContext} from "../../AuthContext";
 import {useFormik} from "formik";
 import * as Yup from 'yup';
 import InputTextComponent from "../../components/form-fields/InputTextComponent/InputTextComponent";
+import CheckboxComponent from "../../components/form-fields/CheckboxComponent/CheckboxComponent";
+import {User} from "../../services/API/openapicode_tyb_user";
+import {USER_ROLE} from "../../utils/const";
+import UserClient from "../../services/API/openapicode_tyb_user/UserClient";
 
 
 const LoginRegistrationPage = () => {
 
     const {setUser} = useContext(AuthContext);
     const [isLogin, setLogin] = useState(true)
+    const [isProfessor, setProfessor] = useState(false)
     const navigate = useNavigate();
 
-    const initialFormState = {
-        username: "", name: "", surname: "", email: "", password: ""
+    const initialFormState : User = {
+        username: "", name: "", surname: "", email: "", password: "", role:""
     }
 
     //metodo di gestione degli errori
@@ -41,19 +46,11 @@ const LoginRegistrationPage = () => {
 
     //Services
     function addUserFunction() {
-
-        const payload: TUser = {
-            name: formik.values.name,
-            surname: formik.values.surname,
-            username: formik.values.username,
-            role: "A",
-            password: formik.values.password
-        }
-
-        UserService.createUser(payload)
+        UserClient.createUserUsingPOST(formik.values)
             .then(response => {
                 console.log(response)
                 //riporto l'utente alla finestra di login per fare l'accesso
+                //TODO gestire l'oggetto di risposta manca implementazione BE
                 handleTabChanges();
             }).catch(err => {
             console.log(err)
@@ -62,10 +59,12 @@ const LoginRegistrationPage = () => {
 
     function loginFunction() {
         //Chiamo il servizio da be
-        UserService.getUser(formik.values)
+        UserClient.recuperateUserByUsernameAndPasswordUsingGET(formik.values)
             //chiamato quando si ottengono le risposte dal web service
             .then(response => {
                 //Posso gestire i dati recuperati
+                //TODO gestire l'oggetto di risposta manca implementazione BE
+
                 if (response != null) {
                     handleResponse(response)
                 }
@@ -81,6 +80,14 @@ const LoginRegistrationPage = () => {
             .required('Campo obbligatorio'),
         password: Yup.string().required('Campo obbligatorio')
     })
+
+    function manageRoleBeforeSave() {
+        formik.setFormikState((oldState: any) => {
+            const newState = {...oldState};
+            newState.values.role = isProfessor ? USER_ROLE.PROFESSORE : USER_ROLE.STUDENTE;
+            return newState;
+        });
+    }
 
     const formik = useFormik({
         initialValues: initialFormState, validationSchema: validationSchema, onSubmit: () => {
@@ -139,6 +146,11 @@ const LoginRegistrationPage = () => {
                 <div className={"tab-pane fade show " + (!isLogin ? "active" : "")}
                      id="pills-register" role="tabpanel" aria-labelledby="tab-register">
                     <div className="form p-5">
+                        <div className="d-flex flex-row justify-content-between mb-3">
+                            <CheckboxComponent name="typeP" label={"Professore"} checked={isProfessor} onChange={()=>{setProfessor(true)}}/>
+                            <CheckboxComponent name="typeS" label={"Studente"} checked={!isProfessor} onChange={()=>{setProfessor(false)}}/>
+                        </div>
+
                         <InputTextComponent id="username_reg" name="username" label="Username" type="text"
                                             formik={formik}
                                             isRequired/>

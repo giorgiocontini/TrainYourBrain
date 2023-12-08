@@ -4,19 +4,50 @@ info:
   description: TYB reference for developers
   version: 1.0.0
 servers:
-  - url: http://localhost:8080/api/
+  - url: http://localhost:8080/api/manage-user/
     description: Inferred Url
 tags:
   - name: TrainYourBrainInterface
     description: Servizi di TYB
 paths:
-  /manage-user/user:
-    get:
+  /create:
+    post:
       tags:
-        - Auth
+        - User
       summary: >-
-        Auth desc
-      operationId: userUsingGET
+        Permette di creare un nuovo utente
+      operationId: createUserUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultUserResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultUserResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultUserResponse'
+  /user:
+    post:
+      tags:
+        - User
+      summary: >-
+        Recupera un utente in base ai dati inseriti
+      operationId: recuperateUserByUsernameAndPasswordUsingGET
       requestBody:
         content:
           application/json:
@@ -58,6 +89,8 @@ components:
         surname:
           type: string
         role:
+          type: string
+        email:
           type: string
     ResultUserResponse:
       type: object

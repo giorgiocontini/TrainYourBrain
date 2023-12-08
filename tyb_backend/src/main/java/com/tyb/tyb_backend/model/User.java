@@ -16,8 +16,8 @@ import java.io.Serializable;
 @NoArgsConstructor //crea un costruttore
 public class User implements Serializable {
 
-   @Id
-   private String id;
+    @Id
+    private String id;
 
     @Field(name = "username") //@Field serve per mappare campi con nomi diversi tra db e java
     @NotBlank(message = "Inserire l'username")
@@ -31,6 +31,9 @@ public class User implements Serializable {
 
     @Field(name = "role")
     private String role;
+
+    @Field(name = "email")
+    private String email;
 
     @Field(name = "password")
     @NotBlank(message = "Inserire la password")

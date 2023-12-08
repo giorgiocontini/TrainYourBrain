@@ -1,11 +1,11 @@
 // axiosClient.js
 
-import {AuthApi} from "../openapicode_tyb_user";
+import {UserApi} from "./api";
 import axios from "axios";
 
 
 const instance = axios.create({
-    baseURL: 'http://localhost:8080/api', // Sostituisci con l'URL della tua API
+    baseURL: 'http://localhost:8080/api/manage-user', // Sostituisci con l'URL della tua API
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',
@@ -13,6 +13,6 @@ const instance = axios.create({
     },
 });
 
-const UserClient = new AuthApi(undefined, 'http://localhost:8080/api', instance);
+const UserClient = new UserApi(undefined, 'http://localhost:8080/api/manage-user', instance);
 
 export default UserClient;

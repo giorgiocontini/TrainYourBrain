@@ -8,6 +8,6 @@ public interface UserService {
 
     String createUser(User user);
 
-    User getUser(CriteriRicercaUser criteri);
+    User getUser(User user);
 
 }
