@@ -1,6 +1,7 @@
 package com.tyb.tyb_backend.model;
 
-import jakarta.validation.constraints.NotBlank;
+import com.tyb.tyb_backend.constant.UserRoleEnum;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ public class User implements Serializable {
     private String id;
 
     @Field(name = "username") //@Field serve per mappare campi con nomi diversi tra db e java
-    @NotBlank(message = "Inserire l'username")
+    @NotNull(message = "Inserire l'username")
     private String username;
 
     @Field(name = "name")
@@ -30,13 +31,25 @@ public class User implements Serializable {
     private String surname;
 
     @Field(name = "role")
-    private String role;
+    @NotNull(message = "Il ruolo è obbligatorio")
+    private UserRoleEnum role;
 
     @Field(name = "email")
     private String email;
 
     @Field(name = "password")
-    @NotBlank(message = "Inserire la password")
+    @NotNull(message = "Inserire la password")
     private String password;
+
+
+    public User(@NotNull String username, String name, String surname, @NotNull UserRoleEnum role, String email, @NotNull String password) {
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.role = role;
+        this.email = email;
+        this.password = password;
+    }
+
 
 }

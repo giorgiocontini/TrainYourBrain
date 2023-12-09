@@ -1,13 +1,18 @@
 package com.tyb.tyb_backend.controller.rest;
 
+import com.tyb.tyb_backend.dto.ResultUserResponse;
+import com.tyb.tyb_backend.dto.UserDto;
 import com.tyb.tyb_backend.model.User;
 import com.tyb.tyb_backend.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.logging.Logger;
 
 
@@ -21,9 +26,9 @@ public class UserController {
     UserService userService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String createUser(@RequestBody @Valid User user){
+    public ResponseEntity<String> createUser(@RequestBody @Valid UserDto user){
         Logger.getGlobal().info("**************** Inserimento Dati User ***************");
-       return  userService.createUser(user);
+       return  new ResponseEntity<>(userService.createUser(user), HttpStatus.OK);
     }
 
 
@@ -40,17 +45,10 @@ public class UserController {
 
 
     @PostMapping(value = "/user",  produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getUserUsernameAndPassword(@RequestBody @Valid User user){
-        try{
-            User resp = userService.getUser(user);
-            if(resp!=null){
-                return new ResponseEntity<>(resp, HttpStatus.OK );
-            }
-        }catch (Exception e){
-            Logger.getGlobal().info("Utente non trovato");
-        }
-
-        return null;
+    public ResponseEntity<ResultUserResponse> getUserUsernameAndPassword(@RequestBody UserDto user){
+        return new ResponseEntity<>(
+                userService.getUser(user),
+                HttpStatus.OK);
     }
 
 
