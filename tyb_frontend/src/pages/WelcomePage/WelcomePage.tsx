@@ -8,7 +8,7 @@ const WelcomePage = () => {
 
     return (<div className="WelcomePage ">
         <div className="row"><h1>Benvenuto su TRAIN YOUR BRAIN, comincia subito ad allenare la mente!</h1></div>
-        <div className="row"><h3>Puoi accedere o registrarti <span className="primary-color-b1 " style={{cursor:"pointer"}}onClick={()=>{
+        <div className="row"><h3>Puoi accedere o registrarti <span className="primary-color-b1 " style={{cursor:"pointer"}} onClick={()=>{
             navigate("/login")
         }}>qui</span></h3></div>
 

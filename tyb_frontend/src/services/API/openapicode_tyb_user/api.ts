@@ -26,15 +26,34 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError } from './base';
 /**
  * 
  * @export
+ * @interface EsitoType
+ */
+export interface EsitoType {
+    /**
+     * 
+     * @type {string}
+     * @memberof EsitoType
+     */
+    'esito'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EsitoType
+     */
+    'descrizione': string;
+}
+/**
+ * 
+ * @export
  * @interface ResultUserResponse
  */
 export interface ResultUserResponse {
     /**
      * 
-     * @type {string}
+     * @type {EsitoType}
      * @memberof ResultUserResponse
      */
-    'esito': string;
+    'esito': EsitoType;
     /**
      * 
      * @type {User}
@@ -77,7 +96,7 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    'role'?: string;
+    'role': string;
     /**
      * 
      * @type {string}
@@ -128,12 +147,14 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
-         * @summary Recupera un utente in base ai dati inseriti
-         * @param {User} [user] 
+         * @summary POST api/manage-user/user
+         * @param {User} user 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        recuperateUserByUsernameAndPasswordUsingGET: async (user?: User, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getUserByUsername: async (user: User, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'user' is not null or undefined
+            assertParamExists('getUserByUsername', 'user', user)
             const localVarPath = `/user`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -177,19 +198,19 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createUserUsingPOST(user?: User, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResultUserResponse>> {
+        async createUserUsingPOST(user?: User, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createUserUsingPOST(user, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @summary Recupera un utente in base ai dati inseriti
-         * @param {User} [user] 
+         * @summary POST api/manage-user/user
+         * @param {User} user 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async recuperateUserByUsernameAndPasswordUsingGET(user?: User, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResultUserResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.recuperateUserByUsernameAndPasswordUsingGET(user, options);
+        async getUserByUsername(user: User, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResultUserResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserByUsername(user, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -209,18 +230,18 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createUserUsingPOST(user?: User, options?: any): AxiosPromise<ResultUserResponse> {
+        createUserUsingPOST(user?: User, options?: any): AxiosPromise<EsitoType> {
             return localVarFp.createUserUsingPOST(user, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Recupera un utente in base ai dati inseriti
-         * @param {User} [user] 
+         * @summary POST api/manage-user/user
+         * @param {User} user 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        recuperateUserByUsernameAndPasswordUsingGET(user?: User, options?: any): AxiosPromise<ResultUserResponse> {
-            return localVarFp.recuperateUserByUsernameAndPasswordUsingGET(user, options).then((request) => request(axios, basePath));
+        getUserByUsername(user: User, options?: any): AxiosPromise<ResultUserResponse> {
+            return localVarFp.getUserByUsername(user, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -246,14 +267,14 @@ export class UserApi extends BaseAPI {
 
     /**
      * 
-     * @summary Recupera un utente in base ai dati inseriti
-     * @param {User} [user] 
+     * @summary POST api/manage-user/user
+     * @param {User} user 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public recuperateUserByUsernameAndPasswordUsingGET(user?: User, options?: AxiosRequestConfig) {
-        return UserApiFp(this.configuration).recuperateUserByUsernameAndPasswordUsingGET(user, options).then((request) => request(this.axios, this.basePath));
+    public getUserByUsername(user: User, options?: AxiosRequestConfig) {
+        return UserApiFp(this.configuration).getUserByUsername(user, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

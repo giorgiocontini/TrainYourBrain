@@ -22,14 +22,15 @@ const showDialogSuccess = (title: string, text: string, FunctionByConfirm?: Func
     });
 };
 
-const showDialogFailed = (errorCode: string, errorMsg: string) => {
-    errorMsg = errorMsg && errorMsg.includes("Errore:") ? errorMsg.split("Errore: ")[1] : errorMsg;
+const showDialogFailed = (errorMsg: string, errorCode?: string) => {
+    //errorMsg = errorMsg && errorMsg.includes("Errore:") ? errorMsg.split("Errore: ")[1] : errorMsg;
     SwalDUPopup.fire({
         icon: "error",
-        title: errorCode,
+        title: errorCode ? errorCode : "",
         html: "<span style='white-space: pre-line'>" + errorMsg + "</span>",
     });
 };
+
 
 const showDialogInfo = (titleInfo: string, infoMsg: string, FunctionByConfirm: Function) => {
     SwalDUPopup.fire({

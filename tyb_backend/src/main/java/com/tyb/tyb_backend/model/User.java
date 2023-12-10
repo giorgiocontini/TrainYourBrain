@@ -1,6 +1,5 @@
 package com.tyb.tyb_backend.model;
 
-import com.tyb.tyb_backend.constant.UserRoleEnum;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,8 +30,8 @@ public class User implements Serializable {
     private String surname;
 
     @Field(name = "role")
-    @NotNull(message = "Il ruolo è obbligatorio")
-    private UserRoleEnum role;
+    @NotNull(message = "Inserire il ruolo")
+    private String role;
 
     @Field(name = "email")
     private String email;
@@ -42,7 +41,8 @@ public class User implements Serializable {
     private String password;
 
 
-    public User(@NotNull String username, String name, String surname, @NotNull UserRoleEnum role, String email, @NotNull String password) {
+    public User( String username, String name, String surname,  String role, String email,
+                 String password) {
         this.username = username;
         this.name = name;
         this.surname = surname;

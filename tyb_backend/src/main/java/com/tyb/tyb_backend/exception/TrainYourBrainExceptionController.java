@@ -1,5 +1,8 @@
 package com.tyb.tyb_backend.exception;
 
+import com.tyb.tyb_backend.dto.Esito.EnumCodiceEsito;
+import com.tyb.tyb_backend.dto.Esito.Esito;
+import com.tyb.tyb_backend.dto.Esito.EsitoResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -7,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,27 +19,15 @@ import java.util.logging.Logger;
  * Gestisce le eccezioni custom dei vari servizi di tyb.
  */
 @RestControllerAdvice
-public class TrainYourBrainExceptionController {
-
+public class TrainYourBrainExceptionController extends RuntimeException{
 
     @ExceptionHandler(value = {TrainYourBrainException.class})
-    public ResponseEntity<String> tybExceptionHandler(TrainYourBrainException tybException) {
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.TEXT_PLAIN);
-
-        Logger.getGlobal().log(Level.SEVERE, tybException.getMessage(), tybException);
-        return new ResponseEntity<>(tybException.getMessage(), headers, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler(value = {RuntimeException.class})
-    public ResponseEntity<String> runtimeExceptionHandler(RuntimeException exception) {
-
-        //TODO definire come gestire le eccezioni per il 400
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.TEXT_PLAIN);
-
-        Logger.getGlobal().log(Level.SEVERE, exception.getMessage(), exception);
-        return new ResponseEntity<>(exception.getMessage(), headers, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<EsitoResponse> tybExceptionHandler(TrainYourBrainException tybException) {
+        //Permette di intercettare le eccezioni custom e gestire il messaggio da inoltrare
+        return new ResponseEntity<>(
+                new EsitoResponse(new Esito()
+                        .setCodice(EnumCodiceEsito.KO)
+                        .setDescrizione(tybException.getMessage())),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

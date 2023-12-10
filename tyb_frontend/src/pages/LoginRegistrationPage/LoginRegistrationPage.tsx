@@ -1,16 +1,14 @@
 import React, {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import ToggleButtonComponent from "../../components/ToggleComponent/ToggleButtonComponent";
-import UserService from "../../services/API/User/UserService";
-import {TUser} from "../../types/types";
 import {AuthContext} from "../../AuthContext";
 import {useFormik} from "formik";
 import * as Yup from 'yup';
 import InputTextComponent from "../../components/form-fields/InputTextComponent/InputTextComponent";
 import CheckboxComponent from "../../components/form-fields/CheckboxComponent/CheckboxComponent";
 import {User} from "../../services/API/openapicode_tyb_user";
-import {USER_ROLE} from "../../utils/const";
 import UserClient from "../../services/API/openapicode_tyb_user/UserClient";
+import {showDialogFailed, showDialogSuccess} from "../../utils/DialogUtils";
 
 
 const LoginRegistrationPage = () => {
@@ -20,22 +18,13 @@ const LoginRegistrationPage = () => {
     const [isProfessor, setProfessor] = useState(false)
     const navigate = useNavigate();
 
-    const initialFormState : User = {
-        username: "", name: "", surname: "", email: "", password: "", role:""
+    const initialFormState: User = {
+        username: "", name: "", surname: "", email: "", password: "", role: ""
     }
 
     //metodo di gestione degli errori
     function handleError(error: any) {
         console.log(error?.response?.data?.message)
-    }
-
-    //metodo di gestione della response
-    function handleResponse(response: any) {
-
-        if (response && response.status === 200) {
-            setUser(response.data);
-            navigate("/home", {replace: true})
-        }
     }
 
     //metodo di gestione dei tab (log/reg)
@@ -46,48 +35,37 @@ const LoginRegistrationPage = () => {
 
     //Services
     function addUserFunction() {
-        UserClient.createUserUsingPOST(formik.values)
+        UserClient.createUserUsingPOST({...formik.values, role: isProfessor ? "P" : "S"})
             .then(response => {
-                console.log(response)
-                //riporto l'utente alla finestra di login per fare l'accesso
-                //TODO gestire l'oggetto di risposta manca implementazione BE
-                handleTabChanges();
-            }).catch(err => {
-            console.log(err)
+                showDialogSuccess("", response.data.descrizione, () => {
+                    handleTabChanges();
+                })
+            })
+            .catch(error => {
+            showDialogFailed(error?.response.data?.esito.descrizione)
         })
     }
 
     function loginFunction() {
-        //Chiamo il servizio da be
-        UserClient.recuperateUserByUsernameAndPasswordUsingGET(formik.values)
-            //chiamato quando si ottengono le risposte dal web service
+        debugger
+        UserClient.getUserByUsername(formik.values)
             .then(response => {
                 //Posso gestire i dati recuperati
-                //TODO gestire l'oggetto di risposta manca implementazione BE
-
-                if (response != null) {
-                    handleResponse(response)
+                if (response.data.esito) {
+                    setUser(response.data.result);
+                    navigate("/home", {replace: true})
                 }
-
             })
-            //in caso di errore
-            .catch(error => handleError(error))
+            .catch((error) => {
+                showDialogFailed(error?.response.data?.esito.descrizione)
+            })
 
     }
 
     const validationSchema = Yup.object().shape({
         username: Yup.string()
-            .required('Campo obbligatorio'),
-        password: Yup.string().required('Campo obbligatorio')
+            .required('Campo obbligatorio'), password: Yup.string().required('Campo obbligatorio')
     })
-
-    function manageRoleBeforeSave() {
-        formik.setFormikState((oldState: any) => {
-            const newState = {...oldState};
-            newState.values.role = isProfessor ? USER_ROLE.PROFESSORE : USER_ROLE.STUDENTE;
-            return newState;
-        });
-    }
 
     const formik = useFormik({
         initialValues: initialFormState, validationSchema: validationSchema, onSubmit: () => {
@@ -146,9 +124,13 @@ const LoginRegistrationPage = () => {
                 <div className={"tab-pane fade show " + (!isLogin ? "active" : "")}
                      id="pills-register" role="tabpanel" aria-labelledby="tab-register">
                     <div className="form p-5">
-                        <div className="d-flex flex-row justify-content-between mb-3">
-                            <CheckboxComponent name="typeP" label={"Professore"} checked={isProfessor} onChange={()=>{setProfessor(true)}}/>
-                            <CheckboxComponent name="typeS" label={"Studente"} checked={!isProfessor} onChange={()=>{setProfessor(false)}}/>
+                        <div className="d-flex flex-row justify-content-around mb-3">
+                            <CheckboxComponent name="typeP" label={"Professore"} checked={isProfessor} onChange={() => {
+                                setProfessor(true)
+                            }}/>
+                            <CheckboxComponent name="typeS" label={"Studente"} checked={!isProfessor} onChange={() => {
+                                setProfessor(false)
+                            }}/>
                         </div>
 
                         <InputTextComponent id="username_reg" name="username" label="Username" type="text"

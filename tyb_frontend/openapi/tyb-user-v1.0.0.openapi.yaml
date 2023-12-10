@@ -21,57 +21,57 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResultUserResponse'
-        '404':
+                $ref: "#/components/schemas/EsitoType"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResultUserResponse'
-        '500':
+                $ref: "#/components/schemas/EsitoType"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResultUserResponse'
+                $ref: "#/components/schemas/EsitoType"
   /user:
     post:
       tags:
         - User
-      summary: >-
-        Recupera un utente in base ai dati inseriti
-      operationId: recuperateUserByUsernameAndPasswordUsingGET
+      summary: "POST api/manage-user/user"
+      operationId: "getUserByUsername"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
+        required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResultUserResponse'
-        '404':
+                $ref: "#/components/schemas/ResultUserResponse"
+        "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResultUserResponse'
-        '500':
+                $ref: "#/components/schemas/EsitoType"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResultUserResponse'
+                $ref: "#/components/schemas/EsitoType"
 components:
   schemas:
     User:
@@ -79,6 +79,7 @@ components:
       required:
         - username
         - password
+        - role
       properties:
         username:
           type: string
@@ -99,9 +100,19 @@ components:
         - result
       properties:
         esito:
-          type: string
+          $ref: "#/components/schemas/EsitoType"
         result:
-            $ref: '#/components/schemas/User'
+          $ref: "#/components/schemas/User"
+    EsitoType:
+      type: object
+      required:
+        - codice
+        - descrizione
+      properties:
+        esito:
+          type: string
+        descrizione:
+          type: string
 
 
 
