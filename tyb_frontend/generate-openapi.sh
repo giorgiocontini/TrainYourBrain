@@ -2,7 +2,7 @@
 function generateAPI {
 MSYS_NO_PATHCONV=1 \
 docker run --rm -v "$(pwd):/local" openapitools/openapi-generator-cli generate \
-    -i /local/openapi/tyb-user-v1.0.0.openapi.yaml \
+    -i /local/openapi/tyb.openapi.yaml \
     -g typescript-axios \
     -o /local/src/services/api/openapicode_tyb_user --package-name tybuser
 }
