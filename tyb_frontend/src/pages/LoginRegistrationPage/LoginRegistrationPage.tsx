@@ -9,6 +9,7 @@ import CheckboxComponent from "../../components/form-fields/CheckboxComponent/Ch
 import {User} from "../../services/API/openapicode_tyb_user";
 import UserClient from "../../services/API/openapicode_tyb_user/UserClient";
 import {showDialogFailed, showDialogSuccess} from "../../utils/DialogUtils";
+import {hashPassword} from "../../utils/commonFunctions";
 
 
 const LoginRegistrationPage = () => {
@@ -42,31 +43,33 @@ const LoginRegistrationPage = () => {
                 })
             })
             .catch(error => {
-            showDialogFailed(error?.response.data?.esito.descrizione)
-        })
-    }
-
-    function loginFunction() {
-        debugger
-        UserClient.getUserByUsername(formik.values)
-            .then(response => {
-                //Posso gestire i dati recuperati
-                if (response.data.esito) {
-                    setUser(response.data.result);
-                    navigate("/home", {replace: true})
-                }
-            })
-            .catch((error) => {
                 showDialogFailed(error?.response.data?.esito.descrizione)
             })
+    }
 
+
+    function loginFunction() {
+        //TODO gestire la pw
+      UserClient.getUserByUsername({...formik.values})
+                .then(response => {
+                    //Posso gestire i dati recuperati
+                    if (response.data.esito) {
+                        setUser(response.data.result);
+                        navigate("/home", {replace: true})
+                    }
+                })
+                .catch((error) => {
+                    debugger
+                    showDialogFailed(error?.response?.data?.esito.descrizione)
+                })
     }
 
     const validationSchema = Yup.object().shape({
-        username: Yup.string()
-            .required('Campo obbligatorio'), password: Yup.string().required('Campo obbligatorio')
+        username: Yup.string().required('Campo obbligatorio'),
+        password: Yup.string().required('Campo obbligatorio')
     })
 
+    const [pwHash, setPwHash] = useState("");
     const formik = useFormik({
         initialValues: initialFormState, validationSchema: validationSchema, onSubmit: () => {
             isLogin ? loginFunction() : addUserFunction()

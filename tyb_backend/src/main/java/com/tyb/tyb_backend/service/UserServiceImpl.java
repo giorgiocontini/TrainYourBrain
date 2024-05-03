@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResultUserResponse getUser(User user) {
         return new ResultUserResponse(new Esito(EnumCodiceEsito.OK),
-                Optional.ofNullable(userRepository.findUserByUsername(user.getUsername()))
+                Optional.ofNullable(userRepository.findUserByUsernameAndPassword(user.getUsername(), user.getPassword()))
                         .orElseThrow(createCustomException("Utente non trovato")));
     }
 

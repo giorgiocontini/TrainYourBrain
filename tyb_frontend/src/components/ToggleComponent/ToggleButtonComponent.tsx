@@ -37,7 +37,9 @@ const ToggleButtonComponent = ({
      */
     const handleChangeToggleButton = () => {
         setFlag(!flag);
-        functionToReset ? functionToReset(): null;
+        if (functionToReset){
+            functionToReset()
+        }
     };
 
     return (

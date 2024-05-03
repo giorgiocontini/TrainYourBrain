@@ -1,16 +1,15 @@
 package com.tyb.tyb_backend.repository;
 
-import com.tyb.tyb_backend.model.Question;
+import com.tyb.tyb_backend.model.QuizResult;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface QuizRepository extends MongoRepository<Question, ObjectId> {
+public interface QuizResultsRepository extends MongoRepository<QuizResult, ObjectId> {
 
-    List<Question> findAllByTopic(String topic);
+    List<QuizResult> findAllByUserId(String userId);
 
 }

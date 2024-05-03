@@ -1,0 +1,271 @@
+openapi: 3.0.3
+info:
+  title: TrainYourBrain
+  description: TYB reference for developers
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/
+    description: Inferred Url
+tags:
+  - name: TrainYourBrainInterface
+    description: Servizi di TYB
+paths:
+  /manage-user/create:
+    post:
+      tags:
+        - User
+      summary: >-
+        Permette di creare un nuovo utente
+      operationId: createUserUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+  /manage-user/user:
+    post:
+      tags:
+        - User
+      summary: "POST api/manage-user/user"
+      operationId: "getUserByUsername"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResultUserResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+  /quiz/{topic}:
+    get:
+      tags:
+        - Quiz
+      summary: >-
+        Permette di recuperare le domanda per uno specifico topic
+      operationId: getQuizUsingGet
+      parameters:
+        - name: topic
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuizResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+  /quiz/{questionId}/{answerId}:
+    get:
+      tags:
+        - Quiz
+      summary: >-
+        Permette di controllare le risposte
+      operationId: checkAnswerUsingGet
+      parameters:
+        - name: questionId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: answerId
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+  /quiz/saveQuiz:
+    post:
+      tags:
+        - Quiz
+      summary: >-
+        Permette di controllare le risposte
+      operationId: saveQuizUsingPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserQuizResultRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - username
+        - password
+        - role
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string
+        role:
+          type: string
+        email:
+          type: string
+    ResultUserResponse:
+      type: object
+      required:
+        - esito
+        - result
+      properties:
+        esito:
+          $ref: "#/components/schemas/EsitoType"
+        result:
+          $ref: "#/components/schemas/User"
+    EsitoType:
+      type: object
+      required:
+        - codice
+        - descrizione
+      properties:
+        esito:
+          type: string
+        descrizione:
+          type: string
+    QuizResponse:
+      type: object
+      required:
+        - esito
+        - result
+      properties:
+        esito:
+          $ref: "#/components/schemas/EsitoType"
+        result:
+          type: array
+          items:
+            $ref: "#/components/schemas/Question"
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+        topic:
+          type: string
+        description:
+          type: string
+        answers:
+          type: array
+          items:
+            properties:
+              description:
+                type: string
+              isCorrect:
+                type: boolean
+            required:
+              - description
+              - isCorrect
+      required:
+        - id
+        - topic
+        - description
+        - answers
+    UserQuizResultRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+        topic:
+          type: string
+        totalScore:
+          type: number
+      required:
+        - userId
+        - topic
+        - totalScore
+
+
+
+
+
+

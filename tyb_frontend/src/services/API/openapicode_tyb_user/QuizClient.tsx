@@ -1,6 +1,6 @@
 // axiosClient.js
 
-import {UserApi} from "./api";
+import {QuizApi} from "./api";
 import axios from "axios";
 
 
@@ -13,6 +13,6 @@ const instance = axios.create({
     },
 });
 
-const UserClient = new UserApi(undefined, 'http://localhost:8080/api', instance);
+const QuizClient = new QuizApi(undefined, 'http://localhost:8080/api', instance);
 
-export default UserClient;
+export default QuizClient;

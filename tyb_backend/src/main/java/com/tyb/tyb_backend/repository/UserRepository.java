@@ -11,6 +11,7 @@ import java.util.List;
 public interface UserRepository extends MongoRepository<User, String> {
 
     User findUserByUsername (String username);
+    User findUserByUsernameAndPassword (String username, String Password);
 
     Boolean existsUserByUsername(String username);
 }

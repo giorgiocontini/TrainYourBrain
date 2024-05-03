@@ -10,3 +10,16 @@ export const handleFormFieldChange=(setState: any, name: string, value: string |
         }
     )
 }
+
+// Funzione per hashare la password
+export const hashPassword = async (password:string):Promise<string> => {
+
+    const bcrypt = require('bcrypt');
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        return hashedPassword;
+    } catch (error) {
+        console.error('Errore durante l\'hashing della password:', error);
+        throw error;
+    }
+};

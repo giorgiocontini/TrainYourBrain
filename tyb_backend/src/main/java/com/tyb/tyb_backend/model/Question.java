@@ -13,10 +13,11 @@ import java.util.ArrayList;
 @Data //genera automaticamente i getter e i setter
 @AllArgsConstructor //crea un costruttore
 @NoArgsConstructor //crea un costruttore
+@Document(collection = "question")
 public class Question implements Serializable {
 
     @Id
-    private String Id;
+    private String id;
 
     @Field(name = "description")
     private String description;

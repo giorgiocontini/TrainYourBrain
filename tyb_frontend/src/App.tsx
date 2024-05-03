@@ -14,6 +14,7 @@ import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import AuthContextProvider, {AuthContext} from "./AuthContext";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import ProtectedRoute from "./root/ProtectedRoute";
+import QuizPage from "./pages/QuizPage/QuizPage";
 
 
 export const routes = createBrowserRouter(
@@ -25,6 +26,7 @@ export const routes = createBrowserRouter(
                 <Route path="profile" Component={ProfilePage}/>
                 <Route path="home" element={<ProtectedRoute allowedRoles={["A", "P", "S"]}><HomePage/></ProtectedRoute>}/>
                 <Route path="welcome/:username" Component={WelcomePage}/>
+                <Route path="quiz" Component={QuizPage}/>
                 <Route path="*" Component={ErrorPage}/>
             </Route>
         </Route>

@@ -1,14 +1,20 @@
 package com.tyb.tyb_backend.service;
 
+import com.tyb.tyb_backend.dto.QuizDataResponse;
+import com.tyb.tyb_backend.dto.ResultQuizResponse;
 import com.tyb.tyb_backend.model.Question;
-
-import java.util.List;
+import com.tyb.tyb_backend.model.QuizResult;
 
 
 public interface QuizService {
 
     String createQuiz(Question question);
 
-    List<Question> getQuestionForATopic(String topic);
+    ResultQuizResponse getQuestionForATopic(String topic);
 
+    Boolean checkAnswer(String questionId, Integer answerIndex);
+
+    QuizDataResponse getResultsByUserId(String userId);
+
+    String saveResults(QuizResult result);
 }

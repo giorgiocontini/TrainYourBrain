@@ -1,0 +1,152 @@
+
+.CardComponent {
+  justify-content: center;
+  margin-top: 12px !important;
+  margin-bottom: 12px !important;
+
+  .Card {
+    width: 265px;
+    height: 268px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px;
+    box-sizing: border-box;
+    gap: 16px;
+
+    .cardHeader {
+      .cardTitle {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 24px;
+        margin-bottom: 4px !important;
+        color: #445970;
+      }
+
+      .cardSubtitle {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 22px;
+        color: #445970;
+        margin-bottom: 16px;
+      }
+
+      .cardText{
+        height: 80px !important;
+      }
+
+
+      .cardBadge {
+        .baseBadgeStyle {
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+          padding: 4px 16px;
+          gap: 10px;
+          border-radius: 4px;
+
+          .label {
+            font-style: normal;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 16px;
+            color: #FFFFFF;
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+          }
+        }
+
+        .Active {
+          background: #0066CC;
+        }
+
+        .Locked {
+          background: #5C6F82;
+        }
+
+        .Error {
+          background: #CC334D;
+        }
+
+        .Completed {
+          background: #008055;
+        }
+
+        .Warning {
+          background: #995C00;
+        }
+
+        .icon_Active {
+          color: #0066CC
+        }
+
+        .icon_Locked {
+          color: #5C6F82
+        }
+
+        .icon_Error {
+          color: #CC334D
+        }
+
+        .icon_Completed {
+          color: #008055
+        }
+
+        .icon_Warning {
+          color: #995C00
+        }
+      }
+    }
+
+    .cardFooter {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .Button-style {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 12px 16px;
+        gap: 8px;
+        width: 231px;
+        height: 40px;
+      }
+    }
+
+  }
+
+  .Active {
+    background-color: white;
+    border: 1px solid #0066CC;
+    box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .Locked {
+    background-color: #FCFCFF;
+    border: 1px solid #D4D4D4;
+  }
+
+  .Error {
+    background: #FCFCFF;
+    border: 1px solid #CC334D;
+  }
+
+  .Warning {
+    background: #FCFCFF;
+    border: 1px solid #995C00;
+  }
+
+  .Hidden {
+    display: none;
+  }
+
+  .Completed {
+    background: #EBECED;
+  }
+}
