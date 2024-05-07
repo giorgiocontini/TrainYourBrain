@@ -1,5 +1,7 @@
 package com.tyb.tyb_backend.controller.rest;
 
+import com.tyb.tyb_backend.dto.Esito.Esito;
+import com.tyb.tyb_backend.dto.Esito.EsitoResponse;
 import com.tyb.tyb_backend.dto.QuizDataResponse;
 import com.tyb.tyb_backend.dto.ResultQuizResponse;
 import com.tyb.tyb_backend.model.Question;
@@ -11,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -24,9 +27,9 @@ public class QuizController {
     QuizService quizService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createQuiz(@RequestBody Question question) {
+    public ResponseEntity<Esito> createQuiz(@RequestBody List<Question> questions) {
         Logger.getGlobal().info("**************** Inserimento Dati User ***************");
-        return new ResponseEntity<>(quizService.createQuiz(question), HttpStatus.OK);
+        return new ResponseEntity<>(quizService.createQuiz(questions), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{topic}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,16 +45,14 @@ public class QuizController {
         return new ResponseEntity<>(quizService.checkAnswer(questionId, answerId), HttpStatus.OK);
     }
 
-    //TODO
-    @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/results/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<QuizDataResponse> getResultsByUserId(@PathVariable String userId) {
         Logger.getGlobal().info("**************** Recupero i risultati relativi ad un utente ***************");
         return new ResponseEntity<>(quizService.getResultsByUserId(userId), HttpStatus.OK);
     }
 
-    //TODO
     @PostMapping(value = "/saveQuiz", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> saveUserResult(@RequestBody QuizResult result) {
+    public ResponseEntity<Esito> saveUserResult(@RequestBody QuizResult result) {
         Logger.getGlobal().info("**************** Salvo il quiz associandolo all'utente ***************");
         return new ResponseEntity<>(quizService.saveResults(result), HttpStatus.OK);
     }

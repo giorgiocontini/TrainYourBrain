@@ -14,3 +14,19 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+/**
+ * Remove focus styles for input focus.
+ */
+:focus:not(.focus--mouse),
+.form-check [type="checkbox"]:focus + label,
+.form-check [type="radio"]:focus + label,
+.toggles label input[type="checkbox"]:focus + .lever {
+  border-bottom: 1px solid;
+  border-color: unset !important;
+  box-shadow: none !important;
+  outline: none !important;
+  &.error {
+    border-color: red !important;
+  }
+}

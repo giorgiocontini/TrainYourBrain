@@ -3,6 +3,7 @@
  *  @description card interface
  */
 export interface CardComponentConfig {
+    key?:string
     status?: CardStatusEnum;
     image?: any;
     id: string;

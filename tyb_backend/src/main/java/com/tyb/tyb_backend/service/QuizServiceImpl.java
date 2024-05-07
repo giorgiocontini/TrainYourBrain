@@ -4,7 +4,6 @@ import com.tyb.tyb_backend.dto.Esito.EnumCodiceEsito;
 import com.tyb.tyb_backend.dto.Esito.Esito;
 import com.tyb.tyb_backend.dto.QuizDataResponse;
 import com.tyb.tyb_backend.dto.ResultQuizResponse;
-import com.tyb.tyb_backend.exception.TrainYourBrainException;
 import com.tyb.tyb_backend.model.Question;
 import com.tyb.tyb_backend.model.QuizResult;
 import com.tyb.tyb_backend.repository.QuizRepository;
@@ -13,8 +12,10 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 
@@ -25,20 +26,17 @@ public class QuizServiceImpl implements QuizService {
     QuizRepository quizRepository;
     @Autowired
     QuizResultsRepository quizResultsRepository;
+    //@Autowired
+    //TopicRepository topicRepository;
 
-
-
-    private static Supplier<TrainYourBrainException> createCustomException(String message) {
-        return () -> new TrainYourBrainException(message);
-    }
 
     @Override
-    public String createQuiz(Question question) {
-        if (question != null) {
-            quizRepository.insert(question);
-            return "Quiz correttamente creato";
+    public Esito createQuiz(List<Question> questions) {
+        if (questions != null && !questions.isEmpty()) {
+            quizRepository.insert(questions);
+            return new Esito(EnumCodiceEsito.OK, "Quiz correttamente creato");
         }
-        return "Inserire i dati obbligatori";
+        return new Esito(EnumCodiceEsito.KO, "Si sono verificati degli errori, si prega di riporvare");
     }
 
     /**
@@ -76,6 +74,10 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public QuizDataResponse getResultsByUserId(String userId) {
 
+        if (userId.equals("all")) {
+            return new QuizDataResponse(new Esito(EnumCodiceEsito.OK),
+                    quizResultsRepository.findAll());
+        }
         return new QuizDataResponse(new Esito(EnumCodiceEsito.OK),
                 quizResultsRepository.findAllByUserId(userId));
     }
@@ -84,12 +86,20 @@ public class QuizServiceImpl implements QuizService {
      * @param result
      */
     @Override
-    public String saveResults(QuizResult result) {
+    public Esito saveResults(QuizResult result) {
+
+        // Definizione del formato desiderato
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        // Formattazione della data nella stringa
+        String dataFormattata = sdf.format(new Date());
+        //setto la data di completamento del quiz
+        result.setDate(dataFormattata);
+
         if (result != null) {
             quizResultsRepository.insert(result);
-            return "Quiz correttamente salvato";
+            return new Esito(EnumCodiceEsito.OK, "Quiz correttamente salvato");
         }
-        return "Inserire i dati obbligatori";
+        return new Esito(EnumCodiceEsito.KO, "Si sono verificati degli errori");
     }
 
 }

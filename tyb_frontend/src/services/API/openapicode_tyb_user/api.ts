@@ -45,50 +45,50 @@ export interface EsitoType {
 /**
  * 
  * @export
- * @interface Question
+ * @interface QuestionType
  */
-export interface Question {
+export interface QuestionType {
     /**
      * 
      * @type {string}
-     * @memberof Question
+     * @memberof QuestionType
      */
-    'id': string;
+    'id'?: string;
     /**
      * 
      * @type {string}
-     * @memberof Question
+     * @memberof QuestionType
      */
     'topic': string;
     /**
      * 
      * @type {string}
-     * @memberof Question
+     * @memberof QuestionType
      */
     'description': string;
     /**
      * 
-     * @type {Array<QuestionAnswersInner>}
-     * @memberof Question
+     * @type {Array<QuestionTypeAnswersInner>}
+     * @memberof QuestionType
      */
-    'answers': Array<QuestionAnswersInner>;
+    'answers': Array<QuestionTypeAnswersInner>;
 }
 /**
  * 
  * @export
- * @interface QuestionAnswersInner
+ * @interface QuestionTypeAnswersInner
  */
-export interface QuestionAnswersInner {
+export interface QuestionTypeAnswersInner {
     /**
      * 
      * @type {string}
-     * @memberof QuestionAnswersInner
+     * @memberof QuestionTypeAnswersInner
      */
     'description': string;
     /**
      * 
      * @type {boolean}
-     * @memberof QuestionAnswersInner
+     * @memberof QuestionTypeAnswersInner
      */
     'isCorrect': boolean;
 }
@@ -106,10 +106,29 @@ export interface QuizResponse {
     'esito': EsitoType;
     /**
      * 
-     * @type {Array<Question>}
+     * @type {Array<QuestionType>}
      * @memberof QuizResponse
      */
-    'result': Array<Question>;
+    'result': Array<QuestionType>;
+}
+/**
+ * 
+ * @export
+ * @interface QuizResultsByUserIdResponse
+ */
+export interface QuizResultsByUserIdResponse {
+    /**
+     * 
+     * @type {EsitoType}
+     * @memberof QuizResultsByUserIdResponse
+     */
+    'esito'?: EsitoType;
+    /**
+     * 
+     * @type {Array<UserQuizResultType>}
+     * @memberof QuizResultsByUserIdResponse
+     */
+    'result'?: Array<UserQuizResultType>;
 }
 /**
  * 
@@ -125,78 +144,84 @@ export interface ResultUserResponse {
     'esito': EsitoType;
     /**
      * 
-     * @type {User}
+     * @type {UserType}
      * @memberof ResultUserResponse
      */
-    'result': User;
+    'result': UserType;
 }
 /**
  * 
  * @export
- * @interface User
+ * @interface UserQuizResultType
  */
-export interface User {
+export interface UserQuizResultType {
     /**
      * 
      * @type {string}
-     * @memberof User
-     */
-    'username': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    'password': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    'name'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    'surname'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    'role': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    'email'?: string;
-}
-/**
- * 
- * @export
- * @interface UserQuizResultRequest
- */
-export interface UserQuizResultRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof UserQuizResultRequest
+     * @memberof UserQuizResultType
      */
     'userId': string;
     /**
      * 
      * @type {string}
-     * @memberof UserQuizResultRequest
+     * @memberof UserQuizResultType
      */
     'topic': string;
     /**
      * 
      * @type {number}
-     * @memberof UserQuizResultRequest
+     * @memberof UserQuizResultType
      */
     'totalScore': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserQuizResultType
+     */
+    'date'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface UserType
+ */
+export interface UserType {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserType
+     */
+    'username': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserType
+     */
+    'password': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserType
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserType
+     */
+    'surname'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserType
+     */
+    'role': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserType
+     */
+    'email'?: string;
 }
 
 /**
@@ -221,6 +246,74 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarPath = `/quiz/{questionId}/{answerId}`
                 .replace(`{${"questionId"}}`, encodeURIComponent(String(questionId)))
                 .replace(`{${"answerId"}}`, encodeURIComponent(String(answerId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Permette di inserire un quiz con delle domande
+         * @param {Array<QuestionType>} [questionType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createQuizUsingPost: async (questionType?: Array<QuestionType>, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/quiz/create`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(questionType, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Recupera i risultati per un determinato userID
+         * @param {string} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getQuizResultsByUserId: async (userId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('getQuizResultsByUserId', 'userId', userId)
+            const localVarPath = `/quiz/results/{userId}`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -280,11 +373,11 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Permette di controllare le risposte
-         * @param {UserQuizResultRequest} [userQuizResultRequest] 
+         * @param {UserQuizResultType} [userQuizResultType] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        saveQuizUsingPost: async (userQuizResultRequest?: UserQuizResultRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        saveQuizUsingPost: async (userQuizResultType?: UserQuizResultType, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/quiz/saveQuiz`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -304,7 +397,7 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(userQuizResultRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(userQuizResultType, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -335,6 +428,28 @@ export const QuizApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Permette di inserire un quiz con delle domande
+         * @param {Array<QuestionType>} [questionType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createQuizUsingPost(questionType?: Array<QuestionType>, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createQuizUsingPost(questionType, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Recupera i risultati per un determinato userID
+         * @param {string} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getQuizResultsByUserId(userId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QuizResultsByUserIdResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getQuizResultsByUserId(userId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Permette di recuperare le domanda per uno specifico topic
          * @param {string} topic 
          * @param {*} [options] Override http request option.
@@ -347,12 +462,12 @@ export const QuizApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Permette di controllare le risposte
-         * @param {UserQuizResultRequest} [userQuizResultRequest] 
+         * @param {UserQuizResultType} [userQuizResultType] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async saveQuizUsingPost(userQuizResultRequest?: UserQuizResultRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.saveQuizUsingPost(userQuizResultRequest, options);
+        async saveQuizUsingPost(userQuizResultType?: UserQuizResultType, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.saveQuizUsingPost(userQuizResultType, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -378,6 +493,26 @@ export const QuizApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
+         * @summary Permette di inserire un quiz con delle domande
+         * @param {Array<QuestionType>} [questionType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createQuizUsingPost(questionType?: Array<QuestionType>, options?: any): AxiosPromise<EsitoType> {
+            return localVarFp.createQuizUsingPost(questionType, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Recupera i risultati per un determinato userID
+         * @param {string} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getQuizResultsByUserId(userId: string, options?: any): AxiosPromise<QuizResultsByUserIdResponse> {
+            return localVarFp.getQuizResultsByUserId(userId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Permette di recuperare le domanda per uno specifico topic
          * @param {string} topic 
          * @param {*} [options] Override http request option.
@@ -389,12 +524,12 @@ export const QuizApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Permette di controllare le risposte
-         * @param {UserQuizResultRequest} [userQuizResultRequest] 
+         * @param {UserQuizResultType} [userQuizResultType] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        saveQuizUsingPost(userQuizResultRequest?: UserQuizResultRequest, options?: any): AxiosPromise<EsitoType> {
-            return localVarFp.saveQuizUsingPost(userQuizResultRequest, options).then((request) => request(axios, basePath));
+        saveQuizUsingPost(userQuizResultType?: UserQuizResultType, options?: any): AxiosPromise<EsitoType> {
+            return localVarFp.saveQuizUsingPost(userQuizResultType, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -421,6 +556,30 @@ export class QuizApi extends BaseAPI {
 
     /**
      * 
+     * @summary Permette di inserire un quiz con delle domande
+     * @param {Array<QuestionType>} [questionType] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof QuizApi
+     */
+    public createQuizUsingPost(questionType?: Array<QuestionType>, options?: AxiosRequestConfig) {
+        return QuizApiFp(this.configuration).createQuizUsingPost(questionType, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Recupera i risultati per un determinato userID
+     * @param {string} userId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof QuizApi
+     */
+    public getQuizResultsByUserId(userId: string, options?: AxiosRequestConfig) {
+        return QuizApiFp(this.configuration).getQuizResultsByUserId(userId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Permette di recuperare le domanda per uno specifico topic
      * @param {string} topic 
      * @param {*} [options] Override http request option.
@@ -434,13 +593,13 @@ export class QuizApi extends BaseAPI {
     /**
      * 
      * @summary Permette di controllare le risposte
-     * @param {UserQuizResultRequest} [userQuizResultRequest] 
+     * @param {UserQuizResultType} [userQuizResultType] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof QuizApi
      */
-    public saveQuizUsingPost(userQuizResultRequest?: UserQuizResultRequest, options?: AxiosRequestConfig) {
-        return QuizApiFp(this.configuration).saveQuizUsingPost(userQuizResultRequest, options).then((request) => request(this.axios, this.basePath));
+    public saveQuizUsingPost(userQuizResultType?: UserQuizResultType, options?: AxiosRequestConfig) {
+        return QuizApiFp(this.configuration).saveQuizUsingPost(userQuizResultType, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -455,11 +614,11 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Permette di creare un nuovo utente
-         * @param {User} [user] 
+         * @param {UserType} [userType] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createUserUsingPOST: async (user?: User, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createUserUsingPOST: async (userType?: UserType, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/manage-user/create`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -479,7 +638,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(user, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(userType, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -489,13 +648,13 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary POST api/manage-user/user
-         * @param {User} user 
+         * @param {UserType} userType 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserByUsername: async (user: User, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'user' is not null or undefined
-            assertParamExists('getUserByUsername', 'user', user)
+        getUserByUsername: async (userType: UserType, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userType' is not null or undefined
+            assertParamExists('getUserByUsername', 'userType', userType)
             const localVarPath = `/manage-user/user`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -515,7 +674,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(user, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(userType, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -535,23 +694,23 @@ export const UserApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Permette di creare un nuovo utente
-         * @param {User} [user] 
+         * @param {UserType} [userType] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createUserUsingPOST(user?: User, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createUserUsingPOST(user, options);
+        async createUserUsingPOST(userType?: UserType, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createUserUsingPOST(userType, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @summary POST api/manage-user/user
-         * @param {User} user 
+         * @param {UserType} userType 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUserByUsername(user: User, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResultUserResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserByUsername(user, options);
+        async getUserByUsername(userType: UserType, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResultUserResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserByUsername(userType, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -567,22 +726,22 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Permette di creare un nuovo utente
-         * @param {User} [user] 
+         * @param {UserType} [userType] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createUserUsingPOST(user?: User, options?: any): AxiosPromise<EsitoType> {
-            return localVarFp.createUserUsingPOST(user, options).then((request) => request(axios, basePath));
+        createUserUsingPOST(userType?: UserType, options?: any): AxiosPromise<EsitoType> {
+            return localVarFp.createUserUsingPOST(userType, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary POST api/manage-user/user
-         * @param {User} user 
+         * @param {UserType} userType 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserByUsername(user: User, options?: any): AxiosPromise<ResultUserResponse> {
-            return localVarFp.getUserByUsername(user, options).then((request) => request(axios, basePath));
+        getUserByUsername(userType: UserType, options?: any): AxiosPromise<ResultUserResponse> {
+            return localVarFp.getUserByUsername(userType, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -597,25 +756,25 @@ export class UserApi extends BaseAPI {
     /**
      * 
      * @summary Permette di creare un nuovo utente
-     * @param {User} [user] 
+     * @param {UserType} [userType] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public createUserUsingPOST(user?: User, options?: AxiosRequestConfig) {
-        return UserApiFp(this.configuration).createUserUsingPOST(user, options).then((request) => request(this.axios, this.basePath));
+    public createUserUsingPOST(userType?: UserType, options?: AxiosRequestConfig) {
+        return UserApiFp(this.configuration).createUserUsingPOST(userType, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary POST api/manage-user/user
-     * @param {User} user 
+     * @param {UserType} userType 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getUserByUsername(user: User, options?: AxiosRequestConfig) {
-        return UserApiFp(this.configuration).getUserByUsername(user, options).then((request) => request(this.axios, this.basePath));
+    public getUserByUsername(userType: UserType, options?: AxiosRequestConfig) {
+        return UserApiFp(this.configuration).getUserByUsername(userType, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

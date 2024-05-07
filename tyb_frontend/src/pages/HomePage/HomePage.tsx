@@ -10,6 +10,7 @@ import MathSVG from '../../svg/math.svg';
 import "./HomePage.scss";
 import CardComponent from "../../components/CardComponent/CardComponent";
 import {CardComponentConfig} from "../../components/CardComponent/CardTypes";
+import PageTitle from "../../components/PageTitle/PageTitle";
 
 interface HomeComponentProps {}
 
@@ -54,32 +55,14 @@ const HomePage: FC<HomeComponentProps> = () => {
                 }
             }
         },
-        {
-            id: "card_2",
-            title: "Card 2",
-            description: "Secondo argomento",
-            image: "https://example.com/image2.jpg",
-            button1: {
-                onClick:Function
-            }
-
-        },
-        {
-            id: "card_3",
-            title: "Card 3",
-            description: "Terzo argomento",
-            image: "https://example.com/image3.jpg",
-            button1: {
-                onClick:Function
-            }
-        },
     ];
     return <div>
-        <h1>Homepage</h1>
+        <PageTitle title={"Homepage"}/>
         <div className="row g-1 g-sm-2 g-md-3 g-lg-4 mb-5 mt-3">
                 {/* Mappiamo i dati delle card per creare le card */}
                 {cardData.map((card, index) => (
                     <CardComponent config={{
+                        key:""+index,
                         status:CardStatusEnum.ACTIVE,
                         id:card.title,
                         title:card.title,

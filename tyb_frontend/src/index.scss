@@ -1,18 +1,8 @@
-
-/**
- * Libs
- */
-@import "~bootstrap-italia/src/scss/bootstrap-italia.scss";
+// Libs
+@import "./bootstrap-italia-custom.scss";
 @import "~bootstrap-icons/font/bootstrap-icons.scss";
 
-/**
- * Overwrites
- */
-@import "./reset.scss";
-
-/**
- * Fonts
- */
+// Fonts
 @import "@fontsource/titillium-web/200.css";
 @import "@fontsource/titillium-web/300.css";
 @import "@fontsource/titillium-web/400.css";
@@ -20,8 +10,11 @@
 @import "@fontsource/titillium-web/700.css";
 @import "@fontsource/titillium-web/900.css";
 
+// Custom
+@import "./reset.scss";
+
 /* root element
-* The fields bellow are global variables, which can be reused in css and scss files.
+* The fields bellow are global variables, reused in css and scss files.
 */
 :root {
   --x-font-size-4xl: 5.61rem;

@@ -1,0 +1,11 @@
+/**
+ * SCSS styles for PageTitle.tsx
+ */
+.PageTitle {
+    color: var(--x-text-color-primary);
+}
+
+.PageTitle h1 {
+    font-size: var(--x-font-size-2xl);
+    margin: 0; /* overwrite bootstrap's `_reboot.scss`*/
+}

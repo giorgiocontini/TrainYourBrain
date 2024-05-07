@@ -1,0 +1,22 @@
+.NotificationComponent {
+}
+
+.NotificationComponent__notify{
+  bottom:0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: start;
+  margin-bottom: 1.2em;
+  margin-top: 1.2em;
+}
+
+.NotificationComponent__flex{
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  width: 100%;
+}

@@ -5,12 +5,15 @@ a:focus:not(:focus-visible) {
     /* The "!important" is really needed here, because bootstrap's focus needs to be overridden */
     outline: none !important;
     box-shadow: none !important;
+    border-color: unset !important;
+
 }
 
 button:focus:not(:focus-visible) {
     /* The "!important" is really needed here, because bootstrap's focus needs to be overridden */
     outline: none !important;
     box-shadow: none !important;
+    border-color: unset !important;
 }
 
 /**
@@ -20,7 +23,7 @@ button:focus:not(:focus-visible) {
 .form-check [type="checkbox"]:focus + label,
 .form-check [type="radio"]:focus + label,
 .toggles label input[type="checkbox"]:focus + .lever {
-    border-bottom: 2px solid;
+    border-bottom: 1px solid;
     border-color: var(--bs-primary) !important;
     box-shadow: none !important;
     outline: none !important;

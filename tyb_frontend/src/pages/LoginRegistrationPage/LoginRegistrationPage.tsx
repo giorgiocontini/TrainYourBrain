@@ -6,10 +6,9 @@ import {useFormik} from "formik";
 import * as Yup from 'yup';
 import InputTextComponent from "../../components/form-fields/InputTextComponent/InputTextComponent";
 import CheckboxComponent from "../../components/form-fields/CheckboxComponent/CheckboxComponent";
-import {User} from "../../services/API/openapicode_tyb_user";
 import UserClient from "../../services/API/openapicode_tyb_user/UserClient";
 import {showDialogFailed, showDialogSuccess} from "../../utils/DialogUtils";
-import {hashPassword} from "../../utils/commonFunctions";
+import {UserType} from "../../services/API/openapicode_tyb_user";
 
 
 const LoginRegistrationPage = () => {
@@ -19,7 +18,7 @@ const LoginRegistrationPage = () => {
     const [isProfessor, setProfessor] = useState(false)
     const navigate = useNavigate();
 
-    const initialFormState: User = {
+    const initialFormState: UserType = {
         username: "", name: "", surname: "", email: "", password: "", role: ""
     }
 
@@ -47,21 +46,19 @@ const LoginRegistrationPage = () => {
             })
     }
 
-
     function loginFunction() {
         //TODO gestire la pw
-      UserClient.getUserByUsername({...formik.values})
-                .then(response => {
-                    //Posso gestire i dati recuperati
-                    if (response.data.esito) {
-                        setUser(response.data.result);
-                        navigate("/home", {replace: true})
-                    }
-                })
-                .catch((error) => {
-                    debugger
-                    showDialogFailed(error?.response?.data?.esito.descrizione)
-                })
+        UserClient.getUserByUsername({...formik.values})
+            .then(response => {
+                //Posso gestire i dati recuperati
+                if (response.data.esito) {
+                    setUser(response.data.result);
+                    navigate("/home", {replace: true})
+                }
+            })
+            .catch((error) => {
+                showDialogFailed(error?.response?.data?.esito.descrizione)
+            })
     }
 
     const validationSchema = Yup.object().shape({

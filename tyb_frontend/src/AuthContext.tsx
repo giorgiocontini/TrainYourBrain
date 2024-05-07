@@ -1,5 +1,5 @@
 import {createContext, useState} from "react";
-import {User} from "./services/API/openapicode_tyb_user";
+import {UserType} from "./services/API/openapicode_tyb_user";
 
 
 type TAuthContextProvider = {
@@ -21,7 +21,7 @@ const AuthContextProvider = ({children}: TAuthContextProvider) => {
 
     //const { getItem, removeItem} = useLocalStorage();
 
-    const [userState, setUserState] = useState<User | undefined>(undefined);
+    const [userState, setUserState] = useState<UserType | undefined>(undefined);
 
     const isInRole = (role: string) => {
         if (userState) {

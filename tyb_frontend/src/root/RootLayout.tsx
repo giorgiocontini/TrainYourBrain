@@ -1,21 +1,18 @@
-import React, {useContext, useEffect} from 'react';
+import React from 'react';
 import {Outlet} from "react-router-dom";
 import HeaderComponent from "../components/HeaderComponent/HeaderComponent";
 import FooterComponent from "../components/FooterComponent/FooterComponent";
-import {AuthContext} from "../AuthContext";
-import {Spinner} from "react-bootstrap";
+
 
 const RootLayout = () => {
 
-
-    return <div>
-                <HeaderComponent/>
-                <main className="container rounded shadow p-5" style={{backgroundColor:"rgba(222,220,220,0.54)"}}>
-                    <Outlet/>
-                </main>
-                <FooterComponent/>
-            </div>
+    return <div style={{backgroundColor: "lightgray", minHeight:"700px"}} >
+        <HeaderComponent/>
+        <main className="container rounded shadow mt-3 mb-5" style={{backgroundColor:"white", minHeight:"700px"}}>
+            <Outlet/>
+        </main>
+        <FooterComponent/>
+    </div>
 }
-
 
 export default RootLayout;

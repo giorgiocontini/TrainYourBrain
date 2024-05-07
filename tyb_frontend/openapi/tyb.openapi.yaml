@@ -21,7 +21,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              $ref: "#/components/schemas/UserType"
       responses:
         "200":
           description: OK
@@ -51,7 +51,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              $ref: "#/components/schemas/UserType"
         required: true
       responses:
         "200":
@@ -141,6 +141,38 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EsitoType"
+  /quiz/results/{userId}:
+    get:
+      tags:
+        - Quiz
+      summary: >-
+        Recupera i risultati per un determinato userID
+      operationId: getQuizResultsByUserId
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuizResultsByUserIdResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
   /quiz/saveQuiz:
     post:
       tags:
@@ -152,7 +184,39 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserQuizResultRequest"
+              $ref: "#/components/schemas/UserQuizResultType"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+  /quiz/create:
+    post:
+      tags:
+        - Quiz
+      summary: >-
+        Permette di inserire un quiz con delle domande
+      operationId: createQuizUsingPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                $ref: "#/components/schemas/QuestionType"
       responses:
         "200":
           description: OK
@@ -174,7 +238,7 @@ paths:
                 $ref: "#/components/schemas/EsitoType"
 components:
   schemas:
-    User:
+    UserType:
       type: object
       required:
         - username
@@ -202,7 +266,7 @@ components:
         esito:
           $ref: "#/components/schemas/EsitoType"
         result:
-          $ref: "#/components/schemas/User"
+          $ref: "#/components/schemas/UserType"
     EsitoType:
       type: object
       required:
@@ -224,8 +288,8 @@ components:
         result:
           type: array
           items:
-            $ref: "#/components/schemas/Question"
-    Question:
+            $ref: "#/components/schemas/QuestionType"
+    QuestionType:
       type: object
       properties:
         id:
@@ -246,11 +310,10 @@ components:
               - description
               - isCorrect
       required:
-        - id
         - topic
         - description
         - answers
-    UserQuizResultRequest:
+    UserQuizResultType:
       type: object
       properties:
         userId:
@@ -259,10 +322,22 @@ components:
           type: string
         totalScore:
           type: number
+        date:
+          type: string
       required:
         - userId
         - topic
         - totalScore
+    QuizResultsByUserIdResponse:
+      type: object
+      properties:
+        esito:
+          $ref: "#/components/schemas/EsitoType"
+        result:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserQuizResultType"
+
 
 
 

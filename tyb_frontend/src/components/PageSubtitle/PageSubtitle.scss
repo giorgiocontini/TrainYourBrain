@@ -1,0 +1,12 @@
+/**
+ * SCSS styles for PageSubtitle.tsx
+ */
+.PageSubtitle {
+    color: black;
+    font-size: var(--x-font-size-xl);
+    font-weight: 700;
+}
+
+.PageSubtitle p {
+    margin: 0; /* overwrite bootstrap's `_reboot.scss`*/
+}

@@ -23,7 +23,7 @@ type TNavLinkProps = {
  * @param href route for the item
  * @returns JSX
  */
-const NavLink = ({ label, href }: TNavLinkProps) => {
+const NavLink = ({ label, href}: TNavLinkProps) => {
     return (
         <li className="NavLink user-select-none">
             <Link to={href}>{label}</Link>

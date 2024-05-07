@@ -5,9 +5,9 @@ import {useLocation, useNavigate} from "react-router-dom"
  * Locals
  */
 import "./QuizPage.scss";
-import {showDialogFailed, showDialogInfo, showDialogSuccess} from "../../utils/DialogUtils";
+import {showDialogFailed, showDialogInfo} from "../../utils/DialogUtils";
 import QuizClient from "../../services/API/openapicode_tyb_user/QuizClient";
-import {Question, UserQuizResultRequest} from "../../services/API/openapicode_tyb_user";
+import {QuestionType, UserQuizResultType} from "../../services/API/openapicode_tyb_user";
 import TimerComponent from "../../components/TimerComponent/TimerComponent";
 import {AuthContext} from "../../AuthContext";
 
@@ -18,26 +18,25 @@ const QuizPage = () => {
     const {state: location} = useLocation();
     const navigate = useNavigate();
     const {topic} = location || {};
-    const [questions, setQuestions] = useState<Question[]>([]);
+    const [questions, setQuestions] = useState<QuestionType[]>([]);
 
     useEffect(() => {
         getQuiz(topic);
     }, []);
 
     // Funzione per recuperare un numero casuale di oggetti dalla lista
-    function getDomandeCasuali(lista: Question[], numeroDomande: number) {
-        const list: Question[] = lista.sort(() => Math.random() - 0.5).slice(0, numeroDomande);
+    function getDomandeCasuali(lista: QuestionType[], numeroDomande: number) {
+        const list: QuestionType[] = lista.sort(() => Math.random() - 0.5).slice(0, numeroDomande);
         setQuestions(list);
     }
 
     function getQuiz(topic: string) {
-
         QuizClient.getQuizUsingGet(topic).then(
             (res) => {
-                getDomandeCasuali(res.data.result, 10);
+                getDomandeCasuali(res?.data?.result, 10);
             }
         ).catch((error) => {
-            showDialogFailed(error?.response.data.error)
+            showDialogFailed(error?.response?.data.error)
         })
     }
 
@@ -51,9 +50,6 @@ const QuizPage = () => {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         } else {
             saveQuizResult();
-            showDialogInfo("Test completato", "Verrai reindirizzato alla homepage", () => {
-                navigate("/home", {replace: true})
-            })
         }
     };
 
@@ -68,8 +64,8 @@ const QuizPage = () => {
 
     function saveQuizResult() {
         QuizClient.saveQuizUsingPost(userResults).then(response => {
-            showDialogSuccess("", response.data.descrizione, () => {
-                //empty
+            showDialogInfo("Test completato", "Verrai reindirizzato alla homepage", () => {
+                navigate("/home", {replace: true})
             })
         })
             .catch(error => {
@@ -77,10 +73,10 @@ const QuizPage = () => {
             })
     }
 
-    const [userResults, setUserResults] = useState<UserQuizResultRequest>({
-        userId: "",
+    const [userResults, setUserResults] = useState<UserQuizResultType>({
+        userId: user.username,
         totalScore: 0,
-        topic: ""
+        topic: topic || ""
     })
 
     const checkAnswer = (ansIndex: number, questionId: string) => {
@@ -96,29 +92,30 @@ const QuizPage = () => {
                         //gestire le risposte corrette
                         setRemainingTime(prevState => (prevState + 15));
                         loadNextQuestion();
-                    }, 1000)
+                    }, 500)
+
+                    setUserResults({
+                        ...userResults,
+                        totalScore: userResults.totalScore + 10//TODO definire logica per il punteggio,
+                    })
                 } else {
 
                     setButtonStyle({
                         ...buttonStyle, qId: questionId,
                         aId: ansIndex, style: "btn btn-danger"
                     })
-
                     setTimeout(() => {
                         //gestire le risposte errate
                         setRemainingTime(prevState => (prevState - 15));
                         loadNextQuestion();
-                    }, 1000)
+                    }, 500)
 
                 }
 
-                if (user) {
-                    setUserResults({
-                        userId: user.username,
-                        totalScore: 10,//TODO definire logica per il punteggio,
-                        topic: ""
-                    })
-                }
+                setUserResults({
+                    ...userResults,
+                    totalScore: userResults.totalScore - 10//TODO definire logica per il punteggio,
+                })
 
             }
         ).catch((error) => {
@@ -155,18 +152,23 @@ const QuizPage = () => {
             <div className="answerGrid mt-4">
                 {/* Griglia 2x2 con risposte */}
                 {(questions[currentQuestionIndex]?.answers)?.map((el, index) => {
-                    return <button key={"answer_" + index} className={"answerButton " + getStyle(index)}
-                                   onClick={() => checkAnswer(index, questions[currentQuestionIndex]?.id)}>{el.description}</button>
+                    return <button key={'answer_' + index} className={'answerButton ' + getStyle(index)}
+                                   onClick={() => {
+                                       checkAnswer(index, questions[currentQuestionIndex]?.id as string);
+                                   }
+                                   }>{el.description}</button>
                 })}
             </div>
         </div>
         <div className="d-flex flex-row mt-5">
-            {currentQuestionIndex != 0 ?
-                <div className={"me-auto"}>
-                    <button className={"btn btn-outline-secondary"} onClick={loadPreviousQuestion}>Indietro
-                    </button>
-                </div>
-                : <></>
+            {
+                //Back button
+                //   currentQuestionIndex != 0 ?
+                //   <div className={"me-auto"}>
+                //       <button className={"btn btn-outline-secondary"} onClick={loadPreviousQuestion}>Indietro
+                //       </button>
+                //   </div>
+                //   : <></>
             }
             {
                 //currentQuestionIndex != questions.length-1?

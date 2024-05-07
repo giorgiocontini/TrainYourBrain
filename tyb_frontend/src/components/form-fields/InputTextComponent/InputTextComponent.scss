@@ -6,11 +6,12 @@
 }
 
 .InputTextComponent input {
+    outline: none !important;
     width: 100%;
     padding: 8px;
     border: 0px;
-    border-bottom: 2px solid;
-    border-color: var(--x-text-color-primary);
+    border-bottom: 1px solid;
+    border-color: var(--x-text-color-primary) !important;
     color: black;
     &.error {
         border-color: red!important;

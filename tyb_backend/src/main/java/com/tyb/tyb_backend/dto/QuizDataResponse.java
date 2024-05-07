@@ -16,6 +16,6 @@ import java.util.List;
 public class QuizDataResponse {
 
     private Esito esito;
-    private List<QuizResult> results;
+    private List<QuizResult> result;
 
 }

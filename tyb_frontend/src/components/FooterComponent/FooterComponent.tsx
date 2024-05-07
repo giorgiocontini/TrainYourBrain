@@ -7,8 +7,8 @@ interface FooterComponentProps {
 
 const FooterComponent = ({}: FooterComponentProps) => {
 
-    return <div className="FooterComponent">
-        <footer className="footer-style d-flex flex-row  align-items-center py-3  border-top fixed-bottom">
+    return <div className="FooterComponent mt-0">
+        <footer className="footer-style align-items-center py-3  border-top">
             <div className="container">
                 TrainYourBrain
             </div>

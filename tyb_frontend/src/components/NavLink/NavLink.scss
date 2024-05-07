@@ -25,6 +25,10 @@
   cursor: pointer;
 }
 
+.NavLink a::after {
+  box-shadow: none !important;
+}
+
 .NavLink::after {
   content: "";
   background-color: white;

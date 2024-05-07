@@ -1,0 +1,12 @@
+/**
+ * SCSS styles for PageDescription.tsx
+ */
+.PageDescription {
+    color: black;
+    font-size: var(--x-font-size-m);
+    font-weight: 400;
+}
+
+.PageDescription p {
+    margin: 0; /* overwrite bootstrap's `_reboot.scss`*/
+}

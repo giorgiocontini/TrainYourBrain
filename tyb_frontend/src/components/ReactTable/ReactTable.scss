@@ -1,0 +1,104 @@
+/**
+ * SCSS styles for ReactTable.tsx
+ */
+.ReactTable__tableWrapper {
+    overflow-x: auto;
+    // transform: rotateX(180deg); // for top scroll
+}
+
+.ReactTable__table {
+    // transform: rotateX(180deg); // for top scroll
+    width: 100%;
+    // min-height: 7rem;
+    text-align: center;
+}
+
+.ReactTable__border {
+    border: 1px solid grey;
+}
+
+.ReactTable__table tr {
+    height: 3rem;
+}
+
+.ReactTable__table thead tr {
+    height: 2.5rem;
+}
+
+.ReactTable__table thead {
+    background-color: #e7e9f2;
+}
+
+.ReactTable__pagination {
+    padding-bottom: 0.5em;
+}
+
+.ReactTable__pagination button {
+    padding: 0.6rem 1rem;
+}
+
+.ReactTable__pagination-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.ReactTable__pagination-PageIndices {
+    display: flex;
+    justify-content: center;
+    width: min(22vw, 130px);
+}
+
+.ReactTable__pagination-PageIndices button {
+    margin: 0 2px;
+    background: transparent;
+}
+
+.ReactTable__pagination-PageIndices button:disabled {
+    color: #acacac;
+}
+
+.ReactTable__pagination-PageIndices
+    :not(.ReactTable__pagination-PageIndices-CurrentIndex) {
+    color: #acacac;
+    border: none;
+}
+
+.ReactTable__pagination-PageIndices-CurrentIndex {
+    border-radius: 4px;
+    border: 1px solid #0066cc;
+    color: #0066cc;
+}
+
+// Bootstrap icon
+.ReactTable__pagination .bi {
+    background: transparent;
+    // color:#ACACAC;
+    border: none;
+}
+
+.ReactTable__table-emptyBlock {
+    background-color: #f5f5f5;
+    width: 100%;
+    text-align: center;
+}
+
+.ReactTable__table-emptyBlock-p {
+    padding: 1rem 0;
+}
+
+.TableClassic__thead_th-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    padding: 0.5rem 0.5rem;
+}
+.arrowCustom {
+    padding-left: 0.5rem;
+}
+
+.custom-select {
+    background: transparent;
+    caret-color: transparent;
+    border-radius: 2em;
+}

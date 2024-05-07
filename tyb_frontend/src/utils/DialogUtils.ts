@@ -34,9 +34,11 @@ const showDialogFailed = (errorMsg: string, errorCode?: string) => {
 
 const showDialogInfo = (titleInfo: string, infoMsg: string, FunctionByConfirm: Function) => {
     SwalDUPopup.fire({
+
         icon: "info",
         title: titleInfo,
         html:  infoMsg ,
+        allowOutsideClick: false,
     }).then((result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {

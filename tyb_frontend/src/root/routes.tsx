@@ -23,10 +23,12 @@ export const useHeaderRoutes = () => {
 
         const homeRoute = {type: "nav-link", label: "Home", path: "/home"};
         const welcomeRoute = {type: "nav-link", label: "Welcome", path: "/"};
+        const statisticheRoute = {type: "nav-link", label: "Statistiche", path: "/statistics"};
+        const addQuiz = {type: "nav-link", label: "Aggiungi Quiz", path: "/add-quiz"};
 
-        const headerRoutesArrStudents: headerRoute[] = [homeRoute];
-        const headerRoutesArrProfessors: headerRoute[] = [homeRoute];
-        const headerRoutesArrAdmin: headerRoute[] = [homeRoute];
+        const headerRoutesArrStudents: headerRoute[] = [homeRoute, statisticheRoute];
+        const headerRoutesArrProfessors: headerRoute[] = [homeRoute, statisticheRoute, addQuiz];
+        const headerRoutesArrAdmin: headerRoute[] = [homeRoute, statisticheRoute,addQuiz];
         const initialRoutes: headerRoute[] = [welcomeRoute];
 
 
