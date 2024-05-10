@@ -8,7 +8,7 @@
 
 .FileUploaderComponent__upload-btn p {
     margin-left: 12px;
-    margin-bottom: 0px; // overwrites bootstrap's _reboot.scss
+    margin-bottom: unset !important; // overwrites bootstrap's _reboot.scss
     font-size: 18px;
 }
 

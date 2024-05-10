@@ -83,22 +83,22 @@ const AddQuizPage = () => {
 
         <div className="row" style={{alignItems: "center"}}>
 
-            <div className={"col-lg-9 col-sm-12 "}>
+            <div className={"col-lg-6 col-sm-12 "}>
                 <InputTextComponent label={"Argomento"} formik={formik} name={"topic"} isRequired={true}/>
             </div>
-            <div className={"col-lg-3 col-sm-12 mt-2"}>
+            <div className={"col-lg-2 col-sm-12 mt-2"}>
                 <ExportXLSXButton disabled={!formik.values.topic} columns={templateColumns} data={[{}]}
                                   fileName={"Quiz_" + formik.values.topic}
                                   title={"Scarica Template"}/></div>
-
-
-        </div>
-        <div className={"row mt-2"}>
-            <div className={"col-lg-6 col-sm-12 "}>
+            <div className={"col-lg-4 col-sm-12 mt-2"}>
                 <ExcelReader manageDataFunction={(risultato: any) => {
                     setDataToSave(risultato);
-                }} formik={formik}/></div>
+                }} formik={formik}/>
+            </div>
+
+
         </div>
+
         <div className={"row mt-3 d-flex ms-auto me-auto"}>
             <button className={"btn btn-primary"} type={"submit"} onClick={() => formik.handleSubmit()}
                     title={"Salva"}>Salva

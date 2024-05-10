@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,14 @@ public class QuizServiceImpl implements QuizService {
      */
     @Override
     public ResultQuizResponse getQuestionForATopic(String topic) {
+
+        if(Objects.equals(topic, "all")){
+            return new ResultQuizResponse(new Esito(EnumCodiceEsito.OK),
+                    quizRepository.findAll().stream().map(question -> {
+                        question.getAnswers().forEach(answer -> answer.setIsCorrect(null));
+                        return question;
+                    }).collect(Collectors.toList()));
+        }
         return new ResultQuizResponse(new Esito(EnumCodiceEsito.OK),
                 quizRepository.findAllByTopic(topic).stream().map(question -> {
                     question.getAnswers().forEach(answer -> answer.setIsCorrect(null));

@@ -5,14 +5,14 @@
 import XLSX from "sheetjs-style";
 // @ts-ignore
 import * as FileSaver from "file-saver";
-import { useContext, useEffect, useState } from "react";
-import { Column } from "react-table";
+import {useEffect, useState} from "react";
+import {Column} from "react-table";
 
 /**
  * Locals
  */
-import { TablesConfigExcel } from "./tablesConfigExcel";
-import {AppContext} from "../../AppContext";
+import {TablesConfigExcel} from "./tablesConfigExcel";
+
 
 /**
  * Types
@@ -25,7 +25,7 @@ type ExcelProps = {
     sheetName?: string;
     customStyle?: string;
     disabled?: boolean;
-    title?:string;
+    title?: string;
 };
 
 /**
@@ -40,13 +40,13 @@ type ExcelProps = {
  * @returns JSX
  */
 const ExportXLSXButton = ({
-    columns,
-    data,
-    fileName,
-    config,
-    customStyle,
-    disabled, title
-}: ExcelProps) => {
+                              columns,
+                              data,
+                              fileName,
+                              config,
+                              customStyle,
+                              disabled, title
+                          }: ExcelProps) => {
 
     /**
      * Constant for filetype
@@ -169,7 +169,7 @@ const ExportXLSXButton = ({
     const exportToExcel = async () => {
         const wscols: any[] = [];
         Object.keys(dataToPrint[0]).forEach((el) => {
-            wscols.push({ wch: 20 });
+            wscols.push({wch: 20});
         });
 
         const ws = XLSX.utils.json_to_sheet(dataToPrint);
@@ -199,8 +199,8 @@ const ExportXLSXButton = ({
         wb.Sheets[fileName] = ws;
         wb.SheetNames = [fileName];
 
-        const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-        const blob = new Blob([excelBuffer], { type: fileType });
+        const excelBuffer = XLSX.write(wb, {bookType: "xlsx", type: "array"});
+        const blob = new Blob([excelBuffer], {type: fileType});
         FileSaver.saveAs(blob, fileName + fileExtension);
     };
 

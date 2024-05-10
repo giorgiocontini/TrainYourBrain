@@ -105,25 +105,25 @@ const FileUploaderComponent = ({
     };
 
     return (
-        <div className="row">
-            <div className="col-auto">
-                <button
-                    className="FileUploaderComponent__upload-btn btn btn-outline-primary me-2"
-                    onClick={() => handleClick()}
-                    disabled={disabled}
-                >
-                    <i className="bi bi-upload"></i>
-                    <p className={isRequired ? "FileUploaderComponent__upload-btn_required" : ""}>{labelButton}</p>
-                </button>
-                <input
-                    type="file"
-                    ref={hiddenFileInput}
-                    accept={acceptFile}
-                    onChange={(e) => handleChange(e)}
-                    className={"d-none"}
-                    value={""}
-                />
-            </div>
+        <div className="d-flex flex-row">
+
+            <button
+                className="btn btn-outline-primary d-flex d-inline me-2"
+                onClick={() => handleClick()}
+                disabled={disabled}
+            >
+                <i className="bi bi-upload me-2"></i>
+                <span className={isRequired ? "FileUploaderComponent__upload-btn_required" : ""}>{labelButton}</span>
+            </button>
+
+            <input
+                type="file"
+                ref={hiddenFileInput}
+                accept={acceptFile}
+                onChange={(e) => handleChange(e)}
+                className={"d-none"}
+                value={""}
+            />
             {formik ? getFileElement(formik?.values?.file) : getFileElement(file)}
         </div>
     );
