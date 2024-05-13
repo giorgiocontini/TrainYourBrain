@@ -1,4 +1,4 @@
-import React, {MouseEvent, useRef} from 'react';
+import React, {MouseEvent, useEffect, useRef} from 'react';
 import {
     BarElement,
     CategoryScale,
@@ -23,47 +23,21 @@ ChartJS.register(
     Tooltip
 );
 
-export const options = {
+export const options= {
     scales: {
         y: {
+            beginAtZero: true
+        },x: {
+            display: false,
             beginAtZero: true
         }
     }
 };
-export type LineData = {
-    labels: string[],
-    datasets: [
-        {
-            type: 'line', //line, bar, pie
-            label: string,
-            //borderColor: 'rgb(255, 99, 132)',
-            borderColor: string,
-            borderWidth: 2,
-            fill: false,
-            data: number[]
-        }
-    ]
-}
-
-export type BarData = {
-    labels: string[],
-    datasets: [
-        {
-            type: 'line', //line, bar, pie
-            label: string,
-            //borderColor: 'rgb(255, 99, 132)',
-            borderColor: string,
-            borderWidth: 2,
-            fill: false,
-            data: number[]
-        }
-    ]
-}
 
 type PlotProps = {
     data: {label: string, value: number, labelAX:string}[];
     label: string;
-    plotType: "bar" | "line";
+    plotType: "bar" | "line" | "pie";
 }
 
 function generateRandomRGB(): string {
@@ -76,7 +50,7 @@ function generateRandomRGB(): string {
     return `rgb(${r}, ${g}, ${b})`;
 }
 
-const PlotComponent = ({data, label, plotType}: PlotProps) => {
+const PlotComponent = ({data, plotType}: PlotProps) => {
 
 
     // Raggruppa i dati per etichetta
@@ -87,26 +61,35 @@ const PlotComponent = ({data, label, plotType}: PlotProps) => {
             acc[curr.label] = [];
         }
         //@ts-ignore
-        acc[curr.label].push(curr.value);
+        acc[curr.label].push({x: curr.labelAX, y: curr.value});
         return acc;
     }, {});
+
+
 
 // Mappa i dati raggruppati in oggetti dataset
     const datasets = Object.keys(groupedData).map((label) => {
         return {
             type: plotType,
-            label: label,
+            label,
             borderColor: generateRandomRGB(),
             borderWidth: 2,
             fill: true,
             data: groupedData[label as keyof {}],
+
         };
     });
 
     const plotData = {
-        labels: data.map((el)=>{return el.labelAX}), //mostrate sotto - date
-        datasets:datasets
+        //labels: data.map((el)=>{return el.labelAX}), //mostrate sotto - date
+        labels: data.map((el)=>{return el.labelAX;}), //mostrate sotto - date
+        datasets
     };
+
+    useEffect(() => {
+        console.log(plotData)
+        debugger
+    }, [plotData]);
     const chartRef = useRef<ChartJS>(null);
 
     const onClick = (event: MouseEvent<HTMLCanvasElement>) => {
@@ -120,7 +103,7 @@ const PlotComponent = ({data, label, plotType}: PlotProps) => {
     return (
         <Chart
             ref={chartRef}
-            type="bar"
+            type={plotType}
             onClick={onClick}
             options={options}
             data={plotData}

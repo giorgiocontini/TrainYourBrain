@@ -104,7 +104,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EsitoType"
-  /quiz/{questionId}/{answerId}:
+  /quiz/{quizId}/{questionId}/{answerId}:
     get:
       tags:
         - Quiz
@@ -112,11 +112,16 @@ paths:
         Permette di controllare le risposte
       operationId: checkAnswerUsingGet
       parameters:
-        - name: questionId
+        - name: quizId
           in: path
           required: true
           schema:
             type: string
+        - name: questionId
+          in: path
+          required: true
+          schema:
+            type: number
         - name: answerId
           in: path
           required: true
@@ -212,11 +217,26 @@ paths:
         Permette di inserire un quiz con delle domande
       operationId: createQuizUsingPost
       requestBody:
+        required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              items:
-                $ref: "#/components/schemas/QuestionType"
+              type: object
+              properties:
+                topic:
+                  type: string
+                  description: L'argomento del documento
+                topicDescription:
+                  type: string
+                  description: La descrizione dell'argomento
+                questions:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/QuestionType'
+                file:
+                  type: string
+                  format: binary
+                  description: Il file da caricare
       responses:
         "200":
           description: OK
@@ -288,13 +308,30 @@ components:
         result:
           type: array
           items:
+            $ref: "#/components/schemas/QuizDto"
+    QuizDto:
+      type: object
+      properties:
+        questions:
+          items:
             $ref: "#/components/schemas/QuestionType"
+        topic:
+          type: string
+        id:
+          type: string
+        topicDescription:
+          type: string
+        image:
+          type: string
+          format: binary
+      required:
+        - questions
+        - topic
+        - topicDescription
     QuestionType:
       type: object
       properties:
         id:
-          type: string
-        topic:
           type: string
         description:
           type: string

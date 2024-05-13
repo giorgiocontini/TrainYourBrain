@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @Data //genera automaticamente i getter e i setter
 @AllArgsConstructor //crea un costruttore

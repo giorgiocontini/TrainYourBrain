@@ -8,6 +8,7 @@ type FileUploaderComponentPropsType = {
     acceptFile?: string;
     prevFile?: File;
     isRequired?: boolean;
+    name?: string
 } & (| {
     //se abbiamo l'oggetto formik i campi sotto non serve passarli
     formik: FormikProps<any>
@@ -26,6 +27,7 @@ type FileUploaderComponentPropsType = {
  * @param acceptFile
  * @param prevFile
  * @param formik
+ * @param name
  * @param isRequired
  * @param initFileInput
  * @returns {JSX.Element}
@@ -37,6 +39,7 @@ const FileUploaderComponent = ({
                                    acceptFile = "*",
                                    prevFile = undefined,
                                    formik,
+                                    name,
                                    isRequired = false,
                                    initFileInput
                                }: FileUploaderComponentPropsType) => {
@@ -48,12 +51,14 @@ const FileUploaderComponent = ({
     };
 
     const handleFormik = (newFile: File | undefined) => {
+
+
         formik?.setFormikState((oldState: any) => {
             const newState = {...oldState};
-            newState.values["file"] = newFile;
+            newState.values[name ? name : "file"] = newFile;
             return newState;
         });
-        formik?.setFieldError("file", "");
+        formik?.setFieldError(name ? name : "file", "");
     };
 
     const handleChange = (event: any) => {
@@ -124,7 +129,7 @@ const FileUploaderComponent = ({
                 className={"d-none"}
                 value={""}
             />
-            {formik ? getFileElement(formik?.values?.file) : getFileElement(file)}
+            {formik ? getFileElement(formik?.values[name ? name : "file"]) : getFileElement(file)}
         </div>
     );
 };

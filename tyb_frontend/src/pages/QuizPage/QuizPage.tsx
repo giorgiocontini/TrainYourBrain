@@ -7,7 +7,7 @@ import {useLocation, useNavigate} from "react-router-dom"
 import "./QuizPage.scss";
 import {showDialogFailed, showDialogInfo} from "../../utils/DialogUtils";
 import QuizClient from "../../services/API/openapicode_tyb_user/QuizClient";
-import {QuestionType, UserQuizResultType} from "../../services/API/openapicode_tyb_user";
+import {QuestionType, QuizDto, UserQuizResultType} from "../../services/API/openapicode_tyb_user";
 import TimerComponent from "../../components/TimerComponent/TimerComponent";
 import {AuthContext} from "../../AuthContext";
 
@@ -17,7 +17,7 @@ const QuizPage = () => {
     const {user} = useContext(AuthContext)
     const {state: location} = useLocation();
     const navigate = useNavigate();
-    const {topic} = location || {};
+    const {topic, idQuiz} = location || {};
     const [questions, setQuestions] = useState<QuestionType[]>([]);
 
     useEffect(() => {
@@ -25,8 +25,8 @@ const QuizPage = () => {
     }, []);
 
     // Funzione per recuperare un numero casuale di oggetti dalla lista
-    function getDomandeCasuali(lista: QuestionType[], numeroDomande: number) {
-        const list: QuestionType[] = lista.sort(() => Math.random() - 0.5).slice(0, numeroDomande);
+    function getDomandeCasuali(lista: QuizDto[], numeroDomande: number) {
+        const list: QuestionType[] = lista[0].questions.sort(() => Math.random() - 0.5).slice(0, numeroDomande);
         setQuestions(list);
     }
 
@@ -60,7 +60,7 @@ const QuizPage = () => {
     };
 
     const [buttonStyle, setButtonStyle]
-        = useState<{ qId: string, aId: number, style: string } | undefined>(undefined);
+        = useState<{ qId: number, aId: number, style: string } | undefined>(undefined);
 
     function saveQuizResult() {
         QuizClient.saveQuizUsingPost(userResults).then(response => {
@@ -79,8 +79,15 @@ const QuizPage = () => {
         topic: topic || ""
     })
 
-    const checkAnswer = (ansIndex: number, questionId: string) => {
-        QuizClient.checkAnswerUsingGet(questionId, ansIndex).then(
+    useEffect(() => {
+        console.log(userResults.totalScore);
+        debugger
+    }, [userResults.totalScore]);
+
+    const checkAnswer = (quizId: string, questionId: number, ansIndex: number) => {
+
+        debugger
+        QuizClient.checkAnswerUsingGet(quizId, questionId, ansIndex).then(
             (res) => {
                 if (res.data) {
                     setButtonStyle({
@@ -92,12 +99,13 @@ const QuizPage = () => {
                         //gestire le risposte corrette
                         setRemainingTime(prevState => (prevState + 15));
                         loadNextQuestion();
+                        setUserResults((oldState) => {
+                            const newState = {...oldState};
+                            newState.totalScore = (newState.totalScore + 10);
+                            return newState;
+                        });
                     }, 500)
 
-                    setUserResults({
-                        ...userResults,
-                        totalScore: userResults.totalScore + 10//TODO definire logica per il punteggio,
-                    })
                 } else {
 
                     setButtonStyle({
@@ -108,15 +116,13 @@ const QuizPage = () => {
                         //gestire le risposte errate
                         setRemainingTime(prevState => (prevState - 15));
                         loadNextQuestion();
+                        setUserResults((oldState) => {
+                            const newState = {...oldState};
+                            newState.totalScore = (newState.totalScore - 10);
+                            return newState;
+                        });
                     }, 500)
-
                 }
-
-                setUserResults({
-                    ...userResults,
-                    totalScore: userResults.totalScore - 10//TODO definire logica per il punteggio,
-                })
-
             }
         ).catch((error) => {
             showDialogFailed(error?.response?.data?.error);
@@ -132,7 +138,7 @@ const QuizPage = () => {
 
     function getStyle(index: number) {
         return (buttonStyle
-            && questions[currentQuestionIndex].id === buttonStyle?.qId
+            && currentQuestionIndex === buttonStyle?.qId
             && index === buttonStyle.aId) ? buttonStyle.style : "";
     }
 
@@ -154,7 +160,7 @@ const QuizPage = () => {
                 {(questions[currentQuestionIndex]?.answers)?.map((el, index) => {
                     return <button key={'answer_' + index} className={'answerButton ' + getStyle(index)}
                                    onClick={() => {
-                                       checkAnswer(index, questions[currentQuestionIndex]?.id as string);
+                                       checkAnswer(idQuiz, currentQuestionIndex, index);
                                    }
                                    }>{el.description}</button>
                 })}
