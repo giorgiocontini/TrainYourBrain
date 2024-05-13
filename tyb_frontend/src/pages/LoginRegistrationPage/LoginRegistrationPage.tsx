@@ -9,6 +9,7 @@ import CheckboxComponent from "../../components/form-fields/CheckboxComponent/Ch
 import UserClient from "../../services/API/openapicode_tyb_user/UserClient";
 import {showDialogFailed, showDialogSuccess} from "../../utils/DialogUtils";
 import {UserType} from "../../services/API/openapicode_tyb_user";
+import "./LoginRegistrationPage.scss";
 
 
 const LoginRegistrationPage = () => {
@@ -20,11 +21,6 @@ const LoginRegistrationPage = () => {
 
     const initialFormState: UserType = {
         username: "", name: "", surname: "", email: "", password: "", role: ""
-    }
-
-    //metodo di gestione degli errori
-    function handleError(error: any) {
-        console.log(error?.response?.data?.message)
     }
 
     //metodo di gestione dei tab (log/reg)
@@ -84,11 +80,11 @@ const LoginRegistrationPage = () => {
     };
 
     return (<div className="row">
-        <div className="col-6">
+        <div className="col-6 hide-on-sm mt-4">
             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
                  className="img-fluid" alt="image"/>
         </div>
-        <div className="col-6 p-4">
+        <div className=" col-sm-12 col-md-12 col-lg-6 p-2 mt-4">
             <ToggleButtonComponent flag={isLogin} setFlag={setLogin} option1={"Accedi"} option2={"Registrati"}
                                    functionToReset={resetFormikForm}/>
             <div className="tab-content">

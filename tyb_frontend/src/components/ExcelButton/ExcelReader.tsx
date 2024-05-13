@@ -74,6 +74,7 @@ const ExcelReader = ({manageDataFunction, formik}: { manageDataFunction: Functio
                                    labelButton={"Carica File"}
                                    disabled={!formik.values.topic}
                                    isRequired={true}
+                                   name={"file"}
                                    formik={formik}/>
         </div>
     );

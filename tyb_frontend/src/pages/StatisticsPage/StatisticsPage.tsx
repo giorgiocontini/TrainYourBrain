@@ -15,6 +15,7 @@ import ExportXLSXButton from "../../components/ExcelButton/ExportXLSXButton";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import PlotComponent from "../../components/PlotComponent/PlotComponent";
 import PageDescription from "../../components/PageDescription/PageDescription";
+import ToggleButtonComponent from "../../components/ToggleComponent/ToggleButtonComponent";
 
 
 const StatisticsPage = () => {
@@ -62,25 +63,33 @@ const StatisticsPage = () => {
             accessor: "date"
         }]
     }, []);
+    const [showCart, setShowChart] = useState(true)
 
 
     return <div>
         <PageTitle title={"Le tue statistiche"}/>
         <PageDescription description={"Di seguito i risultati raggiunti distinti per argomento e data"}/>
         <div className={"container p-4"}>
-            <PlotComponent label={"Math"} data={tableData.map((el)=>{
-                return {label: el.topic, value: el.totalScore, labelAX: el.date || "test"}
-            })} plotType={"bar"}/>
-        </div>
-        <div className="d-flex flex-row ms-auto">
-            <ExportXLSXButton columns={getColumns} data={tableData} fileName={"test"}/>
-        </div>
+
+            <div className="d-flex row justify-content-between mt-3" style={{alignItems:"center"}}>
+                <div className="col-lg-9 col-sm-12">
+                    <ToggleButtonComponent flag={showCart} setFlag={setShowChart} option2={"Tabella"} option1={"Grafici"}/>
+                </div>
+                <div className="col-lg-3 col-sm-12 mb-2" >
+                    <ExportXLSXButton columns={getColumns} data={tableData} fileName={"Statistiche"} customStyle={"d-flex me-0 ms-auto"}/>
+                </div>
+            </div>
+
+            {showCart ? <div className={"border rounded shadow"}>
+                <PlotComponent label={"Math"} data={tableData.map((el) => {
+                    return {label: el.topic, value: el.totalScore, labelAX: el.date || "test"}
+                })} plotType={"line"}/>
+            </div> : <div>
+                <ReactTable columns={getColumns} data={tableData} hasPagination={true}
+                            initialState={{pageSize: 10, pageIndex: 0}} border={true} hasSorting={true}/>
+            </div>}
 
 
-
-        <div className="m-5">
-            <ReactTable columns={getColumns} data={tableData} hasPagination={true}
-                        initialState={{pageSize: 10, pageIndex: 0}} border={true}  hasSorting={true}/>
         </div>
 
 

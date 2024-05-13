@@ -26,7 +26,7 @@ const CardComponent = ({config}: CardComponentProps) => {
     const button1Ref: any = useRef(null);
 
     return (
-        <div key={config.id} className="CardComponent d-flex justify-content-center col-6 col-lg-4 col-xl-3">
+        <div key={config.id} className="CardComponent">
             <article className={"Card " + config.status}>
                 <header className="cardHeader"
                         style={{backgroundImage: `url(${config.image ? config.image : ""})`, height: "130px"}}>
@@ -41,19 +41,6 @@ const CardComponent = ({config}: CardComponentProps) => {
                         </p>
                     </div>
                     {config?.button1 ?
-                        //<button
-                        //    key={"button1_" + config.button1 + "_" + config?.id}
-                        //    ref={button1Ref}
-                        //    className={"Button-style " + config.button1?.type}
-                        //    disabled={config?.button1?.disabled ===undefined ?  config.status ===
-                        //    CardStatusEnum.LOCKED : config?.button1?.disabled }
-                        //    onClick={() => {
-                        //        button1Ref?.current?.blur();
-                        //        config.button1?.clickFunction();
-                        //    }}
-                        //>
-                        //    <span className="Label-button-style">{config?.button1?.label}</span>
-                        //</button>
                         <button
                             key={"button1_" + config?.id}
                             ref={button1Ref}

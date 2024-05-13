@@ -1,7 +1,6 @@
 package com.tyb.tyb_backend.dto;
 
-import com.tyb.tyb_backend.dto.Esito.Esito;
-import com.tyb.tyb_backend.model.Quiz;
+import com.tyb.tyb_backend.model.Question;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +12,12 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResultQuizResponse {
+public class QuizDto {
 
-    private Esito esito;
-    private List<Quiz> result;
+    private List<Question> questions;
+    private String topic;
+    private String topicDescription;
+    private byte[] image;
+
 
 }

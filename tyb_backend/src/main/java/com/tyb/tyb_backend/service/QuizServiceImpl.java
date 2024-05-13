@@ -4,20 +4,20 @@ import com.tyb.tyb_backend.dto.Esito.EnumCodiceEsito;
 import com.tyb.tyb_backend.dto.Esito.Esito;
 import com.tyb.tyb_backend.dto.QuizDataResponse;
 import com.tyb.tyb_backend.dto.ResultQuizResponse;
+import com.tyb.tyb_backend.model.Answer;
 import com.tyb.tyb_backend.model.Question;
+import com.tyb.tyb_backend.model.Quiz;
 import com.tyb.tyb_backend.model.QuizResult;
 import com.tyb.tyb_backend.repository.QuizRepository;
 import com.tyb.tyb_backend.repository.QuizResultsRepository;
+import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 
 @Service
@@ -27,14 +27,12 @@ public class QuizServiceImpl implements QuizService {
     QuizRepository quizRepository;
     @Autowired
     QuizResultsRepository quizResultsRepository;
-    //@Autowired
-    //TopicRepository topicRepository;
-
 
     @Override
-    public Esito createQuiz(List<Question> questions) {
-        if (questions != null && !questions.isEmpty()) {
-            quizRepository.insert(questions);
+    public Esito createQuiz(Quiz quiz) {
+
+        if (quiz != null && !quiz.getQuestions().isEmpty()) {
+            quizRepository.insert(quiz);
             return new Esito(EnumCodiceEsito.OK, "Quiz correttamente creato");
         }
         return new Esito(EnumCodiceEsito.KO, "Si sono verificati degli errori, si prega di riporvare");
@@ -45,20 +43,20 @@ public class QuizServiceImpl implements QuizService {
      * @return
      */
     @Override
-    public ResultQuizResponse getQuestionForATopic(String topic) {
+    public ResultQuizResponse getQuizByTopic(String topic) {
 
-        if(Objects.equals(topic, "all")){
-            return new ResultQuizResponse(new Esito(EnumCodiceEsito.OK),
-                    quizRepository.findAll().stream().map(question -> {
-                        question.getAnswers().forEach(answer -> answer.setIsCorrect(null));
-                        return question;
-                    }).collect(Collectors.toList()));
+        ArrayList<Quiz> quizList = new ArrayList<>();
+        if (Objects.equals(topic, "all")) {
+            quizList = (ArrayList<Quiz>) quizRepository.findAll();
+        } else {
+            Quiz quiz = quizRepository.findQuizByTopic(topic);
+            if (quiz != null) {
+                quiz.getQuestions().forEach(question -> question.getAnswers().forEach(answer -> answer.setIsCorrect(null)));
+                quizList.add(quiz);
+            }
         }
         return new ResultQuizResponse(new Esito(EnumCodiceEsito.OK),
-                quizRepository.findAllByTopic(topic).stream().map(question -> {
-                    question.getAnswers().forEach(answer -> answer.setIsCorrect(null));
-                    return question;
-                }).collect(Collectors.toList()));
+                quizList);
     }
 
     /**
@@ -67,13 +65,25 @@ public class QuizServiceImpl implements QuizService {
      * @return
      */
     @Override
-    public Boolean checkAnswer(String questionId, Integer answerIndex) {
-        ObjectId id = new ObjectId(questionId);
-        Optional<Question> question = quizRepository.findById(id);
-        if (question.isPresent()) {
-            return question.get().getAnswers().get(answerIndex).getIsCorrect();
+    public Boolean checkAnswer(String quizId, Integer questionId, Integer answerIndex) {
+        ObjectId id = new ObjectId(quizId);
+        Optional<Quiz> quizOptional = quizRepository.findById(id);
+
+        if (quizOptional.isPresent()) {
+            Quiz quiz = quizOptional.get();
+            List<Question> questions = quiz.getQuestions();
+
+            if (questionId >= 0 && questionId < questions.size()) {
+                Question question = questions.get(questionId);
+                List<Answer> answers = question.getAnswers();
+
+                if (answerIndex >= 0 && answerIndex < answers.size()) {
+                    return answers.get(answerIndex).getIsCorrect();
+                }
+            }
         }
-        return false;
+
+        return false; // Modificare secondo necessità
     }
 
     /**
@@ -109,6 +119,16 @@ public class QuizServiceImpl implements QuizService {
             return new Esito(EnumCodiceEsito.OK, "Quiz correttamente salvato");
         }
         return new Esito(EnumCodiceEsito.KO, "Si sono verificati degli errori");
+    }
+
+    @Document
+    @Data
+    class DocumentFile {
+        private String name;
+        private byte[] content;
+        private String contentType;
+
+        // getters e setters
     }
 
 }

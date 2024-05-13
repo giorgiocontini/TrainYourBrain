@@ -34,14 +34,15 @@ const HeaderComponent = ({}: HeaderComponentProps) => {
                             <button className="btn btn-primary" onClick={() => {
                                 navigate("/profile")
                             }}>
-                                <i className="bi bi-person-circle me-2"></i>{user.username}
+                                <i className="bi bi-person-circle"></i><span className="ms-2 hide-on-sm">{user.username}</span>
                             </button>
                             <button className="btn btn-danger ms-2" onClick={logout()}>
-                                <i className="bi bi-box-arrow-right me-2"></i>Logout
+                                <i className="bi bi-box-arrow-right"></i><span className="ms-2 hide-on-sm">{"Logout"}</span>
                             </button>
                         </> : <button className="btn btn-primary" onClick={() => {
                             navigate("/login", {replace: true})
-                        }}><i className="bi bi-box-arrow-in-left me-2"></i>Login</button>}
+                        }}><i className="bi bi-box-arrow-in-left"></i><span
+                            className="ms-2 hide-on-sm">{"Login"}</span></button>}
                     </div>
                 </div>
             </div>

@@ -59,12 +59,6 @@ export interface QuestionType {
      * @type {string}
      * @memberof QuestionType
      */
-    'topic': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof QuestionType
-     */
     'description': string;
     /**
      * 
@@ -95,6 +89,43 @@ export interface QuestionTypeAnswersInner {
 /**
  * 
  * @export
+ * @interface QuizDto
+ */
+export interface QuizDto {
+    /**
+     * 
+     * @type {Array<QuestionType>}
+     * @memberof QuizDto
+     */
+    'questions': Array<QuestionType>;
+    /**
+     * 
+     * @type {string}
+     * @memberof QuizDto
+     */
+    'topic': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof QuizDto
+     */
+    'id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof QuizDto
+     */
+    'topicDescription': string;
+    /**
+     * 
+     * @type {File}
+     * @memberof QuizDto
+     */
+    'image'?: File;
+}
+/**
+ * 
+ * @export
  * @interface QuizResponse
  */
 export interface QuizResponse {
@@ -106,10 +137,10 @@ export interface QuizResponse {
     'esito': EsitoType;
     /**
      * 
-     * @type {Array<QuestionType>}
+     * @type {Array<QuizDto>}
      * @memberof QuizResponse
      */
-    'result': Array<QuestionType>;
+    'result': Array<QuizDto>;
 }
 /**
  * 
@@ -233,17 +264,21 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Permette di controllare le risposte
-         * @param {string} questionId 
+         * @param {string} quizId 
+         * @param {number} questionId 
          * @param {number} answerId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        checkAnswerUsingGet: async (questionId: string, answerId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        checkAnswerUsingGet: async (quizId: string, questionId: number, answerId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'quizId' is not null or undefined
+            assertParamExists('checkAnswerUsingGet', 'quizId', quizId)
             // verify required parameter 'questionId' is not null or undefined
             assertParamExists('checkAnswerUsingGet', 'questionId', questionId)
             // verify required parameter 'answerId' is not null or undefined
             assertParamExists('checkAnswerUsingGet', 'answerId', answerId)
-            const localVarPath = `/quiz/{questionId}/{answerId}`
+            const localVarPath = `/quiz/{quizId}/{questionId}/{answerId}`
+                .replace(`{${"quizId"}}`, encodeURIComponent(String(quizId)))
                 .replace(`{${"questionId"}}`, encodeURIComponent(String(questionId)))
                 .replace(`{${"answerId"}}`, encodeURIComponent(String(answerId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -271,11 +306,14 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Permette di inserire un quiz con delle domande
-         * @param {Array<QuestionType>} [questionType] 
+         * @param {string} [topic] L\\\&#39;argomento del documento
+         * @param {string} [topicDescription] La descrizione dell\\\&#39;argomento
+         * @param {Array<QuestionType>} [questions] 
+         * @param {File} [file] Il file da caricare
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createQuizUsingPost: async (questionType?: Array<QuestionType>, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createQuizUsingPost: async (topic?: string, topicDescription?: string, questions?: Array<QuestionType>, file?: File, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/quiz/create`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -287,15 +325,32 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
+
+            if (topic !== undefined) { 
+                localVarFormParams.append('topic', topic as any);
+            }
+    
+            if (topicDescription !== undefined) { 
+                localVarFormParams.append('topicDescription', topicDescription as any);
+            }
+                if (questions) {
+                localVarFormParams.append('questions', questions.join(COLLECTION_FORMATS.csv));
+            }
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
+            if (file !== undefined) { 
+                localVarFormParams.append('file', file as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(questionType, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = localVarFormParams;
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -417,24 +472,28 @@ export const QuizApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Permette di controllare le risposte
-         * @param {string} questionId 
+         * @param {string} quizId 
+         * @param {number} questionId 
          * @param {number} answerId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async checkAnswerUsingGet(questionId: string, answerId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.checkAnswerUsingGet(questionId, answerId, options);
+        async checkAnswerUsingGet(quizId: string, questionId: number, answerId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.checkAnswerUsingGet(quizId, questionId, answerId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @summary Permette di inserire un quiz con delle domande
-         * @param {Array<QuestionType>} [questionType] 
+         * @param {string} [topic] L\\\&#39;argomento del documento
+         * @param {string} [topicDescription] La descrizione dell\\\&#39;argomento
+         * @param {Array<QuestionType>} [questions] 
+         * @param {File} [file] Il file da caricare
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createQuizUsingPost(questionType?: Array<QuestionType>, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createQuizUsingPost(questionType, options);
+        async createQuizUsingPost(topic?: string, topicDescription?: string, questions?: Array<QuestionType>, file?: File, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createQuizUsingPost(topic, topicDescription, questions, file, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -483,23 +542,27 @@ export const QuizApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Permette di controllare le risposte
-         * @param {string} questionId 
+         * @param {string} quizId 
+         * @param {number} questionId 
          * @param {number} answerId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        checkAnswerUsingGet(questionId: string, answerId: number, options?: any): AxiosPromise<boolean> {
-            return localVarFp.checkAnswerUsingGet(questionId, answerId, options).then((request) => request(axios, basePath));
+        checkAnswerUsingGet(quizId: string, questionId: number, answerId: number, options?: any): AxiosPromise<boolean> {
+            return localVarFp.checkAnswerUsingGet(quizId, questionId, answerId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Permette di inserire un quiz con delle domande
-         * @param {Array<QuestionType>} [questionType] 
+         * @param {string} [topic] L\\\&#39;argomento del documento
+         * @param {string} [topicDescription] La descrizione dell\\\&#39;argomento
+         * @param {Array<QuestionType>} [questions] 
+         * @param {File} [file] Il file da caricare
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createQuizUsingPost(questionType?: Array<QuestionType>, options?: any): AxiosPromise<EsitoType> {
-            return localVarFp.createQuizUsingPost(questionType, options).then((request) => request(axios, basePath));
+        createQuizUsingPost(topic?: string, topicDescription?: string, questions?: Array<QuestionType>, file?: File, options?: any): AxiosPromise<EsitoType> {
+            return localVarFp.createQuizUsingPost(topic, topicDescription, questions, file, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -544,26 +607,30 @@ export class QuizApi extends BaseAPI {
     /**
      * 
      * @summary Permette di controllare le risposte
-     * @param {string} questionId 
+     * @param {string} quizId 
+     * @param {number} questionId 
      * @param {number} answerId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof QuizApi
      */
-    public checkAnswerUsingGet(questionId: string, answerId: number, options?: AxiosRequestConfig) {
-        return QuizApiFp(this.configuration).checkAnswerUsingGet(questionId, answerId, options).then((request) => request(this.axios, this.basePath));
+    public checkAnswerUsingGet(quizId: string, questionId: number, answerId: number, options?: AxiosRequestConfig) {
+        return QuizApiFp(this.configuration).checkAnswerUsingGet(quizId, questionId, answerId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Permette di inserire un quiz con delle domande
-     * @param {Array<QuestionType>} [questionType] 
+     * @param {string} [topic] L\\\&#39;argomento del documento
+     * @param {string} [topicDescription] La descrizione dell\\\&#39;argomento
+     * @param {Array<QuestionType>} [questions] 
+     * @param {File} [file] Il file da caricare
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof QuizApi
      */
-    public createQuizUsingPost(questionType?: Array<QuestionType>, options?: AxiosRequestConfig) {
-        return QuizApiFp(this.configuration).createQuizUsingPost(questionType, options).then((request) => request(this.axios, this.basePath));
+    public createQuizUsingPost(topic?: string, topicDescription?: string, questions?: Array<QuestionType>, file?: File, options?: AxiosRequestConfig) {
+        return QuizApiFp(this.configuration).createQuizUsingPost(topic, topicDescription, questions, file, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

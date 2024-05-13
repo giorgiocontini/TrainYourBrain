@@ -12,7 +12,6 @@ import {CardComponentConfig} from "../../components/CardComponent/CardTypes";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import QuizClient from "../../services/API/openapicode_tyb_user/QuizClient";
 import {showDialogFailed} from "../../utils/DialogUtils";
-import {array} from "yup";
 
 
 interface HomeComponentProps {
@@ -37,14 +36,14 @@ const HomePage: FC<HomeComponentProps> = () => {
 
     const navigate = useNavigate()
 
-    const [topics, setTopics] = useState<string[]>([])
+    const [topics, setTopics] = useState<{ topic: string, topicDescription: string, id: string }[]>([])
 
     useEffect(() => {
         QuizClient.getQuizUsingGet("all").then(
             (res) => {
                 const data = res.data.result
-                const topicsFromDB =  data.map((value) => {
-                    return value.topic;
+                const topicsFromDB = data.map((value) => {
+                    return {topic: value.topic, id: value.id || "", topicDescription: value.topicDescription};
                 }).filter((value, index, self) => self.indexOf(value) === index)
                 setTopics([...topicsFromDB]);
             }
@@ -53,15 +52,14 @@ const HomePage: FC<HomeComponentProps> = () => {
         })
     }, []);
 
-
     // Array di dati delle card
     const cardData: CardComponentConfig[] =
         topics.map((el, index) => {
             return {
                 status: CardStatusEnum.ACTIVE,
                 id: "card_" + index,
-                title: el,
-                description: "",
+                title: el.topic,
+                description: el.topicDescription,
                 image: undefined,
                 button1: {
                     label: "Procedi",
@@ -69,40 +67,55 @@ const HomePage: FC<HomeComponentProps> = () => {
                         navigate("/quiz", {
                             replace: true,
                             state: {
-                                topic: el
+                                topic: el.topic,
+                                idQuiz: el.id
                             }
                         })
                     }
                 }
             }
         });
+
+    //<PageTitle title={"Homepage"}/>
+    //        <div className="container">
+    //            <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 mb-5 mt-3">
+    //                {/* Mappa i dati delle card per creare le card */}
+    //                {cardData.map((card, index) => (
+    //                    <div className="col" key={index}>
+    //                        <CardComponent
+    //                            config={{
+    //                                key: "" + index,
+    //                                status: CardStatusEnum.ACTIVE,
+    //                                id: card.title,
+    //                                title: card.title,
+    //                                image: card.image,
+    //                                description: card.description,
+    //                                button1: card?.button1
+    //                            }}
+    //                        />
+    //                    </div>
+    //                ))}
+    //            </div>
+    //        </div>
     return <div>
         <PageTitle title={"Homepage"}/>
-        <div className="row g-1 g-sm-2 g-md-3 g-lg-4 mb-5 mt-3">
-            {/* Mappiamo i dati delle card per creare le card */}
-            {cardData.map((card, index) => (
-                <CardComponent config={{
-                    key: "" + index,
-                    status: CardStatusEnum.ACTIVE,
-                    id: card.title,
-                    title: card.title,
-                    image: card.image,
-                    description: card.description,
-                    button1: card?.button1
-                }}/>
-            ))}
-        </div>
-
-        <div className="d-flex flex-row d-inline">
-            {isInRole(USER_ROLE.ADMIN) ?
-                <div className="col-7 border border-primary rounded p-2">Sezione Admin</div>
-                : null
-            }
-
-            <div className="col-4 me-auto border border-primary rounded p-2">
-                Sezione visibile a tutti
+        <div className="container p-2">
+            <div className="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 mb-5 mt-3 ">
+                {/* Mappiamo i dati delle card per creare le card */}
+                {cardData.map((card, index) => (
+                    <div className="col" key={index}>
+                        <CardComponent config={{
+                            key: "" + index,
+                            status: CardStatusEnum.ACTIVE,
+                            id: card.title,
+                            title: card.title,
+                            image: card.image,
+                            description: card.description,
+                            button1: card?.button1
+                        }}/>
+                    </div>
+                ))}
             </div>
-
         </div>
     </div>
 }
