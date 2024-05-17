@@ -121,7 +121,7 @@ paths:
           in: path
           required: true
           schema:
-            type: number
+            type: string
         - name: answerId
           in: path
           required: true
@@ -344,6 +344,7 @@ components:
               isCorrect:
                 type: boolean
             required:
+              - id
               - description
               - isCorrect
       required:

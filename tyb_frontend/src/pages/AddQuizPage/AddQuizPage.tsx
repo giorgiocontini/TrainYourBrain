@@ -62,11 +62,10 @@ const AddQuizPage = () => {
         topic: Yup.string().required('Campo obbligatorio'),
         topicDescription: Yup.string().required('Campo obbligatorio'),
         file: Yup.mixed().required('Devi caricare un file'),
-        imageFile: Yup.mixed().required('Devi caricare un file')
+        imageFile: Yup.mixed()
     })
 
     const manageDataGotFromExcel = (data: QuestionType[]) => {
-        debugger
         QuizClient.createQuizUsingPost({
                 questions: data,
                 ...formik.values
@@ -85,7 +84,6 @@ const AddQuizPage = () => {
     }
     const formik = useFormik({
         initialValues: initialFormState, validationSchema: validationSchema, onSubmit: () => {
-            debugger
             manageDataGotFromExcel(dataToSave);
         }
     });
@@ -124,22 +122,10 @@ const AddQuizPage = () => {
                 </div>
                 <div className={"col-lg-4 col-sm-12 mt-2"}>
                     <FileUploaderComponent acceptFile={".png, .jpg"}
-                                           labelButton={"Carica File"}
+                                           labelButton={"Carica un'immagine"}
                                            disabled={!formik.values.topic}
-                                           isRequired={true}
                                            name={"imageFile"}
-                                           handleFile={(file: File) => {
-                                               const reader = new FileReader();
-                                               reader.onload = (readEvent) => {
-                                                   const base64 = readEvent.target?.result as string;
-                                                   formik.setFormikState((oldState: any) => {
-                                                       const newState = {...oldState};
-                                                       newState.values["imageFile"] = base64;
-                                                       return newState;
-                                                   });
-                                               };
-                                               reader.readAsDataURL(file);
-                                           }}/>
+                                           formik={formik}/>
                 </div>
 
                 {

@@ -9,6 +9,7 @@ import React, {useContext, useRef} from "react";
 import "./CardComponent.scss";
 import {CardComponentConfig} from "./CardTypes";
 import {AppContext} from "../../AppContext";
+import {generateRandomRGB} from "../PlotComponent/PlotComponent";
 
 
 type CardComponentProps = {
@@ -25,20 +26,25 @@ const CardComponent = ({config}: CardComponentProps) => {
 
     const button1Ref: any = useRef(null);
 
-    debugger
     return (
         <div key={config.id} className="CardComponent">
             <article className={"Card " + config.status}>
                 <header className="cardHeader">
 
-                    <img src={config.image} alt="Card Image"/>
-
+                    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+                        {config.image ? (
+                            <img src={config.image} alt="Card Image" style={{ width: '100%', height: '100%', objectFit: 'cover',
+                                objectPosition: 'center'  }} />
+                        ) : (
+                            <div style={{ backgroundColor: generateRandomRGB(), width: '100%', height: '100%' }}></div>
+                        )}
+                    </div>
                 </header>
                 <footer className="cardFooter">
                     <div className="cardText">
-                        <h2 className="cardTitle">
+                        <h3 className="cardTitle">
                             {config.title}
-                        </h2>
+                        </h3>
                         <p className="cardSubtitle">
                             {config.description}
                         </p>

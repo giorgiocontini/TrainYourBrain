@@ -27,13 +27,16 @@ const QuizPage = () => {
     // Funzione per recuperare un numero casuale di oggetti dalla lista
     function getDomandeCasuali(lista: QuizDto[], numeroDomande: number) {
         const list: QuestionType[] = lista[0].questions.sort(() => Math.random() - 0.5).slice(0, numeroDomande);
-        setQuestions(list);
+        setQuestions(lista[0].questions);
     }
 
     function getQuiz(topic: string) {
         QuizClient.getQuizUsingGet(topic).then(
             (res) => {
-                getDomandeCasuali(res?.data?.result, 10);
+                //getDomandeCasuali(res?.data?.result, 10);
+
+                setQuestions(res?.data?.result[0].questions);
+
             }
         ).catch((error) => {
             showDialogFailed(error?.response?.data.error)
@@ -60,7 +63,7 @@ const QuizPage = () => {
     };
 
     const [buttonStyle, setButtonStyle]
-        = useState<{ qId: number, aId: number, style: string } | undefined>(undefined);
+        = useState<{ qId: string, aId: number, style: string } | undefined>(undefined);
 
     function saveQuizResult() {
         QuizClient.saveQuizUsingPost(userResults).then(response => {
@@ -79,14 +82,9 @@ const QuizPage = () => {
         topic: topic || ""
     })
 
-    useEffect(() => {
-        console.log(userResults.totalScore);
-        debugger
-    }, [userResults.totalScore]);
 
-    const checkAnswer = (quizId: string, questionId: number, ansIndex: number) => {
+    const checkAnswer = (quizId: string, questionId: string, ansIndex: number) => {
 
-        debugger
         QuizClient.checkAnswerUsingGet(quizId, questionId, ansIndex).then(
             (res) => {
                 if (res.data) {
@@ -138,13 +136,13 @@ const QuizPage = () => {
 
     function getStyle(index: number) {
         return (buttonStyle
-            && currentQuestionIndex === buttonStyle?.qId
+            && questions[currentQuestionIndex].id === buttonStyle?.qId
             && index === buttonStyle.aId) ? buttonStyle.style : "";
     }
 
     return <div>
-        <div className="d-flex flex-row justify-content-between" style={{alignItems: "center"}}>
-            <h1>{(topic as string)?.toUpperCase() ?? ""}</h1>
+        <div className="d-flex flex-row justify-content-between p-2" style={{alignItems: "center"}}>
+            <h3>{(topic as string)?.toUpperCase() ?? ""}</h3>
             <TimerComponent
                 onTimeout={handleTimeout} remainingTime={remainingTime} setRemainingTime={setRemainingTime}/>
 
@@ -160,7 +158,7 @@ const QuizPage = () => {
                 {(questions[currentQuestionIndex]?.answers)?.map((el, index) => {
                     return <button key={'answer_' + index} className={'answerButton ' + getStyle(index)}
                                    onClick={() => {
-                                       checkAnswer(idQuiz, currentQuestionIndex, index);
+                                       checkAnswer(idQuiz, questions[currentQuestionIndex]?.id ||"", index);
                                    }
                                    }>{el.description}</button>
                 })}

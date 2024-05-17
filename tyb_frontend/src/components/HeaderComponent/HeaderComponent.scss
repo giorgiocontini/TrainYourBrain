@@ -33,12 +33,14 @@
         font-weight: 700;
         padding: 13px 24px;
         color: white;
-        text-decoration: none;
+        text-decoration: none !important;
         border-width: 0 !important;
+
       }
       .a:hover {
         cursor: pointer;
         color: inherit;
+
       }
     }
   }
