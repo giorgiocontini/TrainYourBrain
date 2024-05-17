@@ -12,6 +12,7 @@ import {CardComponentConfig} from "../../components/CardComponent/CardTypes";
 import PageTitle from "../../components/PageTitle/PageTitle";
 import QuizClient from "../../services/API/openapicode_tyb_user/QuizClient";
 import {showDialogFailed} from "../../utils/DialogUtils";
+import {QuizDto} from "../../services/API/openapicode_tyb_user";
 
 
 interface HomeComponentProps {
@@ -36,15 +37,13 @@ const HomePage: FC<HomeComponentProps> = () => {
 
     const navigate = useNavigate()
 
-    const [topics, setTopics] = useState<{ topic: string, topicDescription: string, id: string }[]>([])
+    const [topics, setTopics] = useState<QuizDto[]>([])
 
     useEffect(() => {
         QuizClient.getQuizUsingGet("all").then(
             (res) => {
                 const data = res.data.result
-                const topicsFromDB = data.map((value) => {
-                    return {topic: value.topic, id: value.id || "", topicDescription: value.topicDescription};
-                }).filter((value, index, self) => self.indexOf(value) === index)
+                const topicsFromDB = data.filter((value, index, self) => self.indexOf(value) === index)
                 setTopics([...topicsFromDB]);
             }
         ).catch((error) => {
@@ -60,7 +59,7 @@ const HomePage: FC<HomeComponentProps> = () => {
                 id: "card_" + index,
                 title: el.topic,
                 description: el.topicDescription,
-                image: undefined,
+                image: el.imageFile,
                 button1: {
                     label: "Procedi",
                     onClick: () => {

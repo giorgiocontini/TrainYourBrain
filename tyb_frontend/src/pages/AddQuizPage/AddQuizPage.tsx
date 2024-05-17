@@ -40,24 +40,6 @@ const AddQuizPage = () => {
 
     const [dataToSave, setDataToSave] = useState([])
 
-    //function convertFileToByteArray(file: File) {
-    //    return new Promise((resolve, reject) => {
-    //        const reader = new FileReader();
-//
-    //        reader.onload = function (event) {
-    //            const arrayBuffer = reader.result;
-    //            const byteArray = new Uint8Array(arrayBuffer);
-    //            resolve(byteArray);
-    //        };
-//
-    //        reader.onerror = function (err) {
-    //            reject(err);
-    //        };
-//
-    //        reader.readAsArrayBuffer(file);
-    //    });
-    //}
-
     const templateColumns = [{
         Header: "Domanda",
         accessor: "domanda"
@@ -83,33 +65,12 @@ const AddQuizPage = () => {
         imageFile: Yup.mixed().required('Devi caricare un file')
     })
 
-    const convertFileToByteArray = (file: File): void => {
-        const reader = new FileReader();
-
-        reader.onload = (event: ProgressEvent<FileReader>) => {
-            const arrayBuffer = event.target?.result as ArrayBuffer;
-            const byteArray = new Uint8Array(arrayBuffer);
-
-            // Qui puoi utilizzare byteArray, per esempio inviarlo a un server
-
-            formik?.setFormikState((oldState: any) => {
-                const newState = {...oldState};
-                newState.values["imageFile"] = byteArray;
-                return newState;
-            });
-            console.log(byteArray);
-        };
-
-        reader.onerror = (error: ProgressEvent<FileReader>) => {
-            console.error('Error reading file:', error);
-        };
-
-        reader.readAsArrayBuffer(file);
-    };
-
     const manageDataGotFromExcel = (data: QuestionType[]) => {
         debugger
-        QuizClient.createQuizUsingPost(formik.values.topic, formik.values.topicDescription, data, formik.values.imageFile
+        QuizClient.createQuizUsingPost({
+                questions: data,
+                ...formik.values
+            }
         ).then(
             (response) => {
                 showDialogSuccess("", response.data.descrizione, () => {
@@ -167,7 +128,18 @@ const AddQuizPage = () => {
                                            disabled={!formik.values.topic}
                                            isRequired={true}
                                            name={"imageFile"}
-                                           formik={formik}/>
+                                           handleFile={(file: File) => {
+                                               const reader = new FileReader();
+                                               reader.onload = (readEvent) => {
+                                                   const base64 = readEvent.target?.result as string;
+                                                   formik.setFormikState((oldState: any) => {
+                                                       const newState = {...oldState};
+                                                       newState.values["imageFile"] = base64;
+                                                       return newState;
+                                                   });
+                                               };
+                                               reader.readAsDataURL(file);
+                                           }}/>
                 </div>
 
                 {

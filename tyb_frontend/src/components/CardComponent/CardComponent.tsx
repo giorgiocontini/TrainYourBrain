@@ -25,11 +25,14 @@ const CardComponent = ({config}: CardComponentProps) => {
 
     const button1Ref: any = useRef(null);
 
+    debugger
     return (
         <div key={config.id} className="CardComponent">
             <article className={"Card " + config.status}>
-                <header className="cardHeader"
-                        style={{backgroundImage: `url(${config.image ? config.image : ""})`, height: "130px"}}>
+                <header className="cardHeader">
+
+                    <img src={config.image} alt="Card Image"/>
+
                 </header>
                 <footer className="cardFooter">
                     <div className="cardText">

@@ -11,7 +11,7 @@ public class DocumentRequest {
     private String topic;
     private String topicDescription;
     private List<Question> questions;
-    private MultipartFile file;
+    private byte[] file;
 
     // Getter e setter
 }

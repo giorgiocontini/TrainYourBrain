@@ -219,24 +219,24 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               type: object
               properties:
                 topic:
                   type: string
-                  description: L'argomento del documento
+                  description: L'argomento principale del quiz
                 topicDescription:
                   type: string
-                  description: La descrizione dell'argomento
+                  description: Una descrizione dell'argomento
                 questions:
                   type: array
                   items:
                     $ref: '#/components/schemas/QuestionType'
-                file:
+                imageFile:
                   type: string
-                  format: binary
-                  description: Il file da caricare
+                  format: base64
+                  description: Il file multimediale da caricare
       responses:
         "200":
           description: OK
@@ -321,9 +321,9 @@ components:
           type: string
         topicDescription:
           type: string
-        image:
+        imageFile:
           type: string
-          format: binary
+          format: base64
       required:
         - questions
         - topic

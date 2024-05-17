@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.List;
@@ -27,9 +26,7 @@ public class Quiz implements Serializable {
     @Field(name = "topicDescription")
     private String topicDescription;
 
-    // Dati del file incorporati
-    private String filename;
-    private String contentType;
-    private byte[] data;
+    @Field(name = "imageFile")
+    private String imageFile;
 
 }

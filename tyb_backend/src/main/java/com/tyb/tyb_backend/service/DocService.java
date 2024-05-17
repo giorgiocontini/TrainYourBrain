@@ -1,13 +1,15 @@
 package com.tyb.tyb_backend.service;
 
+import com.tyb.tyb_backend.model.Question;
 import com.tyb.tyb_backend.model.Quiz;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 
 public interface DocService {
 
-    void saveDocument(Quiz document, MultipartFile file) throws IOException;
+     Quiz saveDocument(String topic, String topicDescription, List<Question> questions, byte[] fileData,
+                             String filename) throws IOException;
 
 }

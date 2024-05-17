@@ -26,6 +26,37 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError } from './base';
 /**
  * 
  * @export
+ * @interface CreateQuizUsingPostRequest
+ */
+export interface CreateQuizUsingPostRequest {
+    /**
+     * L\'argomento principale del quiz
+     * @type {string}
+     * @memberof CreateQuizUsingPostRequest
+     */
+    'topic'?: string;
+    /**
+     * Una descrizione dell\'argomento
+     * @type {string}
+     * @memberof CreateQuizUsingPostRequest
+     */
+    'topicDescription'?: string;
+    /**
+     * 
+     * @type {Array<QuestionType>}
+     * @memberof CreateQuizUsingPostRequest
+     */
+    'questions'?: Array<QuestionType>;
+    /**
+     * Il file multimediale da caricare
+     * @type {string}
+     * @memberof CreateQuizUsingPostRequest
+     */
+    'imageFile'?: string;
+}
+/**
+ * 
+ * @export
  * @interface EsitoType
  */
 export interface EsitoType {
@@ -118,10 +149,10 @@ export interface QuizDto {
     'topicDescription': string;
     /**
      * 
-     * @type {File}
+     * @type {string}
      * @memberof QuizDto
      */
-    'image'?: File;
+    'imageFile'?: string;
 }
 /**
  * 
@@ -306,14 +337,13 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Permette di inserire un quiz con delle domande
-         * @param {string} [topic] L\\\&#39;argomento del documento
-         * @param {string} [topicDescription] La descrizione dell\\\&#39;argomento
-         * @param {Array<QuestionType>} [questions] 
-         * @param {File} [file] Il file da caricare
+         * @param {CreateQuizUsingPostRequest} createQuizUsingPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createQuizUsingPost: async (topic?: string, topicDescription?: string, questions?: Array<QuestionType>, file?: File, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createQuizUsingPost: async (createQuizUsingPostRequest: CreateQuizUsingPostRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createQuizUsingPostRequest' is not null or undefined
+            assertParamExists('createQuizUsingPost', 'createQuizUsingPostRequest', createQuizUsingPostRequest)
             const localVarPath = `/quiz/create`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -325,32 +355,15 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
-            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
 
-            if (topic !== undefined) { 
-                localVarFormParams.append('topic', topic as any);
-            }
     
-            if (topicDescription !== undefined) { 
-                localVarFormParams.append('topicDescription', topicDescription as any);
-            }
-                if (questions) {
-                localVarFormParams.append('questions', questions.join(COLLECTION_FORMATS.csv));
-            }
+            localVarHeaderParameter['Content-Type'] = 'application/json';
 
-    
-            if (file !== undefined) { 
-                localVarFormParams.append('file', file as any);
-            }
-    
-    
-            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = localVarFormParams;
+            localVarRequestOptions.data = serializeDataIfNeeded(createQuizUsingPostRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -485,15 +498,12 @@ export const QuizApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Permette di inserire un quiz con delle domande
-         * @param {string} [topic] L\\\&#39;argomento del documento
-         * @param {string} [topicDescription] La descrizione dell\\\&#39;argomento
-         * @param {Array<QuestionType>} [questions] 
-         * @param {File} [file] Il file da caricare
+         * @param {CreateQuizUsingPostRequest} createQuizUsingPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createQuizUsingPost(topic?: string, topicDescription?: string, questions?: Array<QuestionType>, file?: File, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createQuizUsingPost(topic, topicDescription, questions, file, options);
+        async createQuizUsingPost(createQuizUsingPostRequest: CreateQuizUsingPostRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createQuizUsingPost(createQuizUsingPostRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -554,15 +564,12 @@ export const QuizApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Permette di inserire un quiz con delle domande
-         * @param {string} [topic] L\\\&#39;argomento del documento
-         * @param {string} [topicDescription] La descrizione dell\\\&#39;argomento
-         * @param {Array<QuestionType>} [questions] 
-         * @param {File} [file] Il file da caricare
+         * @param {CreateQuizUsingPostRequest} createQuizUsingPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createQuizUsingPost(topic?: string, topicDescription?: string, questions?: Array<QuestionType>, file?: File, options?: any): AxiosPromise<EsitoType> {
-            return localVarFp.createQuizUsingPost(topic, topicDescription, questions, file, options).then((request) => request(axios, basePath));
+        createQuizUsingPost(createQuizUsingPostRequest: CreateQuizUsingPostRequest, options?: any): AxiosPromise<EsitoType> {
+            return localVarFp.createQuizUsingPost(createQuizUsingPostRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -621,16 +628,13 @@ export class QuizApi extends BaseAPI {
     /**
      * 
      * @summary Permette di inserire un quiz con delle domande
-     * @param {string} [topic] L\\\&#39;argomento del documento
-     * @param {string} [topicDescription] La descrizione dell\\\&#39;argomento
-     * @param {Array<QuestionType>} [questions] 
-     * @param {File} [file] Il file da caricare
+     * @param {CreateQuizUsingPostRequest} createQuizUsingPostRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof QuizApi
      */
-    public createQuizUsingPost(topic?: string, topicDescription?: string, questions?: Array<QuestionType>, file?: File, options?: AxiosRequestConfig) {
-        return QuizApiFp(this.configuration).createQuizUsingPost(topic, topicDescription, questions, file, options).then((request) => request(this.axios, this.basePath));
+    public createQuizUsingPost(createQuizUsingPostRequest: CreateQuizUsingPostRequest, options?: AxiosRequestConfig) {
+        return QuizApiFp(this.configuration).createQuizUsingPost(createQuizUsingPostRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

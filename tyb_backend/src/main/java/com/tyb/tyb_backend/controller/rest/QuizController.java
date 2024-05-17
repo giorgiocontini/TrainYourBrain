@@ -8,6 +8,7 @@ import com.tyb.tyb_backend.dto.ResultQuizResponse;
 import com.tyb.tyb_backend.model.Question;
 import com.tyb.tyb_backend.model.Quiz;
 import com.tyb.tyb_backend.model.QuizResult;
+import com.tyb.tyb_backend.repository.QuizRepository;
 import com.tyb.tyb_backend.service.DocService;
 import com.tyb.tyb_backend.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,21 +34,13 @@ public class QuizController {
 
     @Autowired
     DocService docService;
+    @Autowired
+    private QuizRepository quizRepository;
 
-    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Esito> createQuiz( @ModelAttribute DocumentRequest documentRequest) {
-        Logger.getGlobal().info("**************** Inserimento Dati User ***************");
 
-        try {
-            Quiz document = new Quiz();
-            document.setTopic(documentRequest.getTopic());
-            document.setTopicDescription(documentRequest.getTopicDescription());
-            document.setQuestions(documentRequest.getQuestions());
-            docService.saveDocument(document, documentRequest.getFile());
-            return new ResponseEntity<>(quizService.createQuiz(document), HttpStatus.OK);
-        } catch (IOException e) {
-            return new ResponseEntity<>(new Esito(EnumCodiceEsito.KO, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @PostMapping(value = "/create",  produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Esito> createDocument(@RequestBody Quiz quiz) {
+            return ResponseEntity.ok(quizService.createQuiz(quiz));
     }
 
     @GetMapping(value = "/{topic}", produces = MediaType.APPLICATION_JSON_VALUE)
