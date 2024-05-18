@@ -3,14 +3,6 @@ import * as XLSX from 'xlsx';
 import {QuestionType} from "../../services/API/openapicode_tyb_user";
 import FileUploaderComponent from "../FileUploaderComponent/FileUploaderComponent";
 
-
-interface Oggetto {
-    topic: string;
-    question: string;
-    answer: string;
-    isCorrect: boolean;
-}
-
 const ExcelReader = ({manageDataFunction, formik}: { manageDataFunction: Function, formik:any}) => {
     const handleFileUpload = (file:any): void => {
         //const file = e.target.files?.[0];
@@ -32,8 +24,7 @@ const ExcelReader = ({manageDataFunction, formik}: { manageDataFunction: Functio
             // Converti il foglio di lavoro in un array di oggetti
             const excelData = XLSX.utils.sheet_to_json(worksheet, {header: 1}).slice(1).map((row: any) => {
                 return {
-                    topic: formik.values.topic,
-                    question: row[0],
+                    description: row[0],
                     answer: row[1],
                     isCorrect: row[2] === "Si"
                 }
@@ -41,17 +32,16 @@ const ExcelReader = ({manageDataFunction, formik}: { manageDataFunction: Functio
 
             const getObjectForQuiz: {
                 [question: string]: {
-                    topic: string,
-                    question: string,
+                    description: string,
                     answers: { answer: string, isCorrect: boolean }[]
                 }
             } = excelData.reduce((acc, oggetto) => {
-                const {topic, question, answer, isCorrect} = oggetto;
-                if (!acc[question as keyof {}]) {
+                const {description, answer, isCorrect} = oggetto;
+                if (!acc[description as keyof {}]) {
                     //@ts-ignore
-                    acc[question as keyof {}] = {topic, question, answers: []};
+                    acc[description as keyof {}] = {description, answers: []};
                 }
-                (acc[question as keyof {}] as QuestionType).answers.push({description: answer, isCorrect: isCorrect});
+                (acc[description as keyof {}] as QuestionType).answers.push({description: answer, isCorrect: isCorrect});
                 return acc;
             }, {});
 

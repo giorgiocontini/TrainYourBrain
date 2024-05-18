@@ -5,6 +5,7 @@ import com.tyb.tyb_backend.dto.QuizDataResponse;
 import com.tyb.tyb_backend.dto.ResultQuizResponse;
 import com.tyb.tyb_backend.model.Quiz;
 import com.tyb.tyb_backend.model.QuizResult;
+import org.bson.types.ObjectId;
 
 
 public interface QuizService {
@@ -13,7 +14,7 @@ public interface QuizService {
 
     ResultQuizResponse getQuizByTopic(String topic);
 
-    Boolean checkAnswer(String quizId, Integer questionId, Integer answerIndex);
+    Boolean checkAnswer(String quizId, String questionId, Integer answerIndex);
 
     QuizDataResponse getResultsByUserId(String userId);
 

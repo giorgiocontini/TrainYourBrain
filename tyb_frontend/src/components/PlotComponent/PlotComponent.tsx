@@ -40,7 +40,7 @@ type PlotProps = {
     plotType: "bar" | "line" | "pie";
 }
 
-function generateRandomRGB(): string {
+export function generateRandomRGB(): string {
     // Genera tre numeri interi casuali tra 0 e 255
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
@@ -86,10 +86,6 @@ const PlotComponent = ({data, plotType}: PlotProps) => {
         datasets
     };
 
-    useEffect(() => {
-        console.log(plotData)
-        debugger
-    }, [plotData]);
     const chartRef = useRef<ChartJS>(null);
 
     const onClick = (event: MouseEvent<HTMLCanvasElement>) => {

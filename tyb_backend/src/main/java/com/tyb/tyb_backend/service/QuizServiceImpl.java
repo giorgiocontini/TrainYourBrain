@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Service;
 
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -28,10 +29,16 @@ public class QuizServiceImpl implements QuizService {
     @Autowired
     QuizResultsRepository quizResultsRepository;
 
+
     @Override
     public Esito createQuiz(Quiz quiz) {
 
         if (quiz != null && !quiz.getQuestions().isEmpty()) {
+            quiz.getQuestions().forEach(question -> {
+                if (question.getId() == null) {
+                    question.setId(new ObjectId().toHexString());
+                }
+            });
             quizRepository.insert(quiz);
             return new Esito(EnumCodiceEsito.OK, "Quiz correttamente creato");
         }
@@ -45,9 +52,12 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public ResultQuizResponse getQuizByTopic(String topic) {
 
-        ArrayList<Quiz> quizList = new ArrayList<>();
+        List<Quiz> quizList = new ArrayList<>();
         if (Objects.equals(topic, "all")) {
-            quizList = (ArrayList<Quiz>) quizRepository.findAll();
+            quizList = quizRepository.findAll();
+            quizList.forEach(quiz -> quiz.getQuestions().forEach(question ->{ question.getAnswers().forEach(answer -> answer.setIsCorrect(null));
+            }
+            ));
         } else {
             Quiz quiz = quizRepository.findQuizByTopic(topic);
             if (quiz != null) {
@@ -55,8 +65,8 @@ public class QuizServiceImpl implements QuizService {
                 quizList.add(quiz);
             }
         }
-        return new ResultQuizResponse(new Esito(EnumCodiceEsito.OK),
-                quizList);
+        return new ResultQuizResponse(new Esito(EnumCodiceEsito.OK), quizList);
+
     }
 
     /**
@@ -65,22 +75,25 @@ public class QuizServiceImpl implements QuizService {
      * @return
      */
     @Override
-    public Boolean checkAnswer(String quizId, Integer questionId, Integer answerIndex) {
+    public Boolean checkAnswer(String quizId, String questionId, Integer answerIndex) {
         ObjectId id = new ObjectId(quizId);
         Optional<Quiz> quizOptional = quizRepository.findById(id);
 
         if (quizOptional.isPresent()) {
             Quiz quiz = quizOptional.get();
             List<Question> questions = quiz.getQuestions();
-
-            if (questionId >= 0 && questionId < questions.size()) {
-                Question question = questions.get(questionId);
-                List<Answer> answers = question.getAnswers();
-
-                if (answerIndex >= 0 && answerIndex < answers.size()) {
-                    return answers.get(answerIndex).getIsCorrect();
-                }
-            }
+            return questions.stream()
+                    .filter(question -> question.getId().equals(questionId))
+                    .findFirst()
+                    .map(question -> {
+                        // Assicurati che l'indice della risposta sia valido
+                        if (answerIndex >= 0 && answerIndex < question.getAnswers().size()) {
+                            return question.getAnswers().get(answerIndex).getIsCorrect();
+                        } else {
+                            return null; // O lancia un'eccezione se l'indice non è valido
+                        }
+                    })
+                    .orElse(null); // O lancia un'eccezione se la domanda non è trovata
         }
 
         return false; // Modificare secondo necessità

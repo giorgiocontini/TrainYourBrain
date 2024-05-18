@@ -36,8 +36,6 @@ const StatisticsPage = () => {
         })
     }
     useEffect(() => {
-        debugger
-
         if (isInRole("P") || isInRole("A")){
             //recupero i dati di tutti gli utenti
             getTableDate("all")
@@ -71,7 +69,7 @@ const StatisticsPage = () => {
         <PageDescription description={"Di seguito i risultati raggiunti distinti per argomento e data"}/>
         <div className={"container p-4"}>
 
-            <div className="d-flex row justify-content-between mt-3" style={{alignItems:"center"}}>
+            <div className="d-flex row justify-content-between mt-3 mb-4" style={{alignItems:"center"}}>
                 <div className="col-lg-9 col-sm-12">
                     <ToggleButtonComponent flag={showCart} setFlag={setShowChart} option2={"Tabella"} option1={"Grafici"}/>
                 </div>

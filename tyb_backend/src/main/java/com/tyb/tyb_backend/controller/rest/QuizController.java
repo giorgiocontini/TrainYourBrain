@@ -11,6 +11,7 @@ import com.tyb.tyb_backend.model.QuizResult;
 import com.tyb.tyb_backend.repository.QuizRepository;
 import com.tyb.tyb_backend.service.DocService;
 import com.tyb.tyb_backend.service.QuizService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,7 +51,7 @@ public class QuizController {
     }
 
     @GetMapping(value = "/{quizId}/{questionId}/{answerId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> checkAnswer(@PathVariable String quizId, @PathVariable Integer questionId,
+    public ResponseEntity<Boolean> checkAnswer(@PathVariable String quizId, @PathVariable String questionId,
                                                @PathVariable Integer answerId) {
         Logger.getGlobal().info("**************** Verifico risposta ***************");
         return new ResponseEntity<>(quizService.checkAnswer(quizId, questionId, answerId), HttpStatus.OK);
