@@ -14,6 +14,7 @@ export const useUser = () => {
 
     const removeUser = () => {
         setUser(undefined);
+        sessionStorage.clear();
     };
 
     return { user, addUser, removeUser };

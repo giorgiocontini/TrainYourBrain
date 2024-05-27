@@ -17,6 +17,7 @@
     "bootstrap-icons": "^1.10.5",
     "bootstrap-italia": "^2.1.1",
     "chart.js": "^4.4.2",
+    "crypto-js": "^4.2.0",
     "file-saver": "^2.0.5",
     "formik": "^2.4.4",
     "openai": "^4.0.0",

@@ -7,14 +7,17 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 @Document(collection = "user") //Nome del documento sul db
 @Data //genera automaticamente i getter e i setter
 @AllArgsConstructor //crea un costruttore
 @NoArgsConstructor //crea un costruttore
-public class User implements Serializable {
+public class User implements Serializable, UserDetails {
 
     @Id
     private String id;
@@ -52,4 +55,43 @@ public class User implements Serializable {
     }
 
 
+    /**
+     * @return
+     */
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

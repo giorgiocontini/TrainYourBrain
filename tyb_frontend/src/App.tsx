@@ -5,7 +5,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import "react-icons/fa";
 import React, {useContext} from 'react';
 import AppContextProvider from "./AppContext";
-import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} from "react-router-dom";
+import {createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider} from "react-router-dom";
 import RootLayout from "./root/RootLayout";
 import LoginRegistrationPage from "./pages/LoginRegistrationPage/LoginRegistrationPage";
 import HomePage from "./pages/HomePage/HomePage";
@@ -18,20 +18,21 @@ import QuizPage from "./pages/QuizPage/QuizPage";
 import StatisticsPage from "./pages/StatisticsPage/StatisticsPage";
 import AddQuizPage from "./pages/AddQuizPage/AddQuizPage";
 
+//                 <Route path="profile" Component={ProfilePage}/>
 
 export const routes = createBrowserRouter(
     createRoutesFromElements(
         <Route>
-            <Route path="/" Component={RootLayout}>
+            <Route path="/" Component={RootLayout} >
                 <Route path="" Component={WelcomePage}/>
                 <Route path="login" Component={LoginRegistrationPage}/>
-                <Route path="profile" Component={ProfilePage}/>
                 <Route path="home" element={<ProtectedRoute allowedRoles={["A", "P", "S"]}><HomePage/></ProtectedRoute>}/>
                 <Route path="welcome/:username" Component={WelcomePage}/>
-                <Route path="quiz" Component={QuizPage}/>
-                <Route path="statistics" Component={StatisticsPage}/>
-                <Route path="add-quiz" Component={AddQuizPage}/>
-                <Route path="*" Component={ErrorPage}/>
+                <Route path="quiz" element={<ProtectedRoute allowedRoles={["A", "P", "S"]}><QuizPage/></ProtectedRoute>}/>
+                <Route path="statistics" element={<ProtectedRoute allowedRoles={["A", "P", "S"]}><StatisticsPage/></ProtectedRoute>}/>
+                <Route path="add-quiz" element={<ProtectedRoute allowedRoles={["A", "P"]}><AddQuizPage/></ProtectedRoute>}/>
+                <Route path="*" element={<Navigate to="/" replace />} />
+
             </Route>
         </Route>
     ))

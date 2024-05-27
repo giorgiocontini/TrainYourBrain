@@ -32,11 +32,8 @@ export enum CardStatusEnum {
 }
 
 const HomePage: FC<HomeComponentProps> = () => {
-    const {isInRole} = useContext(AuthContext);
-    const params = useParams();
 
     const navigate = useNavigate()
-
     const [topics, setTopics] = useState<QuizDto[]>([])
 
     useEffect(() => {
@@ -74,28 +71,6 @@ const HomePage: FC<HomeComponentProps> = () => {
                 }
             }
         });
-
-    //<PageTitle title={"Homepage"}/>
-    //        <div className="container">
-    //            <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 mb-5 mt-3">
-    //                {/* Mappa i dati delle card per creare le card */}
-    //                {cardData.map((card, index) => (
-    //                    <div className="col" key={index}>
-    //                        <CardComponent
-    //                            config={{
-    //                                key: "" + index,
-    //                                status: CardStatusEnum.ACTIVE,
-    //                                id: card.title,
-    //                                title: card.title,
-    //                                image: card.image,
-    //                                description: card.description,
-    //                                button1: card?.button1
-    //                            }}
-    //                        />
-    //                    </div>
-    //                ))}
-    //            </div>
-    //        </div>
     return <div>
         <PageTitle title={"Homepage"}/>
         <div className="container p-2">

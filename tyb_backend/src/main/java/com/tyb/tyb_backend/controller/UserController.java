@@ -1,4 +1,4 @@
-package com.tyb.tyb_backend.controller.rest;
+package com.tyb.tyb_backend.controller;
 
 import com.tyb.tyb_backend.dto.Esito.Esito;
 import com.tyb.tyb_backend.dto.ResultUserResponse;
@@ -13,12 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.logging.Logger;
 
-
 @RestController
 @RequestMapping("/api/manage-user")
 @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")  //protocollo e indirizzo della nostra web API
 public class UserController {
-
 
     @Autowired
     UserService userService;
@@ -26,14 +24,16 @@ public class UserController {
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Esito> createUser(@RequestBody @Valid User user) {
         Logger.getGlobal().info("**************** Inserimento Dati User ***************");
+        // Chiama il servizio per creare un nuovo utente e ritorna la risposta
         return new ResponseEntity<>(userService.createUser(user), HttpStatus.OK);
     }
 
-
     @PostMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResultUserResponse> getUserByCriteri(@RequestBody User user) {
+
+        Logger.getGlobal().info("**************** Recupero user ***************"+user);
+
+        // Chiama il servizio per ottenere i dettagli dell'utente e ritorna la risposta
         return new ResponseEntity<>(userService.getUser(user), HttpStatus.OK);
     }
-
-
 }

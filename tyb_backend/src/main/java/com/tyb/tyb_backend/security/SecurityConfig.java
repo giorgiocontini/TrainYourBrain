@@ -1,64 +1,86 @@
 package com.tyb.tyb_backend.security;
 
-import com.tyb.tyb_backend.security.CustomAuthenticationFilter;
+import com.tyb.tyb_backend.jwt.JwtAuthenticationFilter;
 import com.tyb.tyb_backend.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.List;
+import java.util.logging.Logger;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private final UserService userService; // Inject your user service here
+    private static final Logger logger = Logger.getLogger(SecurityConfig.class.getName());
 
-    public SecurityConfig(UserService userService) {
-        this.userService = userService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationProvider customAuthenticationProvider) throws Exception {
+        logger.info("Configuring security filter chain");
+
         http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF using the updated API
-                .authorizeRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers("/user").permitAll() // Allow access to the custom authentication endpoint
-                                .anyRequest().authenticated()
+                .csrf(csrf -> csrf.disable())
+                .cors(withDefaults())
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/", "/home", "/public/**", "/api/auth/login").permitAll()
+                        .anyRequest().authenticated()
                 )
-                .formLogin(formLogin -> formLogin.disable()) // Disable default form login
-                .addFilterBefore(new CustomAuthenticationFilter(userService, http.getSharedObject(AuthenticationManager.class)), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(customAuthenticationProvider); // Register the custom provider
+
+        logger.info("Security filter chain configured");
+
         return http.build();
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User.builder()
-                .username("user")
-                .password(passwordEncoder().encode("password"))
-                .roles("USER")
-                .build();
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder().encode("admin"))
-                .roles("ADMIN")
-                .build();
-        return new InMemoryUserDetailsManager(user, admin);
+    public CorsFilter corsFilter() {
+        logger.info("Configuring CORS filter");
+
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        logger.info("CORS filter configured");
+
+        return new CorsFilter(source);
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        logger.info("Creating AuthenticationManager");
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        logger.info("Creating PasswordEncoder");
         return new BCryptPasswordEncoder();
     }
 }

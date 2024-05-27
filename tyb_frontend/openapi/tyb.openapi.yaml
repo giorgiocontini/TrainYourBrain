@@ -72,6 +72,40 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EsitoType"
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: "POST api/auth/login"
+      operationId: "login"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  userData:
+                    $ref: "#/components/schemas/UserType"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema: {}
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema: {}
   /quiz/{topic}:
     get:
       tags:
@@ -276,6 +310,16 @@ components:
         role:
           type: string
         email:
+          type: string
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
           type: string
     ResultUserResponse:
       type: object

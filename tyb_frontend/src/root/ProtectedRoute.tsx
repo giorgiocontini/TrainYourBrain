@@ -43,7 +43,7 @@ const ProtectedRoute = ({ children, allowedRoles }: TProtectedRouteProps) => {
             {isAuthorized ?
                     <>{children}</>
               : (
-                    <Navigate to="not-authorized" replace={true} />
+                    <Navigate to="/" replace={true} />
                 )}
         </>
     );

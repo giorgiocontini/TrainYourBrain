@@ -1,26 +1,17 @@
-package com.tyb.tyb_backend.controller.rest;
+package com.tyb.tyb_backend.controller;
 
-import com.tyb.tyb_backend.dto.DocumentRequest;
-import com.tyb.tyb_backend.dto.Esito.EnumCodiceEsito;
 import com.tyb.tyb_backend.dto.Esito.Esito;
 import com.tyb.tyb_backend.dto.QuizDataResponse;
 import com.tyb.tyb_backend.dto.ResultQuizResponse;
-import com.tyb.tyb_backend.model.Question;
 import com.tyb.tyb_backend.model.Quiz;
 import com.tyb.tyb_backend.model.QuizResult;
-import com.tyb.tyb_backend.repository.QuizRepository;
-import com.tyb.tyb_backend.service.DocService;
 import com.tyb.tyb_backend.service.QuizService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -33,15 +24,10 @@ public class QuizController {
     @Autowired
     QuizService quizService;
 
-    @Autowired
-    DocService docService;
-    @Autowired
-    private QuizRepository quizRepository;
 
-
-    @PostMapping(value = "/create",  produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Esito> createDocument(@RequestBody Quiz quiz) {
-            return ResponseEntity.ok(quizService.createQuiz(quiz));
+        return ResponseEntity.ok(quizService.createQuiz(quiz));
     }
 
     @GetMapping(value = "/{topic}", produces = MediaType.APPLICATION_JSON_VALUE)

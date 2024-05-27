@@ -10,6 +10,8 @@ import UserClient from "../../services/API/openapicode_tyb_user/UserClient";
 import {showDialogFailed, showDialogSuccess} from "../../utils/DialogUtils";
 import {UserType} from "../../services/API/openapicode_tyb_user";
 import "./LoginRegistrationPage.scss";
+import CryptoJS from 'crypto-js';
+import AuthClient from "../../services/API/openapicode_tyb_user/LoginClient";
 
 
 const LoginRegistrationPage = () => {
@@ -29,32 +31,53 @@ const LoginRegistrationPage = () => {
         setLogin(!isLogin);
     }
 
-    //Services
+    // Function to encrypt the password
+    function encryptPassword(password:string):string {
+        const secretKey = "ti-nascondo-la-passw0rd"; // Use a secure key and store it securely
+        return CryptoJS.AES.encrypt(password, secretKey).toString();
+    }
+
+// Services
     function addUserFunction() {
-        UserClient.createUserUsingPOST({...formik.values, role: isProfessor ? "P" : "S"})
+        // Encrypt the password
+        //const encryptedPassword = encryptPassword(formik.values.password);
+
+        // Create user data object with encrypted password
+        const userData = {
+            ...formik.values,
+            role: isProfessor ? "P" : "S"
+        };
+
+        UserClient.createUserUsingPOST(userData)
             .then(response => {
-                showDialogSuccess("", response.data.descrizione, () => {
+                showDialogSuccess("", response.data.descrizione || "", () => {
                     handleTabChanges();
-                })
+                });
             })
             .catch(error => {
-                showDialogFailed(error?.response.data?.esito.descrizione)
-            })
+                showDialogFailed(error?.response.data?.esito.descrizione || "");
+            });
     }
 
     function loginFunction() {
-        //TODO gestire la pw
-        UserClient.getUserByUsername({...formik.values})
+        AuthClient.login({
+        username: formik.values.username, password: formik.values.password
+        })
             .then(response => {
                 //Posso gestire i dati recuperati
-                if (response.data.esito) {
-                    setUser(response.data.result);
-                    navigate("/home", {replace: true})
+                if (response.data) {
+                    sessionStorage.setItem("authToken", response.data?.token || "");
+                    if (response.data.userData) {
+                        setUser(response.data.userData);
+                        navigate("/home", {replace: true})
+                    }
                 }
             })
             .catch((error) => {
-                showDialogFailed(error?.response?.data?.esito.descrizione)
+                    showDialogFailed("Utente non trovato")
             })
+
+
     }
 
     const validationSchema = Yup.object().shape({

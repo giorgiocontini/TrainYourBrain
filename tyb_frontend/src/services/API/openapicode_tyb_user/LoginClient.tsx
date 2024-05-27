@@ -1,6 +1,6 @@
 // axiosClient.js
 
-import {QuizApi} from "./api";
+import {AuthApi} from "./api";
 import axios from "axios";
 
 
@@ -28,6 +28,6 @@ instance.interceptors.request.use(
 );
 
 
-const QuizClient = new QuizApi(undefined, 'http://localhost:8080/api', instance);
+const AuthClient = new AuthApi(undefined, 'http://localhost:8080/api', instance);
 
-export default QuizClient;
+export default AuthClient;
