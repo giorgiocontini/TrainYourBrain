@@ -1,6 +1,6 @@
 package com.tyb.tyb_backend;
 
-import com.tyb.tyb_backend.controller.rest.UserController;
+import com.tyb.tyb_backend.controller.UserController;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
