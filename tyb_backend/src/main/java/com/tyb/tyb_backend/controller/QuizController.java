@@ -1,5 +1,6 @@
 package com.tyb.tyb_backend.controller;
 
+import com.tyb.tyb_backend.dto.AnswerRequest;
 import com.tyb.tyb_backend.dto.Esito.Esito;
 import com.tyb.tyb_backend.dto.QuizDataResponse;
 import com.tyb.tyb_backend.dto.ResultQuizResponse;
@@ -36,11 +37,11 @@ public class QuizController {
         return new ResponseEntity<>(quizService.getQuizByTopic(topic), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{quizId}/{questionId}/{answerId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{quizId}/{questionId}/checkAnswer", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> checkAnswer(@PathVariable String quizId, @PathVariable String questionId,
-                                               @PathVariable Integer answerId) {
+                                               @RequestBody AnswerRequest answerObj) {
         Logger.getGlobal().info("**************** Verifico risposta ***************");
-        return new ResponseEntity<>(quizService.checkAnswer(quizId, questionId, answerId), HttpStatus.OK);
+        return new ResponseEntity<>(quizService.checkAnswer(quizId, questionId, answerObj.getAnswer()), HttpStatus.OK);
     }
 
     @GetMapping(value = "/results/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)

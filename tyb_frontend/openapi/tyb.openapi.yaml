@@ -138,8 +138,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EsitoType"
-  /quiz/{quizId}/{questionId}/{answerId}:
-    get:
+  /quiz/{quizId}/{questionId}/checkAnswer:
+    post:
       tags:
         - Quiz
       summary: >-
@@ -156,11 +156,15 @@ paths:
           required: true
           schema:
             type: string
-        - name: answerId
-          in: path
-          required: true
-          schema:
-            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answer:
+                  type: string
       responses:
         "200":
           description: OK
