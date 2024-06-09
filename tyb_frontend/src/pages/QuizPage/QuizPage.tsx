@@ -94,7 +94,7 @@ const QuizPage = () => {
 
     const checkAnswer = (quizId: string, questionId: string, answer: string) => {
 
-        QuizClient.checkAnswerUsingGet(quizId, questionId, {answer}).then(
+        QuizClient.checkAnswerUsingPost(quizId, questionId, {answer}).then(
             (res) => {
                 if (res.data) {
                     setButtonStyle({
@@ -166,6 +166,8 @@ const QuizPage = () => {
             setShuffledAnswers(shuffleArray([...questions[currentQuestionIndex].answers]));
         }
     }, [questions, currentQuestionIndex]);
+
+
     return <div>
         <div className="d-flex flex-row justify-content-between p-2" style={{alignItems: "center"}}>
             <h3>{(topic as string)?.toUpperCase() ?? ""}</h3>

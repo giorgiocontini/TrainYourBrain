@@ -34,9 +34,10 @@ export enum CardStatusEnum {
 const HomePage: FC<HomeComponentProps> = () => {
 
     const navigate = useNavigate()
+    const {isInRole} = useContext(AuthContext)
     const [topics, setTopics] = useState<QuizDto[]>([])
 
-    useEffect(() => {
+    const getQuizzes= ()=>{
         QuizClient.getQuizUsingGet("all").then(
             (res) => {
                 const data = res.data.result
@@ -46,17 +47,21 @@ const HomePage: FC<HomeComponentProps> = () => {
         ).catch((error) => {
             showDialogFailed(error?.response?.data.error)
         })
+    }
+    useEffect(() => {
+        getQuizzes();
     }, []);
 
     // Array di dati delle card
     const cardData: CardComponentConfig[] =
         topics.map((el, index) => {
             return {
-                status: CardStatusEnum.ACTIVE,
-                id: "card_" + index,
+                status: el.isHidden ? CardStatusEnum.LOCKED :CardStatusEnum.ACTIVE,
+                id: el.id || "",
                 title: el.topic,
                 description: el.topicDescription,
                 image: el.imageFile,
+                isHidden: el.isHidden || false,
                 button1: {
                     label: "Procedi",
                     onClick: () => {
@@ -68,7 +73,9 @@ const HomePage: FC<HomeComponentProps> = () => {
                             }
                         })
                     }
-                }
+                },
+                onHidden: getQuizzes,
+                onDelete: getQuizzes
             }
         });
     return <div>
@@ -76,16 +83,11 @@ const HomePage: FC<HomeComponentProps> = () => {
         <div className="container p-2">
             <div className="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 mb-5 mt-3 ">
                 {/* Mappiamo i dati delle card per creare le card */}
-                {cardData.map((card, index) => (
+                {cardData.filter((card)=>((isInRole("S") && !card.isHidden) || isInRole("A"))).map((card, index) => (
                     <div className="col" key={index}>
                         <CardComponent config={{
-                            key: "" + index,
-                            status: CardStatusEnum.ACTIVE,
-                            id: card.title,
-                            title: card.title,
-                            image: card.image,
-                            description: card.description,
-                            button1: card?.button1
+                            ...card,
+                            key: card.id,
                         }}/>
                     </div>
                 ))}

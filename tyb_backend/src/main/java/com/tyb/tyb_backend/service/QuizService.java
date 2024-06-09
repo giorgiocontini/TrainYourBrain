@@ -19,4 +19,8 @@ public interface QuizService {
     QuizDataResponse getResultsByUserId(String userId);
 
     Esito saveResults(QuizResult result);
+
+    Esito showHideQuiz(String id);
+
+    Esito deleteQuiz(String id);
 }

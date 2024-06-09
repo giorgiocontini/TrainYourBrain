@@ -144,7 +144,7 @@ paths:
         - Quiz
       summary: >-
         Permette di controllare le risposte
-      operationId: checkAnswerUsingGet
+      operationId: checkAnswerUsingPost
       parameters:
         - name: quizId
           in: path
@@ -294,6 +294,70 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EsitoType"
+  /quiz/show-hide/{quizId}:
+    put:
+      tags:
+        - Quiz
+      summary: >-
+        Permette di nascondere o mostrarre un quiz agli studenti
+      operationId: showHideQuizUsingPut
+      parameters:
+        - name: quizId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+  /quiz/delete/{quizId}:
+    delete:
+      tags:
+        - Quiz
+      summary: >-
+        Permette eliminare fisicamente un quiz dal database
+      operationId: deleteQuizUsingDelete
+      parameters:
+        - name: quizId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
 components:
   schemas:
     UserType:
@@ -372,6 +436,8 @@ components:
         imageFile:
           type: string
           format: base64
+        isHidden:
+          type: boolean
       required:
         - questions
         - topic

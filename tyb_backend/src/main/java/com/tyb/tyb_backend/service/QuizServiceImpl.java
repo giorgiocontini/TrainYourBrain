@@ -3,6 +3,7 @@ package com.tyb.tyb_backend.service;
 import com.tyb.tyb_backend.dto.Esito.EnumCodiceEsito;
 import com.tyb.tyb_backend.dto.Esito.Esito;
 import com.tyb.tyb_backend.dto.QuizDataResponse;
+import com.tyb.tyb_backend.dto.QuizDto;
 import com.tyb.tyb_backend.dto.ResultQuizResponse;
 import com.tyb.tyb_backend.model.Answer;
 import com.tyb.tyb_backend.model.Question;
@@ -40,11 +41,37 @@ public class QuizServiceImpl implements QuizService {
                     question.setId(new ObjectId().toHexString());
                 }
             });
+            quiz.setIsHidden(true);
             quizRepository.insert(quiz);
-            return new Esito(EnumCodiceEsito.OK, "Quiz correttamente creato");
+            return new Esito(EnumCodiceEsito.OK, "Quiz correttamente creato. Può renderlo disponibile dalla home.");
         }
         return new Esito(EnumCodiceEsito.KO, "Si sono verificati degli errori, si prega di riporvare");
     }
+
+    @Override
+    public Esito showHideQuiz(String id) {
+        Optional<Quiz> quiz = quizRepository.findById(new ObjectId(id));
+        if(quiz.isPresent()){
+            if(quiz.get().getIsHidden()==null){
+                quiz.get().setIsHidden(false);
+            }
+            quiz.get().setIsHidden(!quiz.get().getIsHidden());
+            quizRepository.save(quiz.get());
+            return new Esito(EnumCodiceEsito.OK, "Operazione correttamente eseguita");
+        }
+        return new Esito(EnumCodiceEsito.KO, "Si sono verificati degli errori, si prega di riporvare");
+    }
+
+    @Override
+    public Esito deleteQuiz(String id) {
+        Optional<Quiz> quiz = quizRepository.findById(new ObjectId(id));
+        if(quiz.isPresent()){
+            quizRepository.delete(quiz.get());
+            return new Esito(EnumCodiceEsito.OK, "Operazione correttamente eseguita");
+        }
+        return new Esito(EnumCodiceEsito.KO, "Si sono verificati degli errori, si prega di riporvare");
+    }
+
 
     /**
      * @param topic

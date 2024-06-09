@@ -18,7 +18,6 @@ const LoginRegistrationPage = () => {
 
     const {setUser} = useContext(AuthContext);
     const [isLogin, setLogin] = useState(true)
-    const [isProfessor, setProfessor] = useState(false)
     const navigate = useNavigate();
 
     const initialFormState: UserType = {
@@ -45,7 +44,7 @@ const LoginRegistrationPage = () => {
         // Create user data object with encrypted password
         const userData = {
             ...formik.values,
-            role: isProfessor ? "P" : "S"
+            role: isAdmin ? "A" : "S"
         };
 
         UserClient.createUserUsingPOST(userData)
@@ -80,9 +79,21 @@ const LoginRegistrationPage = () => {
 
     }
 
+    const [isAdmin, setIsAdmin] = useState<boolean>(false)
+
     const validationSchema = Yup.object().shape({
         username: Yup.string().required('Campo obbligatorio'),
-        password: Yup.string().required('Campo obbligatorio')
+        password: Yup.string().required('Campo obbligatorio'),
+        email: Yup.string().email('Email non valida').test(
+            'email-required-if-admin',
+            'Campo obbligatorio',
+            function (value) {
+                if (isAdmin) {
+                    return !!value;
+                }
+                return true;
+            }
+        ),
     })
 
     const [pwHash, setPwHash] = useState("");
@@ -144,18 +155,18 @@ const LoginRegistrationPage = () => {
                      id="pills-register" role="tabpanel" aria-labelledby="tab-register">
                     <div className="form p-5">
                         <div className="d-flex flex-row justify-content-around mb-3">
-                            <CheckboxComponent name="typeP" label={"Professore"} checked={isProfessor} onChange={() => {
-                                setProfessor(true)
+                            <CheckboxComponent name="typeP" label={"Admin"} checked={isAdmin} onChange={() => {
+                                setIsAdmin(true)
                             }}/>
-                            <CheckboxComponent name="typeS" label={"Studente"} checked={!isProfessor} onChange={() => {
-                                setProfessor(false)
+                            <CheckboxComponent name="typeS" label={"Studente"} checked={!isAdmin} onChange={() => {
+                                setIsAdmin(false)
                             }}/>
                         </div>
 
                         <InputTextComponent id="username_reg" name="username" label="Username" type="text"
                                             formik={formik}
                                             isRequired/>
-                        <InputTextComponent name="email" label="Email" type="email"
+                        <InputTextComponent name="email" label="Email" type="email" isRequired={isAdmin}
                                             formik={formik}/>
                         <InputTextComponent name="name" label="Nome" type="text"
                                             formik={formik}/>

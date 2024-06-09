@@ -26,13 +26,13 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
- * @interface CheckAnswerUsingGetRequest
+ * @interface CheckAnswerUsingPostRequest
  */
-export interface CheckAnswerUsingGetRequest {
+export interface CheckAnswerUsingPostRequest {
     /**
      * 
      * @type {string}
-     * @memberof CheckAnswerUsingGetRequest
+     * @memberof CheckAnswerUsingPostRequest
      */
     'answer'?: string;
 }
@@ -204,6 +204,12 @@ export interface QuizDto {
      * @memberof QuizDto
      */
     'imageFile'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof QuizDto
+     */
+    'isHidden'?: boolean;
 }
 /**
  * 
@@ -458,17 +464,17 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
          * @summary Permette di controllare le risposte
          * @param {string} quizId 
          * @param {string} questionId 
-         * @param {CheckAnswerUsingGetRequest} checkAnswerUsingGetRequest 
+         * @param {CheckAnswerUsingPostRequest} checkAnswerUsingPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        checkAnswerUsingGet: async (quizId: string, questionId: string, checkAnswerUsingGetRequest: CheckAnswerUsingGetRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        checkAnswerUsingPost: async (quizId: string, questionId: string, checkAnswerUsingPostRequest: CheckAnswerUsingPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'quizId' is not null or undefined
-            assertParamExists('checkAnswerUsingGet', 'quizId', quizId)
+            assertParamExists('checkAnswerUsingPost', 'quizId', quizId)
             // verify required parameter 'questionId' is not null or undefined
-            assertParamExists('checkAnswerUsingGet', 'questionId', questionId)
-            // verify required parameter 'checkAnswerUsingGetRequest' is not null or undefined
-            assertParamExists('checkAnswerUsingGet', 'checkAnswerUsingGetRequest', checkAnswerUsingGetRequest)
+            assertParamExists('checkAnswerUsingPost', 'questionId', questionId)
+            // verify required parameter 'checkAnswerUsingPostRequest' is not null or undefined
+            assertParamExists('checkAnswerUsingPost', 'checkAnswerUsingPostRequest', checkAnswerUsingPostRequest)
             const localVarPath = `/quiz/{quizId}/{questionId}/checkAnswer`
                 .replace(`{${"quizId"}}`, encodeURIComponent(String(quizId)))
                 .replace(`{${"questionId"}}`, encodeURIComponent(String(questionId)));
@@ -490,7 +496,7 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(checkAnswerUsingGetRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(checkAnswerUsingPostRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -527,6 +533,40 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(createQuizUsingPostRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Permette eliminare fisicamente un quiz dal database
+         * @param {string} quizId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteQuizUsingDelete: async (quizId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'quizId' is not null or undefined
+            assertParamExists('deleteQuizUsingDelete', 'quizId', quizId)
+            const localVarPath = `/quiz/delete/{quizId}`
+                .replace(`{${"quizId"}}`, encodeURIComponent(String(quizId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -635,6 +675,40 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary Permette di nascondere o mostrarre un quiz agli studenti
+         * @param {string} quizId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        showHideQuizUsingPut: async (quizId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'quizId' is not null or undefined
+            assertParamExists('showHideQuizUsingPut', 'quizId', quizId)
+            const localVarPath = `/quiz/show-hide/{quizId}`
+                .replace(`{${"quizId"}}`, encodeURIComponent(String(quizId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -650,14 +724,14 @@ export const QuizApiFp = function(configuration?: Configuration) {
          * @summary Permette di controllare le risposte
          * @param {string} quizId 
          * @param {string} questionId 
-         * @param {CheckAnswerUsingGetRequest} checkAnswerUsingGetRequest 
+         * @param {CheckAnswerUsingPostRequest} checkAnswerUsingPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async checkAnswerUsingGet(quizId: string, questionId: string, checkAnswerUsingGetRequest: CheckAnswerUsingGetRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.checkAnswerUsingGet(quizId, questionId, checkAnswerUsingGetRequest, options);
+        async checkAnswerUsingPost(quizId: string, questionId: string, checkAnswerUsingPostRequest: CheckAnswerUsingPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.checkAnswerUsingPost(quizId, questionId, checkAnswerUsingPostRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['QuizApi.checkAnswerUsingGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['QuizApi.checkAnswerUsingPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -671,6 +745,19 @@ export const QuizApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createQuizUsingPost(createQuizUsingPostRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['QuizApi.createQuizUsingPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Permette eliminare fisicamente un quiz dal database
+         * @param {string} quizId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteQuizUsingDelete(quizId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteQuizUsingDelete(quizId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['QuizApi.deleteQuizUsingDelete']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -712,6 +799,19 @@ export const QuizApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['QuizApi.saveQuizUsingPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @summary Permette di nascondere o mostrarre un quiz agli studenti
+         * @param {string} quizId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async showHideQuizUsingPut(quizId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.showHideQuizUsingPut(quizId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['QuizApi.showHideQuizUsingPut']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -727,12 +827,12 @@ export const QuizApiFactory = function (configuration?: Configuration, basePath?
          * @summary Permette di controllare le risposte
          * @param {string} quizId 
          * @param {string} questionId 
-         * @param {CheckAnswerUsingGetRequest} checkAnswerUsingGetRequest 
+         * @param {CheckAnswerUsingPostRequest} checkAnswerUsingPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        checkAnswerUsingGet(quizId: string, questionId: string, checkAnswerUsingGetRequest: CheckAnswerUsingGetRequest, options?: any): AxiosPromise<boolean> {
-            return localVarFp.checkAnswerUsingGet(quizId, questionId, checkAnswerUsingGetRequest, options).then((request) => request(axios, basePath));
+        checkAnswerUsingPost(quizId: string, questionId: string, checkAnswerUsingPostRequest: CheckAnswerUsingPostRequest, options?: any): AxiosPromise<boolean> {
+            return localVarFp.checkAnswerUsingPost(quizId, questionId, checkAnswerUsingPostRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -743,6 +843,16 @@ export const QuizApiFactory = function (configuration?: Configuration, basePath?
          */
         createQuizUsingPost(createQuizUsingPostRequest: CreateQuizUsingPostRequest, options?: any): AxiosPromise<EsitoType> {
             return localVarFp.createQuizUsingPost(createQuizUsingPostRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Permette eliminare fisicamente un quiz dal database
+         * @param {string} quizId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteQuizUsingDelete(quizId: string, options?: any): AxiosPromise<EsitoType> {
+            return localVarFp.deleteQuizUsingDelete(quizId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -774,6 +884,16 @@ export const QuizApiFactory = function (configuration?: Configuration, basePath?
         saveQuizUsingPost(userQuizResultType?: UserQuizResultType, options?: any): AxiosPromise<EsitoType> {
             return localVarFp.saveQuizUsingPost(userQuizResultType, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @summary Permette di nascondere o mostrarre un quiz agli studenti
+         * @param {string} quizId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        showHideQuizUsingPut(quizId: string, options?: any): AxiosPromise<EsitoType> {
+            return localVarFp.showHideQuizUsingPut(quizId, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -789,13 +909,13 @@ export class QuizApi extends BaseAPI {
      * @summary Permette di controllare le risposte
      * @param {string} quizId 
      * @param {string} questionId 
-     * @param {CheckAnswerUsingGetRequest} checkAnswerUsingGetRequest 
+     * @param {CheckAnswerUsingPostRequest} checkAnswerUsingPostRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof QuizApi
      */
-    public checkAnswerUsingGet(quizId: string, questionId: string, checkAnswerUsingGetRequest: CheckAnswerUsingGetRequest, options?: RawAxiosRequestConfig) {
-        return QuizApiFp(this.configuration).checkAnswerUsingGet(quizId, questionId, checkAnswerUsingGetRequest, options).then((request) => request(this.axios, this.basePath));
+    public checkAnswerUsingPost(quizId: string, questionId: string, checkAnswerUsingPostRequest: CheckAnswerUsingPostRequest, options?: RawAxiosRequestConfig) {
+        return QuizApiFp(this.configuration).checkAnswerUsingPost(quizId, questionId, checkAnswerUsingPostRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -808,6 +928,18 @@ export class QuizApi extends BaseAPI {
      */
     public createQuizUsingPost(createQuizUsingPostRequest: CreateQuizUsingPostRequest, options?: RawAxiosRequestConfig) {
         return QuizApiFp(this.configuration).createQuizUsingPost(createQuizUsingPostRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Permette eliminare fisicamente un quiz dal database
+     * @param {string} quizId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof QuizApi
+     */
+    public deleteQuizUsingDelete(quizId: string, options?: RawAxiosRequestConfig) {
+        return QuizApiFp(this.configuration).deleteQuizUsingDelete(quizId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -844,6 +976,18 @@ export class QuizApi extends BaseAPI {
      */
     public saveQuizUsingPost(userQuizResultType?: UserQuizResultType, options?: RawAxiosRequestConfig) {
         return QuizApiFp(this.configuration).saveQuizUsingPost(userQuizResultType, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Permette di nascondere o mostrarre un quiz agli studenti
+     * @param {string} quizId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof QuizApi
+     */
+    public showHideQuizUsingPut(quizId: string, options?: RawAxiosRequestConfig) {
+        return QuizApiFp(this.configuration).showHideQuizUsingPut(quizId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

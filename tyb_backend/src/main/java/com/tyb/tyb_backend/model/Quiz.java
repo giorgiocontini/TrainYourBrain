@@ -29,4 +29,7 @@ public class Quiz implements Serializable {
     @Field(name = "imageFile")
     private String imageFile;
 
+    @Field(name = "isHidden")
+    private Boolean isHidden;
+
 }

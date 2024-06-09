@@ -56,4 +56,16 @@ public class QuizController {
         return new ResponseEntity<>(quizService.saveResults(result), HttpStatus.OK);
     }
 
+    @PutMapping(value = "/show-hide/{quizId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Esito> showHideQuiz(@PathVariable String quizId) {
+        Logger.getGlobal().info("**************** Nascondo agli studenti il quiz selezionato ***************");
+        return new ResponseEntity<>(quizService.showHideQuiz(quizId), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/delete/{quizId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Esito> deleteQuiz(@PathVariable String quizId) {
+        Logger.getGlobal().info("**************** Nascondo agli studenti il quiz selezionato ***************");
+        return new ResponseEntity<>(quizService.deleteQuiz(quizId), HttpStatus.OK);
+    }
+
 }
