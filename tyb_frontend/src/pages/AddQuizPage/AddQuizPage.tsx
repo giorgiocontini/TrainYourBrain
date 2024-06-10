@@ -68,7 +68,9 @@ const AddQuizPage = () => {
     const manageDataGotFromExcel = (data: QuestionType[]) => {
         QuizClient.createQuizUsingPost({
                 questions: data,
-                ...formik.values
+                ...formik.values,
+                imageFile: formik.values.imageFile
+
             }
         ).then(
             (response) => {
@@ -121,11 +123,11 @@ const AddQuizPage = () => {
                     }} formik={formik}/>
                 </div>
                 <div className={"col-lg-4 col-sm-12 mt-2"}>
-                    <FileUploaderComponent acceptFile={".png, .jpg"}
-                                           labelButton={"Carica un'immagine"}
-                                           disabled={!formik.values.topic}
-                                           name={"imageFile"}
-                                           formik={formik}/>
+                    <FileUploaderComponent
+                        labelButton={"Carica un'immagine"}
+                        disabled={!formik.values.topic}
+                        name={"imageFile"}
+                        formik={formik}/>
                 </div>
 
                 {

@@ -1,5 +1,7 @@
 package com.tyb.tyb_backend.service;
 
+import com.tyb.tyb_backend.dto.ChangePasswordDto;
+import com.tyb.tyb_backend.dto.DeleteUserDto;
 import com.tyb.tyb_backend.dto.Esito.EnumCodiceEsito;
 import com.tyb.tyb_backend.dto.Esito.Esito;
 import com.tyb.tyb_backend.dto.ResultUserResponse;
@@ -11,20 +13,21 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private static final Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
+    private static Supplier<TrainYourBrainException> createCustomException(String message) {
+        return () -> new TrainYourBrainException(message);
+    }
 
     @Override
     public Esito createUser(User user) {
@@ -37,6 +40,44 @@ public class UserServiceImpl implements UserService {
         } else {
             logger.warning("User already exists: " + user.getUsername());
             throw new TrainYourBrainException("Utente già presente");
+        }
+    }
+
+    @Override
+    public Esito deleteUser(DeleteUserDto dto) {
+        logger.info("Deleting user: " + dto.getUsername());
+        if (existUser(dto.getUsername())) {
+            User userLoadedFromDb = userRepository.findByUsername(dto.getUsername());
+            if (passwordEncoder.matches(dto.getPassword(), userLoadedFromDb.getPassword())) {
+                userRepository.delete(userLoadedFromDb);
+                logger.info("User deleted successfully: " + dto.getUsername());
+                return new Esito(EnumCodiceEsito.OK, "Utente eliminato correttamente");
+            }
+            return new Esito(EnumCodiceEsito.KO, "La password non è corretta");
+
+        } else {
+            logger.warning("User doesn't exists: " + dto.getUsername());
+            throw new TrainYourBrainException("Utente non presente");
+        }
+    }
+
+    @Override
+    public Esito changePassword(ChangePasswordDto dto) {
+        logger.info("Changing user password: " + dto.getUsername());
+        if (existUser(dto.getUsername())) {
+            User userLoadedFromDb = userRepository.findByUsername(dto.getUsername());
+            if (passwordEncoder.matches(dto.getOldPassword(), userLoadedFromDb.getPassword())) {
+                userLoadedFromDb.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+                logger.info("Password changed");
+
+                userRepository.save(userLoadedFromDb);
+                return new Esito(EnumCodiceEsito.OK, "Password aggiornata correttamente");
+            }
+            return new Esito(EnumCodiceEsito.KO, "La password non è corretta");
+
+        } else {
+            logger.warning("User doesn't exists: " + dto.getUsername());
+            throw new TrainYourBrainException("Utente non presente");
         }
     }
 
@@ -64,10 +105,6 @@ public class UserServiceImpl implements UserService {
     private Boolean existUser(String username) {
         logger.info("Checking if user exists: " + username);
         return userRepository.existsUserByUsername(username);
-    }
-
-    private static Supplier<TrainYourBrainException> createCustomException(String message) {
-        return () -> new TrainYourBrainException(message);
     }
 
     public User loadUserByUsername(String username) throws UsernameNotFoundException {

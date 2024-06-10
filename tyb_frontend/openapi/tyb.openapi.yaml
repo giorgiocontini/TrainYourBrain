@@ -358,6 +358,68 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EsitoType"
+  /manage-user/delete:
+    delete:
+      tags:
+        - User
+      summary: >-
+        Permette eliminare fisicamente un utente dal database
+      operationId: deleteUserUsingDelete
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteUserRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+  /manage-user/changepassword:
+    put:
+      tags:
+        - User
+      summary: >-
+        Permette cambiare la password di un utente
+      operationId: changePasswordUsingPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
 components:
   schemas:
     UserType:
@@ -405,7 +467,7 @@ components:
         - codice
         - descrizione
       properties:
-        esito:
+        codice:
           type: string
         descrizione:
           type: string
@@ -489,6 +551,29 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/UserQuizResultType"
+    ChangePasswordRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        oldPassword:
+          type: string
+        newPassword:
+          type: string
+      required:
+        - username
+        - newPassword
+        - oldPassword
+    DeleteUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
 
 
 

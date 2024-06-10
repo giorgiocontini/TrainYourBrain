@@ -1,6 +1,8 @@
 package com.tyb.tyb_backend.controller;
 
+import com.tyb.tyb_backend.dto.DeleteUserDto;
 import com.tyb.tyb_backend.dto.Esito.Esito;
+import com.tyb.tyb_backend.dto.ChangePasswordDto;
 import com.tyb.tyb_backend.dto.ResultUserResponse;
 import com.tyb.tyb_backend.model.User;
 import com.tyb.tyb_backend.service.UserService;
@@ -26,6 +28,21 @@ public class UserController {
         Logger.getGlobal().info("**************** Inserimento Dati User ***************");
         // Chiama il servizio per creare un nuovo utente e ritorna la risposta
         return new ResponseEntity<>(userService.createUser(user), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Esito> deleteUser(@RequestBody DeleteUserDto dto) {
+        Logger.getGlobal().info("**************** Elimino Dati User ***************");
+        // Chiama il servizio per creare un nuovo utente e ritorna la risposta
+
+        return new ResponseEntity<>(userService.deleteUser(dto), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/changepassword", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Esito> changePassword(@RequestBody ChangePasswordDto dto) {
+        Logger.getGlobal().info("**************** Modifico Password User ***************");
+        // Chiama il servizio per creare un nuovo utente e ritorna la risposta
+        return new ResponseEntity<>(userService.changePassword(dto), HttpStatus.OK);
     }
 
     @PostMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)

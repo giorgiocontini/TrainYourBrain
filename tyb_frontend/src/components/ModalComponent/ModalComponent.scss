@@ -1,16 +1,14 @@
-/**
- * SCSS styles for ModalsPortal.tsx
- */
 .ModalsPortal__wrapper {
   position: fixed;
-  flex-direction: column;
-  justify-content: center;
   top: 0;
   left: 0;
   z-index: 1000;
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;  /* Assicurati che il contenitore sia centrato */
   visibility: hidden;
   opacity: 0;
   transition: all 0.2s linear;
@@ -22,15 +20,20 @@
 }
 
 .ModalsPortal__backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
   height: 100%;
-  position: absolute;
   background-color: rgba(0, 0, 0, 0.5);
+  z-index: -1;  /* Assicurati che il backdrop sia sotto il contenitore del modal */
 }
 
 .ModalsPortal__container {
   position: relative;
-  width: 100%;
+  max-width: 600px;  /* Imposta una larghezza massima per il modal */
   max-height: 80%;
   background-clip: border-box;
   background-color: white;
@@ -40,4 +43,5 @@
   padding: 12px;
   outline: 0;
   overflow: auto;
+  z-index: 1;  /* Assicurati che il contenitore del modal sia sopra il backdrop */
 }

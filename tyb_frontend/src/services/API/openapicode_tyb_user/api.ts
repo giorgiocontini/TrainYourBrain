@@ -26,6 +26,31 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface ChangePasswordRequest
+ */
+export interface ChangePasswordRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ChangePasswordRequest
+     */
+    'username': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ChangePasswordRequest
+     */
+    'oldPassword': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ChangePasswordRequest
+     */
+    'newPassword': string;
+}
+/**
+ * 
+ * @export
  * @interface CheckAnswerUsingPostRequest
  */
 export interface CheckAnswerUsingPostRequest {
@@ -70,6 +95,25 @@ export interface CreateQuizUsingPostRequest {
 /**
  * 
  * @export
+ * @interface DeleteUserRequest
+ */
+export interface DeleteUserRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof DeleteUserRequest
+     */
+    'username': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeleteUserRequest
+     */
+    'password': string;
+}
+/**
+ * 
+ * @export
  * @interface EsitoType
  */
 export interface EsitoType {
@@ -78,7 +122,7 @@ export interface EsitoType {
      * @type {string}
      * @memberof EsitoType
      */
-    'esito'?: string;
+    'codice': string;
     /**
      * 
      * @type {string}
@@ -1001,6 +1045,40 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
     return {
         /**
          * 
+         * @summary Permette cambiare la password di un utente
+         * @param {ChangePasswordRequest} [changePasswordRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        changePasswordUsingPut: async (changePasswordRequest?: ChangePasswordRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/manage-user/changepassword`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(changePasswordRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Permette di creare un nuovo utente
          * @param {UserType} [userType] 
          * @param {*} [options] Override http request option.
@@ -1027,6 +1105,40 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(userType, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Permette eliminare fisicamente un utente dal database
+         * @param {DeleteUserRequest} [deleteUserRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteUserUsingDelete: async (deleteUserRequest?: DeleteUserRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/manage-user/delete`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(deleteUserRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1081,6 +1193,19 @@ export const UserApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @summary Permette cambiare la password di un utente
+         * @param {ChangePasswordRequest} [changePasswordRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async changePasswordUsingPut(changePasswordRequest?: ChangePasswordRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.changePasswordUsingPut(changePasswordRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.changePasswordUsingPut']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Permette di creare un nuovo utente
          * @param {UserType} [userType] 
          * @param {*} [options] Override http request option.
@@ -1090,6 +1215,19 @@ export const UserApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createUserUsingPOST(userType, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.createUserUsingPOST']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Permette eliminare fisicamente un utente dal database
+         * @param {DeleteUserRequest} [deleteUserRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteUserUsingDelete(deleteUserRequest?: DeleteUserRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserUsingDelete(deleteUserRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.deleteUserUsingDelete']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1117,6 +1255,16 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
     return {
         /**
          * 
+         * @summary Permette cambiare la password di un utente
+         * @param {ChangePasswordRequest} [changePasswordRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        changePasswordUsingPut(changePasswordRequest?: ChangePasswordRequest, options?: any): AxiosPromise<EsitoType> {
+            return localVarFp.changePasswordUsingPut(changePasswordRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Permette di creare un nuovo utente
          * @param {UserType} [userType] 
          * @param {*} [options] Override http request option.
@@ -1124,6 +1272,16 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          */
         createUserUsingPOST(userType?: UserType, options?: any): AxiosPromise<EsitoType> {
             return localVarFp.createUserUsingPOST(userType, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Permette eliminare fisicamente un utente dal database
+         * @param {DeleteUserRequest} [deleteUserRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteUserUsingDelete(deleteUserRequest?: DeleteUserRequest, options?: any): AxiosPromise<EsitoType> {
+            return localVarFp.deleteUserUsingDelete(deleteUserRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1147,6 +1305,18 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
 export class UserApi extends BaseAPI {
     /**
      * 
+     * @summary Permette cambiare la password di un utente
+     * @param {ChangePasswordRequest} [changePasswordRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public changePasswordUsingPut(changePasswordRequest?: ChangePasswordRequest, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).changePasswordUsingPut(changePasswordRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Permette di creare un nuovo utente
      * @param {UserType} [userType] 
      * @param {*} [options] Override http request option.
@@ -1155,6 +1325,18 @@ export class UserApi extends BaseAPI {
      */
     public createUserUsingPOST(userType?: UserType, options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).createUserUsingPOST(userType, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Permette eliminare fisicamente un utente dal database
+     * @param {DeleteUserRequest} [deleteUserRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public deleteUserUsingDelete(deleteUserRequest?: DeleteUserRequest, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).deleteUserUsingDelete(deleteUserRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

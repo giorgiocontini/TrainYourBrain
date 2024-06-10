@@ -8,11 +8,10 @@ import React, {useContext, useRef} from "react";
  */
 import "./CardComponent.scss";
 import {CardComponentConfig} from "./CardTypes";
-import {AppContext} from "../../AppContext";
 import {generateRandomRGB} from "../PlotComponent/PlotComponent";
 import {AuthContext} from "../../AuthContext";
 import QuizClient from "../../services/API/openapicode_tyb_user/QuizClient";
-import {showDialogConfirmOperation, showDialogFailed, showDialogInfo, showDialogSuccess} from "../../utils/DialogUtils";
+import {showDialogConfirmOperation, showDialogFailed} from "../../utils/DialogUtils";
 import {useNavigate} from "react-router-dom";
 
 
@@ -33,11 +32,11 @@ const CardComponent = ({config}: CardComponentProps) => {
 
     const {isInRole} = useContext(AuthContext)
 
-    const showHideFunction= ()=>{
+    const showHideFunction = () => {
         QuizClient.showHideQuizUsingPut(config.id).then(
-            res=>{
+            res => {
                 //showDialogSuccess(res?.data?.esito || "", res.data.descrizione);
-                if (config.onHidden){
+                if (config.onHidden) {
                     config.onHidden()
                 }
             }
@@ -46,11 +45,11 @@ const CardComponent = ({config}: CardComponentProps) => {
         });
     }
 
-    const deleteFunction= ()=>{
+    const deleteFunction = () => {
         QuizClient.deleteQuizUsingDelete(config.id).then(
-            res=>{
+            res => {
                 //showDialogSuccess(res?.data?.esito || "", res.data.descrizione);
-                if (config.onDelete){
+                if (config.onDelete) {
                     config.onDelete()
                 }
             }
@@ -63,12 +62,14 @@ const CardComponent = ({config}: CardComponentProps) => {
         <div key={config.id} className={"CardComponent "}>
             <article className={"Card " + config.status}>
                 <header className="cardHeader">
-                    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+                    <div style={{width: '100%', height: '100%', position: 'relative'}}>
                         {config.image ? (
-                            <img src={config.image} alt="Card Image" style={{ width: '100%', height: '100%', objectFit: 'cover',
-                                objectPosition: 'center'  }} />
+                            <img src={config.image} alt="Card Image" style={{
+                                width: '100%', height: '100%', objectFit: 'cover',
+                                objectPosition: 'center'
+                            }}/>
                         ) : (
-                            <div style={{ backgroundColor: generateRandomRGB(), width: '100%', height: '100%' }}></div>
+                            <div style={{backgroundColor: generateRandomRGB(), width: '100%', height: '100%'}}></div>
                         )}
                     </div>
                 </header>
@@ -121,7 +122,7 @@ const CardComponent = ({config}: CardComponentProps) => {
                                         onClick={() => {
                                             // delete
 
-                                            showDialogConfirmOperation( "Attenzione", "Confermi di voler eliminare il quiz?", deleteFunction)
+                                            showDialogConfirmOperation("Attenzione", "Confermi di voler eliminare il quiz?", deleteFunction)
 
                                         }}
                                         title={"Elimina quiz"}
