@@ -420,6 +420,63 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EsitoType"
+  /manage-user/add-admin:
+    post:
+      tags:
+        - User
+      summary: >-
+        Permette cambiare la password di un utente
+      operationId: addAdminUsingPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NominaAdminRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+  /manage-user/get-admins:
+    get:
+      tags:
+        - User
+      summary: >-
+        Permette cambiare la password di un utente
+      operationId: getAdminsUsingGet
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResultAdminsResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResultAdminsResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResultAdminsResponse"
 components:
   schemas:
     UserType:
@@ -441,6 +498,22 @@ components:
           type: string
         email:
           type: string
+    AdminType:
+      type: object
+      required:
+        - username
+        - email
+        - nominante
+        - dataNomina
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        nominante:
+          type: string
+        dataNomina:
+          type: string
     LoginRequest:
       type: object
       required:
@@ -461,6 +534,18 @@ components:
           $ref: "#/components/schemas/EsitoType"
         result:
           $ref: "#/components/schemas/UserType"
+    ResultAdminsResponse:
+      type: object
+      required:
+        - esito
+        - result
+      properties:
+        esito:
+          $ref: "#/components/schemas/EsitoType"
+        result:
+          type: array
+          items:
+            $ref: "#/components/schemas/AdminType"
     EsitoType:
       type: object
       required:
@@ -574,6 +659,16 @@ components:
       required:
         - username
         - password
+    NominaAdminRequest:
+          type: object
+          properties:
+            email:
+              type: string
+            nominante:
+              type: string
+          required:
+            - email
+            - nominante
 
 
 

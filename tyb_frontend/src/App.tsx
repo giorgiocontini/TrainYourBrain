@@ -17,6 +17,7 @@ import ProtectedRoute from "./root/ProtectedRoute";
 import QuizPage from "./pages/QuizPage/QuizPage";
 import StatisticsPage from "./pages/StatisticsPage/StatisticsPage";
 import AddQuizPage from "./pages/AddQuizPage/AddQuizPage";
+import AddAdminPage from "./pages/AddAdminPage/AddAdminPage";
 
 //                 <Route path="profile" Component={ProfilePage}/>
 
@@ -31,6 +32,7 @@ export const routes = createBrowserRouter(
                 <Route path="quiz" element={<ProtectedRoute allowedRoles={["A", "S"]}><QuizPage/></ProtectedRoute>}/>
                 <Route path="statistics" element={<ProtectedRoute allowedRoles={["A", "S"]}><StatisticsPage/></ProtectedRoute>}/>
                 <Route path="add-quiz" element={<ProtectedRoute allowedRoles={["A"]}><AddQuizPage/></ProtectedRoute>}/>
+                <Route path="add-admin" element={<ProtectedRoute allowedRoles={["A"]}><AddAdminPage/></ProtectedRoute>}/>
                 <Route path="profile" element={<ProtectedRoute allowedRoles={["A", "S"]}><ProfilePage/></ProtectedRoute>}/>
                 <Route path="*" element={<Navigate to="/" replace />} />
 

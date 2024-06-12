@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 
 @Document(collection = "user") //Nome del documento sul db
 @Data //genera automaticamente i getter e i setter
@@ -39,18 +40,26 @@ public class User implements Serializable, UserDetails {
     @Field(name = "email")
     private String email;
 
+    @Field(name = "nominante")
+    private String nominante;
+
+    @Field(name = "dataNomina")
+    private String dataNomina;
+
     @Field(name = "password")
     @NotNull(message = "Inserire la password")
     private String password;
 
 
-    public User( String username, String name, String surname,  String role, String email,
-                 String password) {
+    public User(String username, String name, String surname, String role, String email,
+                String password, String nominante, String dataNomina) {
         this.username = username;
         this.name = name;
         this.surname = surname;
         this.role = role;
         this.email = email;
+        this.nominante = nominante;
+        this.dataNomina = dataNomina;
         this.password = password;
     }
 

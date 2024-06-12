@@ -49,12 +49,12 @@ const LoginRegistrationPage = () => {
 
         UserClient.createUserUsingPOST(userData)
             .then(response => {
-                showDialogSuccess("", response.data.descrizione || "", () => {
+                showDialogSuccess("", response?.data.descrizione || "", () => {
                     handleTabChanges();
                 });
             })
             .catch(error => {
-                showDialogFailed(error?.response.data?.esito.descrizione || "");
+                showDialogFailed(error?.response?.data?.esito.descrizione || "");
             });
     }
 
@@ -65,9 +65,9 @@ const LoginRegistrationPage = () => {
             .then(response => {
                 //Posso gestire i dati recuperati
                 if (response.data) {
-                    sessionStorage.setItem("authToken", response.data?.token || "");
+                    sessionStorage.setItem("authToken", response?.data?.token || "");
                     if (response.data.userData) {
-                        setUser(response.data.userData);
+                        setUser(response?.data.userData);
                         navigate("/home", {replace: true})
                     }
                 }

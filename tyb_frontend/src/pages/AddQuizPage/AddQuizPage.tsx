@@ -47,7 +47,7 @@ const AddQuizPage = () => {
         Header: "Risposta",
         accessor: "risposta"
     }, {
-        Header: "Corretta",
+        Header: "Corretta(Si/No)",
         accessor: "corretta"
     }]
 

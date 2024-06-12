@@ -25,19 +25,22 @@ export const useHeaderRoutes = () => {
         const welcomeRoute = {type: "nav-link", label: "Welcome", path: "/"};
         const statisticheRoute = {type: "nav-link", label: "Statistiche", path: "/statistics"};
         const addQuiz = {type: "nav-link", label: "Aggiungi Quiz", path: "/add-quiz"};
+        const addAdmin = {type: "nav-link", label: "Nomina Admin", path: "/add-admin"};
 
         const headerRoutesArrStudents: headerRoute[] = [homeRoute, statisticheRoute];
-        const headerRoutesArrProfessors: headerRoute[] = [homeRoute, statisticheRoute, addQuiz];
-        const headerRoutesArrAdmin: headerRoute[] = [homeRoute, statisticheRoute,addQuiz];
+        //const headerRoutesArrProfessors: headerRoute[] = [homeRoute, statisticheRoute, addQuiz];
+        const headerRoutesArrAdmin: headerRoute[] = [homeRoute, statisticheRoute,addQuiz, addAdmin];
         const initialRoutes: headerRoute[] = [welcomeRoute];
 
 
 
         if (isInRole("S")) {
             return headerRoutesArrStudents;
-        } else if (isInRole("P")) {
-            return headerRoutesArrProfessors;
-        } else if (isInRole("A")) {
+        }
+        //else if (isInRole("P")) {
+        //    return headerRoutesArrProfessors;
+        //}
+        else if (isInRole("A")) {
             return headerRoutesArrAdmin;
         } else {
             return initialRoutes;

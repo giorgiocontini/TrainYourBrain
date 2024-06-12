@@ -26,6 +26,37 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface AdminType
+ */
+export interface AdminType {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminType
+     */
+    'username': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminType
+     */
+    'email': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminType
+     */
+    'nominante': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminType
+     */
+    'dataNomina': string;
+}
+/**
+ * 
+ * @export
  * @interface ChangePasswordRequest
  */
 export interface ChangePasswordRequest {
@@ -171,6 +202,25 @@ export interface LoginRequest {
 /**
  * 
  * @export
+ * @interface NominaAdminRequest
+ */
+export interface NominaAdminRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof NominaAdminRequest
+     */
+    'email': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NominaAdminRequest
+     */
+    'nominante': string;
+}
+/**
+ * 
+ * @export
  * @interface QuestionType
  */
 export interface QuestionType {
@@ -292,6 +342,25 @@ export interface QuizResultsByUserIdResponse {
      * @memberof QuizResultsByUserIdResponse
      */
     'result'?: Array<UserQuizResultType>;
+}
+/**
+ * 
+ * @export
+ * @interface ResultAdminsResponse
+ */
+export interface ResultAdminsResponse {
+    /**
+     * 
+     * @type {EsitoType}
+     * @memberof ResultAdminsResponse
+     */
+    'esito': EsitoType;
+    /**
+     * 
+     * @type {Array<AdminType>}
+     * @memberof ResultAdminsResponse
+     */
+    'result': Array<AdminType>;
 }
 /**
  * 
@@ -1046,6 +1115,40 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Permette cambiare la password di un utente
+         * @param {NominaAdminRequest} [nominaAdminRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addAdminUsingPost: async (nominaAdminRequest?: NominaAdminRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/manage-user/add-admin`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(nominaAdminRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Permette cambiare la password di un utente
          * @param {ChangePasswordRequest} [changePasswordRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1147,6 +1250,36 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @summary Permette cambiare la password di un utente
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAdminsUsingGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/manage-user/get-admins`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary POST api/manage-user/user
          * @param {UserType} userType 
          * @param {*} [options] Override http request option.
@@ -1194,6 +1327,19 @@ export const UserApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Permette cambiare la password di un utente
+         * @param {NominaAdminRequest} [nominaAdminRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addAdminUsingPost(nominaAdminRequest?: NominaAdminRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addAdminUsingPost(nominaAdminRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.addAdminUsingPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Permette cambiare la password di un utente
          * @param {ChangePasswordRequest} [changePasswordRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1232,6 +1378,18 @@ export const UserApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Permette cambiare la password di un utente
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAdminsUsingGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResultAdminsResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAdminsUsingGet(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.getAdminsUsingGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary POST api/manage-user/user
          * @param {UserType} userType 
          * @param {*} [options] Override http request option.
@@ -1253,6 +1411,16 @@ export const UserApiFp = function(configuration?: Configuration) {
 export const UserApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = UserApiFp(configuration)
     return {
+        /**
+         * 
+         * @summary Permette cambiare la password di un utente
+         * @param {NominaAdminRequest} [nominaAdminRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addAdminUsingPost(nominaAdminRequest?: NominaAdminRequest, options?: any): AxiosPromise<EsitoType> {
+            return localVarFp.addAdminUsingPost(nominaAdminRequest, options).then((request) => request(axios, basePath));
+        },
         /**
          * 
          * @summary Permette cambiare la password di un utente
@@ -1285,6 +1453,15 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
+         * @summary Permette cambiare la password di un utente
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAdminsUsingGet(options?: any): AxiosPromise<ResultAdminsResponse> {
+            return localVarFp.getAdminsUsingGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary POST api/manage-user/user
          * @param {UserType} userType 
          * @param {*} [options] Override http request option.
@@ -1303,6 +1480,18 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
  * @extends {BaseAPI}
  */
 export class UserApi extends BaseAPI {
+    /**
+     * 
+     * @summary Permette cambiare la password di un utente
+     * @param {NominaAdminRequest} [nominaAdminRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public addAdminUsingPost(nominaAdminRequest?: NominaAdminRequest, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).addAdminUsingPost(nominaAdminRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @summary Permette cambiare la password di un utente
@@ -1337,6 +1526,17 @@ export class UserApi extends BaseAPI {
      */
     public deleteUserUsingDelete(deleteUserRequest?: DeleteUserRequest, options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).deleteUserUsingDelete(deleteUserRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Permette cambiare la password di un utente
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public getAdminsUsingGet(options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).getAdminsUsingGet(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

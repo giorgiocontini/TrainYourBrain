@@ -101,7 +101,7 @@ const CardComponent = ({config}: CardComponentProps) => {
                             {isInRole("A") ?
                                 <>
                                     <button
-                                        key={"delete_1_" + config?.id}
+                                        key={"hide_1_" + config?.id}
                                         className={"btn btn-outline-secondary px-2 "}
                                         disabled={false}
                                         onClick={() => {
