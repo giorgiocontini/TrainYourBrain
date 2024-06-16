@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 /**
  * Locals
@@ -134,6 +134,18 @@ const AddQuizPage = () => {
         });
     };
 
+    useEffect(() => {
+        if (quizTestuale){
+            setFolderToJson([])
+        }else{
+            formik?.setFormikState((oldState: any) => {
+                const newState = {...oldState};
+                newState.values["file"] = undefined;
+                return newState;
+            });
+        }
+    }, [quizTestuale]);
+
     return <div className={"mb-5"}>
         <PageTitle title={"Aggiungi un quiz"}/>
         <div className="container">
@@ -195,7 +207,10 @@ const AddQuizPage = () => {
             </div>
             <div className={"row mt-5 d-flex ms-auto me-auto"}>
                 <button className={"btn btn-primary mt-4"} type={"submit"} onClick={() => formik.handleSubmit()}
-                        title={"Salva"}>Salva
+                        title={"Salva"}
+                        disabled={!(formik.values.topic !== ""
+                            && formik.values.topicDescription !== ""
+                            && (formik.values.file !== undefined || foldertoJson.length > 0))}>Salva
                 </button>
             </div>
 
