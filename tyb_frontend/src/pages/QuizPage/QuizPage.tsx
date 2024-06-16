@@ -24,6 +24,7 @@ const QuizPage = () => {
     const navigate = useNavigate();
     const {topic, idQuiz} = location || {};
     const [questions, setQuestions] = useState<QuestionType[]>([]);
+    const [imagesType, setImagesType] = useState(false);
 
     useEffect(() => {
         getQuiz(topic);
@@ -43,9 +44,8 @@ const QuizPage = () => {
     function getQuiz(topic: string) {
         QuizClient.getQuizUsingGet(topic).then(
             (res) => {
-                //getDomandeCasuali(res?.data?.result, 10);
-
                 setQuestions(res?.data?.result[0].questions);
+                setImagesType(res?.data?.result[0]?.imagesQuiz || false);
             }
         ).catch((error) => {
             showDialogFailed(error?.response?.data.error)
@@ -90,7 +90,6 @@ const QuizPage = () => {
         totalScore: 0,
         topic: topic || ""
     })
-
 
     const checkAnswer = (quizId: string, questionId: string, answer: string) => {
 
@@ -150,7 +149,7 @@ const QuizPage = () => {
     }
 
     // Funzione di mescolamento (Fisher-Yates)
-    const shuffleArray = (array:QuestionTypeAnswersInner[]) => {
+    const shuffleArray = (array: QuestionTypeAnswersInner[]) => {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];
@@ -167,7 +166,6 @@ const QuizPage = () => {
         }
     }, [questions, currentQuestionIndex]);
 
-
     return <div>
         <div className="d-flex flex-row justify-content-between p-2" style={{alignItems: "center"}}>
             <h3>{(topic as string)?.toUpperCase() ?? ""}</h3>
@@ -177,16 +175,17 @@ const QuizPage = () => {
             <h6> {'Domanda ' + (currentQuestionIndex + 1) + " di " + questions?.length}</h6>
         </div>
         <div className="pageContainer mt-5">
-            <div className="questionContainer">
-                {/* Domanda di lunghezza variabile */}
-                <h2>{questions[currentQuestionIndex]?.description || ""}</h2>
+            <div className="questionContainer d-flex justify-content-center">
+                {imagesType ? <img src={questions[currentQuestionIndex]?.description} alt={"image"}/> :
+                    <h2>{questions[currentQuestionIndex]?.description || ""}</h2>
+                }
             </div>
             <div className="answerGrid mt-4">
                 {/* Griglia 2x2 con risposte */}
                 {shuffledAnswers?.map((el, index) => {
                     return <button key={'answer_' + index} className={'answerButton ' + getStyle(el.description)}
                                    onClick={() => {
-                                       checkAnswer(idQuiz, questions[currentQuestionIndex]?.id ||"", el.description);
+                                       checkAnswer(idQuiz, questions[currentQuestionIndex]?.id || "", el.description);
                                    }
                                    }>{el.description}</button>
                 })}

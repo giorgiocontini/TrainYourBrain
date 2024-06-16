@@ -32,4 +32,7 @@ public class Quiz implements Serializable {
     @Field(name = "isHidden")
     private Boolean isHidden;
 
+    @Field(name = "imagesQuiz")
+    private Boolean imagesQuiz;
+
 }

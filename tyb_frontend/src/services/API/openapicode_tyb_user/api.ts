@@ -122,6 +122,12 @@ export interface CreateQuizUsingPostRequest {
      * @memberof CreateQuizUsingPostRequest
      */
     'imageFile'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CreateQuizUsingPostRequest
+     */
+    'imagesQuiz'?: boolean;
 }
 /**
  * 
@@ -304,6 +310,12 @@ export interface QuizDto {
      * @memberof QuizDto
      */
     'isHidden'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof QuizDto
+     */
+    'imagesQuiz'?: boolean;
 }
 /**
  * 

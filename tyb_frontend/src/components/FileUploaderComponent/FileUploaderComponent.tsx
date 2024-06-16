@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from "react";
 import "./FileUploaderComponent.scss";
 import {FormikProps} from "formik";
 
+
 type FileUploaderComponentPropsType = {
     labelButton: string;
     disabled?: boolean;
@@ -17,7 +18,6 @@ type FileUploaderComponentPropsType = {
     formik?: never
     initFileInput?: { init: boolean; setInit: (b: boolean) => void }; handleFile: (file: any) => void,
 });
-
 
 /**
  * FileUploaderComponent
@@ -39,7 +39,7 @@ const FileUploaderComponent = ({
                                    acceptFile = "*",
                                    prevFile = undefined,
                                    formik,
-                                    name,
+                                   name,
                                    isRequired = false,
                                    initFileInput
                                }: FileUploaderComponentPropsType) => {
@@ -51,7 +51,6 @@ const FileUploaderComponent = ({
     };
 
     const handleFormik = (newFile: File | undefined) => {
-
 
         formik?.setFormikState((oldState: any) => {
             const newState = {...oldState};
