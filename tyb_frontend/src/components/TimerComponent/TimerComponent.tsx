@@ -12,10 +12,11 @@ const TimerComponent: React.FC<TimerProps> = ({ onTimeout, remainingTime, setRem
 
 
     useEffect(() => {
+        debugger
         const timerId = setInterval(() => {
             setRemainingTime(prevTime => {
                 const newTime = prevTime - 1;
-                if (newTime <= 0) {
+                if (newTime === 0) {
                     clearInterval(timerId);
                     onTimeout();
                 }
@@ -27,8 +28,12 @@ const TimerComponent: React.FC<TimerProps> = ({ onTimeout, remainingTime, setRem
     }, [onTimeout]);
 
     const formatTime = (time: number): string => {
-        const minutes = Math.floor(time / 60);
-        const seconds = time % 60;
+        let minutes = Math.floor(time / 60);
+        let seconds = time % 60;
+        if (time<=0){
+            minutes=0;
+            seconds=0;
+        }
         return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
 
