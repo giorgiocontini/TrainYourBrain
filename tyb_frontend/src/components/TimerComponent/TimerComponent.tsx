@@ -12,7 +12,6 @@ const TimerComponent: React.FC<TimerProps> = ({ onTimeout, remainingTime, setRem
 
 
     useEffect(() => {
-        debugger
         const timerId = setInterval(() => {
             setRemainingTime(prevTime => {
                 const newTime = prevTime - 1;

@@ -70,7 +70,6 @@ const AddQuizPage = () => {
     })
 
     const createQuiz = (data: QuestionType[]) => {
-        debugger
         QuizClient.createQuizUsingPost({
                 questions: data,
                 ...formik.values,
