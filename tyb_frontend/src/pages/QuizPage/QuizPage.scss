@@ -16,10 +16,10 @@
 .answerGrid {
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr/* Una colonna */ !important;
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  text-align: left !important;
-  /* Layout a una colonna su schermi piï¿½ piccoli */
+
+  /* Layout a una colonna su schermi più piccoli */
   @media screen and (max-width: 600px) {
     grid-template-columns: 1fr; /* Una colonna */
   }

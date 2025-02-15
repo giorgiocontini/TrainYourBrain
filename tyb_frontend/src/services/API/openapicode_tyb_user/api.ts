@@ -447,7 +447,7 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        checkAnswerUsingGet: async (quizId: string, questionId: string, answerId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        checkAnswerUsingGet: async (quizId: string, questionId: string, answerId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'quizId' is not null or undefined
             assertParamExists('checkAnswerUsingGet', 'quizId', quizId)
             // verify required parameter 'questionId' is not null or undefined
@@ -629,16 +629,16 @@ export const QuizApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = QuizApiAxiosParamCreator(configuration)
     return {
         /**
-         *
+         * 
          * @summary Permette di controllare le risposte
-         * @param {string} quizId
-         * @param {string} questionId
-         * @param description
+         * @param {string} quizId 
+         * @param {string} questionId 
+         * @param {number} answerId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async checkAnswerUsingGet(quizId: string, questionId: string, description: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.checkAnswerUsingGet(quizId, questionId, description, options);
+        async checkAnswerUsingGet(quizId: string, questionId: string, answerId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.checkAnswerUsingGet(quizId, questionId, answerId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -704,7 +704,7 @@ export const QuizApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        checkAnswerUsingGet(quizId: string, questionId: string, answerId: string, options?: any): AxiosPromise<boolean> {
+        checkAnswerUsingGet(quizId: string, questionId: string, answerId: number, options?: any): AxiosPromise<boolean> {
             return localVarFp.checkAnswerUsingGet(quizId, questionId, answerId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -767,8 +767,8 @@ export class QuizApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof QuizApi
      */
-    public checkAnswerUsingGet(quizId: string, questionId: string, description: string, options?: AxiosRequestConfig) {
-        return QuizApiFp(this.configuration).checkAnswerUsingGet(quizId, questionId, description, options).then((request) => request(this.axios, this.basePath));
+    public checkAnswerUsingGet(quizId: string, questionId: string, answerId: number, options?: AxiosRequestConfig) {
+        return QuizApiFp(this.configuration).checkAnswerUsingGet(quizId, questionId, answerId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

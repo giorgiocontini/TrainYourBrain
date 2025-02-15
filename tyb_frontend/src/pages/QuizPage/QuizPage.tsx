@@ -31,12 +31,14 @@ const QuizPage = () => {
     }
 
     function getQuiz(topic: string) {
-        QuizClient.getQuizUsingGet(topic).then((res) => {
-            //getDomandeCasuali(res?.data?.result, 10);
+        QuizClient.getQuizUsingGet(topic).then(
+            (res) => {
+                //getDomandeCasuali(res?.data?.result, 10);
 
-            setQuestions(res?.data?.result[0].questions);
+                setQuestions(res?.data?.result[0].questions);
 
-        }).catch((error) => {
+            }
+        ).catch((error) => {
             showDialogFailed(error?.response?.data.error)
         })
     }
@@ -60,7 +62,8 @@ const QuizPage = () => {
         }
     };
 
-    const [buttonStyle, setButtonStyle] = useState<{ qId: string, aId: number, style: string } | undefined>(undefined);
+    const [buttonStyle, setButtonStyle]
+        = useState<{ qId: string, aId: number, style: string } | undefined>(undefined);
 
     function saveQuizResult() {
         QuizClient.saveQuizUsingPost(userResults).then(response => {
@@ -74,46 +77,52 @@ const QuizPage = () => {
     }
 
     const [userResults, setUserResults] = useState<UserQuizResultType>({
-        userId: user.username, totalScore: 0, topic: topic || ""
+        userId: user.username,
+        totalScore: 0,
+        topic: topic || ""
     })
 
 
-    const checkAnswer = (quizId: string, questionId: string, ansIndex: number, description: string) => {
+    const checkAnswer = (quizId: string, questionId: string, ansIndex: number) => {
 
-        QuizClient.checkAnswerUsingGet(quizId, questionId, description).then((res) => {
-            if (res.data) {
-                setButtonStyle({
-                    ...buttonStyle, qId: questionId, aId: ansIndex, style: "btn btn-success"
-                })
+        QuizClient.checkAnswerUsingGet(quizId, questionId, ansIndex).then(
+            (res) => {
+                if (res.data) {
+                    setButtonStyle({
+                        ...buttonStyle, qId: questionId,
+                        aId: ansIndex, style: "btn btn-success"
+                    })
 
-                setTimeout(() => {
-                    //gestire le risposte corrette
-                    setRemainingTime(prevState => (prevState + 15));
-                    //loadNextQuestion();
-                    setUserResults((oldState) => {
-                        const newState = {...oldState};
-                        newState.totalScore = (newState.totalScore + 10);
-                        return newState;
-                    });
-                }, 500)
+                    setTimeout(() => {
+                        //gestire le risposte corrette
+                        setRemainingTime(prevState => (prevState + 15));
+                        loadNextQuestion();
+                        setUserResults((oldState) => {
+                            const newState = {...oldState};
+                            newState.totalScore = (newState.totalScore + 10);
+                            return newState;
+                        });
+                    }, 500)
 
-            } else {
+                } else {
 
-                setButtonStyle({
-                    ...buttonStyle, qId: questionId, aId: ansIndex, style: "btn btn-danger"
-                })
-                setTimeout(() => {
-                    //gestire le risposte errate
-                    setRemainingTime(prevState => (prevState - 15));
-                    //loadNextQuestion();
-                    setUserResults((oldState) => {
-                        const newState = {...oldState};
-                        newState.totalScore = (newState.totalScore - 10);
-                        return newState;
-                    });
-                }, 500)
+                    setButtonStyle({
+                        ...buttonStyle, qId: questionId,
+                        aId: ansIndex, style: "btn btn-danger"
+                    })
+                    setTimeout(() => {
+                        //gestire le risposte errate
+                        setRemainingTime(prevState => (prevState - 15));
+                        loadNextQuestion();
+                        setUserResults((oldState) => {
+                            const newState = {...oldState};
+                            newState.totalScore = (newState.totalScore - 10);
+                            return newState;
+                        });
+                    }, 500)
+                }
             }
-        }).catch((error) => {
+        ).catch((error) => {
             showDialogFailed(error?.response?.data?.error);
         })
 
@@ -126,7 +135,9 @@ const QuizPage = () => {
     };
 
     function getStyle(index: number) {
-        return (buttonStyle && questions[currentQuestionIndex].id === buttonStyle?.qId && index === buttonStyle.aId) ? buttonStyle.style : "";
+        return (buttonStyle
+            && questions[currentQuestionIndex].id === buttonStyle?.qId
+            && index === buttonStyle.aId) ? buttonStyle.style : "";
     }
 
     return <div>
@@ -142,20 +153,20 @@ const QuizPage = () => {
                 {/* Domanda di lunghezza variabile */}
                 <h2>{questions[currentQuestionIndex]?.description || ""}</h2>
             </div>
-            <div className="answerGrid mt-4" style={{ textAlign: 'start'}}>
-
+            <div className="answerGrid mt-4">
                 {/* Griglia 2x2 con risposte */}
-                {(questions[currentQuestionIndex]?.answers)?.
-                    map((el, index) => {
-                        return <button key={'answer_' + index} className={'answerButton ' + getStyle(index)}
-                                       onClick={() => {
-                                           checkAnswer(idQuiz, questions[currentQuestionIndex]?.id || "",index, el.description);
-                                       }}>{el.description}</button>
-                    })}
+                {(questions[currentQuestionIndex]?.answers)?.map((el, index) => {
+                    return <button key={'answer_' + index} className={'answerButton ' + getStyle(index)}
+                                   onClick={() => {
+                                       checkAnswer(idQuiz, questions[currentQuestionIndex]?.id ||"", index);
+                                   }
+                                   }>{el.description}</button>
+                })}
             </div>
         </div>
         <div className="d-flex flex-row mt-5">
-            {//Back button
+            {
+                //Back button
                 //   currentQuestionIndex != 0 ?
                 //   <div className={"me-auto"}>
                 //       <button className={"btn btn-outline-secondary"} onClick={loadPreviousQuestion}>Indietro
@@ -163,7 +174,8 @@ const QuizPage = () => {
                 //   </div>
                 //   : <></>
             }
-            {//currentQuestionIndex != questions.length-1?
+            {
+                //currentQuestionIndex != questions.length-1?
                 <div className={"ms-auto"}>
                     <button className={"btn btn-outline-secondary"} onClick={loadNextQuestion}>Avanti
                     </button>
