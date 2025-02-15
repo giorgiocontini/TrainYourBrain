@@ -14,10 +14,9 @@ public interface QuizService {
 
     ResultQuizResponse getQuizByTopic(String topic);
 
-    Boolean checkAnswer(String quizId, String questionId, String answerIndex);
+    Boolean checkAnswer(String quizId, String questionId, Integer answerIndex);
 
     QuizDataResponse getResultsByUserId(String userId);
 
     Esito saveResults(QuizResult result);
-
 }

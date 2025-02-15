@@ -38,7 +38,7 @@ public class QuizController {
 
     @GetMapping(value = "/{quizId}/{questionId}/{answerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> checkAnswer(@PathVariable String quizId, @PathVariable String questionId,
-                                               @PathVariable String answerId) {
+                                               @PathVariable Integer answerId) {
         Logger.getGlobal().info("**************** Verifico risposta ***************");
         return new ResponseEntity<>(quizService.checkAnswer(quizId, questionId, answerId), HttpStatus.OK);
     }
