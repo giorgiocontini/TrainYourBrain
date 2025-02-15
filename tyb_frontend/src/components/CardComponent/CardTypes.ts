@@ -8,11 +8,14 @@ export interface CardComponentConfig {
     image?: any;
     id: string;
     title: string;
+    isHidden?:boolean;
     description: string;
     button1?: {
         label?:string,
         onClick:Function
     };
+    onHidden?: Function
+    onDelete?: Function
 }
 
 /**

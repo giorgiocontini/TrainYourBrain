@@ -49,4 +49,29 @@ const showDialogInfo = (titleInfo: string, infoMsg: string, FunctionByConfirm: F
     });
 };
 
-export {showDialogFailed, showDialogSuccess, SwalDUPopup, showDialogInfo};
+const showDialogConfirmOperation = (
+    title: string,
+    msg: string,
+    functionByConfirm: Function
+) => {
+    SwalDUPopup.fire({
+        icon: "warning",
+        showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonText: "Conferma",
+        cancelButtonText: "Annulla",
+        allowOutsideClick: false,
+        title: title,
+        html: msg,
+        customClass: {
+            confirmButton: "btn btn-primary m-1 ",
+            cancelButton: "btn btn-outline-info m-1"
+        },
+        preConfirm(inputValue: any) {
+            functionByConfirm(true);
+        }
+    });
+};
+
+
+export {showDialogFailed, showDialogSuccess, showDialogConfirmOperation, SwalDUPopup, showDialogInfo};

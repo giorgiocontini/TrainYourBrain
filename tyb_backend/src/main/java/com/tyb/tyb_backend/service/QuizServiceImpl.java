@@ -3,6 +3,7 @@ package com.tyb.tyb_backend.service;
 import com.tyb.tyb_backend.dto.Esito.EnumCodiceEsito;
 import com.tyb.tyb_backend.dto.Esito.Esito;
 import com.tyb.tyb_backend.dto.QuizDataResponse;
+import com.tyb.tyb_backend.dto.QuizDto;
 import com.tyb.tyb_backend.dto.ResultQuizResponse;
 import com.tyb.tyb_backend.model.Answer;
 import com.tyb.tyb_backend.model.Question;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -39,11 +41,37 @@ public class QuizServiceImpl implements QuizService {
                     question.setId(new ObjectId().toHexString());
                 }
             });
+            quiz.setIsHidden(true);
             quizRepository.insert(quiz);
-            return new Esito(EnumCodiceEsito.OK, "Quiz correttamente creato");
+            return new Esito(EnumCodiceEsito.OK, "Quiz correttamente creato. Può renderlo disponibile dalla home.");
         }
         return new Esito(EnumCodiceEsito.KO, "Si sono verificati degli errori, si prega di riporvare");
     }
+
+    @Override
+    public Esito showHideQuiz(String id) {
+        Optional<Quiz> quiz = quizRepository.findById(new ObjectId(id));
+        if(quiz.isPresent()){
+            if(quiz.get().getIsHidden()==null){
+                quiz.get().setIsHidden(false);
+            }
+            quiz.get().setIsHidden(!quiz.get().getIsHidden());
+            quizRepository.save(quiz.get());
+            return new Esito(EnumCodiceEsito.OK, "Operazione correttamente eseguita");
+        }
+        return new Esito(EnumCodiceEsito.KO, "Si sono verificati degli errori, si prega di riporvare");
+    }
+
+    @Override
+    public Esito deleteQuiz(String id) {
+        Optional<Quiz> quiz = quizRepository.findById(new ObjectId(id));
+        if(quiz.isPresent()){
+            quizRepository.delete(quiz.get());
+            return new Esito(EnumCodiceEsito.OK, "Operazione correttamente eseguita");
+        }
+        return new Esito(EnumCodiceEsito.KO, "Si sono verificati degli errori, si prega di riporvare");
+    }
+
 
     /**
      * @param topic
@@ -71,32 +99,29 @@ public class QuizServiceImpl implements QuizService {
 
     /**
      * @param questionId
-     * @param answerIndex
-     * @return
+     * @param answer
      */
     @Override
-    public Boolean checkAnswer(String quizId, String questionId, Integer answerIndex) {
+    public Boolean checkAnswer(String quizId, String questionId, String answer) {
         ObjectId id = new ObjectId(quizId);
         Optional<Quiz> quizOptional = quizRepository.findById(id);
 
         if (quizOptional.isPresent()) {
             Quiz quiz = quizOptional.get();
             List<Question> questions = quiz.getQuestions();
+
             return questions.stream()
                     .filter(question -> question.getId().equals(questionId))
                     .findFirst()
-                    .map(question -> {
-                        // Assicurati che l'indice della risposta sia valido
-                        if (answerIndex >= 0 && answerIndex < question.getAnswers().size()) {
-                            return question.getAnswers().get(answerIndex).getIsCorrect();
-                        } else {
-                            return null; // O lancia un'eccezione se l'indice non è valido
-                        }
-                    })
-                    .orElse(null); // O lancia un'eccezione se la domanda non è trovata
+                    .map(question -> question.getAnswers().stream()
+                            .filter(elem -> elem.getDescription().equals(answer))
+                            .findFirst()
+                            .map(Answer::getIsCorrect)
+                            .orElse(false)) // Restituisce false se la risposta non è trovata
+                    .orElse(false); // Restituisce false se la domanda non è trovata
         }
 
-        return false; // Modificare secondo necessità
+        return false; // Restituisce false se il quiz non è trovato
     }
 
     /**

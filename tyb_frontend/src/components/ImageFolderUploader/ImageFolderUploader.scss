@@ -1,0 +1,6 @@
+.FileUploaderComponent__upload-btn_required::after {
+  content: "*";
+  color: red;
+  padding-left: 2px;
+  font-weight: bold;
+}

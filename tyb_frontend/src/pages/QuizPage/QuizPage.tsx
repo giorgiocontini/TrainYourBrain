@@ -7,7 +7,12 @@ import {useLocation, useNavigate} from "react-router-dom"
 import "./QuizPage.scss";
 import {showDialogFailed, showDialogInfo} from "../../utils/DialogUtils";
 import QuizClient from "../../services/API/openapicode_tyb_user/QuizClient";
-import {QuestionType, QuizDto, UserQuizResultType} from "../../services/API/openapicode_tyb_user";
+import {
+    QuestionType,
+    QuestionTypeAnswersInner,
+    QuizDto,
+    UserQuizResultType
+} from "../../services/API/openapicode_tyb_user";
 import TimerComponent from "../../components/TimerComponent/TimerComponent";
 import {AuthContext} from "../../AuthContext";
 
@@ -19,10 +24,16 @@ const QuizPage = () => {
     const navigate = useNavigate();
     const {topic, idQuiz} = location || {};
     const [questions, setQuestions] = useState<QuestionType[]>([]);
+    const [imagesType, setImagesType] = useState(false);
 
     useEffect(() => {
         getQuiz(topic);
+
     }, []);
+
+    useEffect(() => {
+        setRemainingTime(questions.length * 30);
+    }, [questions]);
 
     // Funzione per recuperare un numero casuale di oggetti dalla lista
     function getDomandeCasuali(lista: QuizDto[], numeroDomande: number) {
@@ -33,17 +44,15 @@ const QuizPage = () => {
     function getQuiz(topic: string) {
         QuizClient.getQuizUsingGet(topic).then(
             (res) => {
-                //getDomandeCasuali(res?.data?.result, 10);
-
                 setQuestions(res?.data?.result[0].questions);
-
+                setImagesType(res?.data?.result[0]?.imagesQuiz || false);
             }
         ).catch((error) => {
             showDialogFailed(error?.response?.data.error)
         })
     }
 
-    const [remainingTime, setRemainingTime] = useState(1800);
+    const [remainingTime, setRemainingTime] = useState<number>(1800);
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
@@ -63,7 +72,7 @@ const QuizPage = () => {
     };
 
     const [buttonStyle, setButtonStyle]
-        = useState<{ qId: string, aId: number, style: string } | undefined>(undefined);
+        = useState<{ qId: string, answer: string, style: string } | undefined>(undefined);
 
     function saveQuizResult() {
         QuizClient.saveQuizUsingPost(userResults).then(response => {
@@ -82,20 +91,19 @@ const QuizPage = () => {
         topic: topic || ""
     })
 
+    const checkAnswer = (quizId: string, questionId: string, answer: string) => {
 
-    const checkAnswer = (quizId: string, questionId: string, ansIndex: number) => {
-
-        QuizClient.checkAnswerUsingGet(quizId, questionId, ansIndex).then(
+        QuizClient.checkAnswerUsingPost(quizId, questionId, {answer}).then(
             (res) => {
                 if (res.data) {
                     setButtonStyle({
                         ...buttonStyle, qId: questionId,
-                        aId: ansIndex, style: "btn btn-success"
+                        answer: answer, style: "btn btn-success"
                     })
 
                     setTimeout(() => {
                         //gestire le risposte corrette
-                        setRemainingTime(prevState => (prevState + 15));
+                        setRemainingTime(prevState => (prevState - 15));
                         loadNextQuestion();
                         setUserResults((oldState) => {
                             const newState = {...oldState};
@@ -108,11 +116,11 @@ const QuizPage = () => {
 
                     setButtonStyle({
                         ...buttonStyle, qId: questionId,
-                        aId: ansIndex, style: "btn btn-danger"
+                        answer: answer, style: "btn btn-danger"
                     })
                     setTimeout(() => {
                         //gestire le risposte errate
-                        setRemainingTime(prevState => (prevState - 15));
+                        //setRemainingTime(prevState => (prevState - 15));
                         loadNextQuestion();
                         setUserResults((oldState) => {
                             const newState = {...oldState};
@@ -134,11 +142,29 @@ const QuizPage = () => {
         })
     };
 
-    function getStyle(index: number) {
+    function getStyle(answer: string) {
         return (buttonStyle
             && questions[currentQuestionIndex].id === buttonStyle?.qId
-            && index === buttonStyle.aId) ? buttonStyle.style : "";
+            && answer === buttonStyle.answer) ? buttonStyle.style : "";
     }
+
+    // Funzione di mescolamento (Fisher-Yates)
+    const shuffleArray = (array: QuestionTypeAnswersInner[]) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    };
+
+    const [shuffledAnswers, setShuffledAnswers] = useState<QuestionTypeAnswersInner[]>([]);
+
+    useEffect(() => {
+        if (questions[currentQuestionIndex]?.answers) {
+            // Mescola le risposte ogni volta che cambia la domanda corrente
+            setShuffledAnswers(shuffleArray([...questions[currentQuestionIndex].answers]));
+        }
+    }, [questions, currentQuestionIndex]);
 
     return <div>
         <div className="d-flex flex-row justify-content-between p-2" style={{alignItems: "center"}}>
@@ -149,16 +175,17 @@ const QuizPage = () => {
             <h6> {'Domanda ' + (currentQuestionIndex + 1) + " di " + questions?.length}</h6>
         </div>
         <div className="pageContainer mt-5">
-            <div className="questionContainer">
-                {/* Domanda di lunghezza variabile */}
-                <h2>{questions[currentQuestionIndex]?.description || ""}</h2>
+            <div className="questionContainer d-flex justify-content-center">
+                {imagesType ? <img src={questions[currentQuestionIndex]?.description} alt={"image"}/> :
+                    <h2>{questions[currentQuestionIndex]?.description || ""}</h2>
+                }
             </div>
             <div className="answerGrid mt-4">
                 {/* Griglia 2x2 con risposte */}
-                {(questions[currentQuestionIndex]?.answers)?.map((el, index) => {
-                    return <button key={'answer_' + index} className={'answerButton ' + getStyle(index)}
+                {shuffledAnswers?.map((el, index) => {
+                    return <button key={'answer_' + index} className={'answerButton ' + getStyle(el.description)}
                                    onClick={() => {
-                                       checkAnswer(idQuiz, questions[currentQuestionIndex]?.id ||"", index);
+                                       checkAnswer(idQuiz, questions[currentQuestionIndex]?.id || "", el.description);
                                    }
                                    }>{el.description}</button>
                 })}

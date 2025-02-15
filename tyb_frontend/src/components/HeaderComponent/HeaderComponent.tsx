@@ -33,7 +33,7 @@ const HeaderComponent = ({}: HeaderComponentProps) => {
                     <div>
                         {user ? <>
                             <button className="btn btn-primary" onClick={() => {
-                                //navigate("/profile")
+                                navigate("/profile")
                             }}>
                                 <i className="bi bi-person-circle"></i><span className="ms-2 hide-on-sm">{user.username}</span>
                             </button>

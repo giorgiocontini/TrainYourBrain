@@ -138,13 +138,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EsitoType"
-  /quiz/{quizId}/{questionId}/{answerId}:
-    get:
+  /quiz/{quizId}/{questionId}/checkAnswer:
+    post:
       tags:
         - Quiz
       summary: >-
         Permette di controllare le risposte
-      operationId: checkAnswerUsingGet
+      operationId: checkAnswerUsingPost
       parameters:
         - name: quizId
           in: path
@@ -156,11 +156,15 @@ paths:
           required: true
           schema:
             type: string
-        - name: answerId
-          in: path
-          required: true
-          schema:
-            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answer:
+                  type: string
       responses:
         "200":
           description: OK
@@ -271,6 +275,8 @@ paths:
                   type: string
                   format: base64
                   description: Il file multimediale da caricare
+                imagesQuiz:
+                  type: boolean
       responses:
         "200":
           description: OK
@@ -290,6 +296,189 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EsitoType"
+  /quiz/show-hide/{quizId}:
+    put:
+      tags:
+        - Quiz
+      summary: >-
+        Permette di nascondere o mostrarre un quiz agli studenti
+      operationId: showHideQuizUsingPut
+      parameters:
+        - name: quizId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+  /quiz/delete/{quizId}:
+    delete:
+      tags:
+        - Quiz
+      summary: >-
+        Permette eliminare fisicamente un quiz dal database
+      operationId: deleteQuizUsingDelete
+      parameters:
+        - name: quizId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+  /manage-user/delete:
+    delete:
+      tags:
+        - User
+      summary: >-
+        Permette eliminare fisicamente un utente dal database
+      operationId: deleteUserUsingDelete
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteUserRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+  /manage-user/changepassword:
+    put:
+      tags:
+        - User
+      summary: >-
+        Permette cambiare la password di un utente
+      operationId: changePasswordUsingPut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+  /manage-user/add-admin:
+    post:
+      tags:
+        - User
+      summary: >-
+        Permette cambiare la password di un utente
+      operationId: addAdminUsingPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NominaAdminRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EsitoType"
+  /manage-user/get-admins:
+    get:
+      tags:
+        - User
+      summary: >-
+        Permette cambiare la password di un utente
+      operationId: getAdminsUsingGet
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResultAdminsResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResultAdminsResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResultAdminsResponse"
 components:
   schemas:
     UserType:
@@ -311,6 +500,22 @@ components:
           type: string
         email:
           type: string
+    AdminType:
+      type: object
+      required:
+        - username
+        - email
+        - nominante
+        - dataNomina
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        nominante:
+          type: string
+        dataNomina:
+          type: string
     LoginRequest:
       type: object
       required:
@@ -331,13 +536,25 @@ components:
           $ref: "#/components/schemas/EsitoType"
         result:
           $ref: "#/components/schemas/UserType"
+    ResultAdminsResponse:
+      type: object
+      required:
+        - esito
+        - result
+      properties:
+        esito:
+          $ref: "#/components/schemas/EsitoType"
+        result:
+          type: array
+          items:
+            $ref: "#/components/schemas/AdminType"
     EsitoType:
       type: object
       required:
         - codice
         - descrizione
       properties:
-        esito:
+        codice:
           type: string
         descrizione:
           type: string
@@ -368,6 +585,10 @@ components:
         imageFile:
           type: string
           format: base64
+        isHidden:
+          type: boolean
+        imagesQuiz:
+          type: boolean
       required:
         - questions
         - topic
@@ -419,6 +640,39 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/UserQuizResultType"
+    ChangePasswordRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        oldPassword:
+          type: string
+        newPassword:
+          type: string
+      required:
+        - username
+        - newPassword
+        - oldPassword
+    DeleteUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+    NominaAdminRequest:
+          type: object
+          properties:
+            email:
+              type: string
+            nominante:
+              type: string
+          required:
+            - email
+            - nominante
 
 
 

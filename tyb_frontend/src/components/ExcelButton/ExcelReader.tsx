@@ -61,7 +61,7 @@ const ExcelReader = ({manageDataFunction, formik}: { manageDataFunction: Functio
     return (
         <div className={"text-center"}>
             <FileUploaderComponent acceptFile={".xlsx, .xls"}
-                                   labelButton={"Carica File"}
+                                   labelButton={"Carica Excel"}
                                    disabled={!formik.values.topic}
                                    isRequired={true}
                                    name={"file"}

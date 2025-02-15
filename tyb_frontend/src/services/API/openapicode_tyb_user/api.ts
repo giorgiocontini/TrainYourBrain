@@ -14,15 +14,84 @@
 
 
 import type { Configuration } from './configuration';
-import type { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
+import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
 import type { RequestArgs } from './base';
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError } from './base';
+import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
+/**
+ * 
+ * @export
+ * @interface AdminType
+ */
+export interface AdminType {
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminType
+     */
+    'username': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminType
+     */
+    'email': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminType
+     */
+    'nominante': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AdminType
+     */
+    'dataNomina': string;
+}
+/**
+ * 
+ * @export
+ * @interface ChangePasswordRequest
+ */
+export interface ChangePasswordRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ChangePasswordRequest
+     */
+    'username': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ChangePasswordRequest
+     */
+    'oldPassword': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ChangePasswordRequest
+     */
+    'newPassword': string;
+}
+/**
+ * 
+ * @export
+ * @interface CheckAnswerUsingPostRequest
+ */
+export interface CheckAnswerUsingPostRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof CheckAnswerUsingPostRequest
+     */
+    'answer'?: string;
+}
 /**
  * 
  * @export
@@ -53,6 +122,31 @@ export interface CreateQuizUsingPostRequest {
      * @memberof CreateQuizUsingPostRequest
      */
     'imageFile'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CreateQuizUsingPostRequest
+     */
+    'imagesQuiz'?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface DeleteUserRequest
+ */
+export interface DeleteUserRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof DeleteUserRequest
+     */
+    'username': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof DeleteUserRequest
+     */
+    'password': string;
 }
 /**
  * 
@@ -65,7 +159,7 @@ export interface EsitoType {
      * @type {string}
      * @memberof EsitoType
      */
-    'esito'?: string;
+    'codice': string;
     /**
      * 
      * @type {string}
@@ -110,6 +204,25 @@ export interface LoginRequest {
      * @memberof LoginRequest
      */
     'password': string;
+}
+/**
+ * 
+ * @export
+ * @interface NominaAdminRequest
+ */
+export interface NominaAdminRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof NominaAdminRequest
+     */
+    'email': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NominaAdminRequest
+     */
+    'nominante': string;
 }
 /**
  * 
@@ -191,6 +304,18 @@ export interface QuizDto {
      * @memberof QuizDto
      */
     'imageFile'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof QuizDto
+     */
+    'isHidden'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof QuizDto
+     */
+    'imagesQuiz'?: boolean;
 }
 /**
  * 
@@ -229,6 +354,25 @@ export interface QuizResultsByUserIdResponse {
      * @memberof QuizResultsByUserIdResponse
      */
     'result'?: Array<UserQuizResultType>;
+}
+/**
+ * 
+ * @export
+ * @interface ResultAdminsResponse
+ */
+export interface ResultAdminsResponse {
+    /**
+     * 
+     * @type {EsitoType}
+     * @memberof ResultAdminsResponse
+     */
+    'esito': EsitoType;
+    /**
+     * 
+     * @type {Array<AdminType>}
+     * @memberof ResultAdminsResponse
+     */
+    'result': Array<AdminType>;
 }
 /**
  * 
@@ -337,7 +481,7 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        login: async (loginRequest: LoginRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        login: async (loginRequest: LoginRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'loginRequest' is not null or undefined
             assertParamExists('login', 'loginRequest', loginRequest)
             const localVarPath = `/auth/login`;
@@ -383,9 +527,11 @@ export const AuthApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async login(loginRequest: LoginRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Login200Response>> {
+        async login(loginRequest: LoginRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Login200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.login(loginRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.login']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
@@ -425,7 +571,7 @@ export class AuthApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public login(loginRequest: LoginRequest, options?: AxiosRequestConfig) {
+    public login(loginRequest: LoginRequest, options?: RawAxiosRequestConfig) {
         return AuthApiFp(this.configuration).login(loginRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
@@ -443,21 +589,20 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
          * @summary Permette di controllare le risposte
          * @param {string} quizId 
          * @param {string} questionId 
-         * @param {number} answerId 
+         * @param {CheckAnswerUsingPostRequest} checkAnswerUsingPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        checkAnswerUsingGet: async (quizId: string, questionId: string, answerId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        checkAnswerUsingPost: async (quizId: string, questionId: string, checkAnswerUsingPostRequest: CheckAnswerUsingPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'quizId' is not null or undefined
-            assertParamExists('checkAnswerUsingGet', 'quizId', quizId)
+            assertParamExists('checkAnswerUsingPost', 'quizId', quizId)
             // verify required parameter 'questionId' is not null or undefined
-            assertParamExists('checkAnswerUsingGet', 'questionId', questionId)
-            // verify required parameter 'answerId' is not null or undefined
-            assertParamExists('checkAnswerUsingGet', 'answerId', answerId)
-            const localVarPath = `/quiz/{quizId}/{questionId}/{answerId}`
+            assertParamExists('checkAnswerUsingPost', 'questionId', questionId)
+            // verify required parameter 'checkAnswerUsingPostRequest' is not null or undefined
+            assertParamExists('checkAnswerUsingPost', 'checkAnswerUsingPostRequest', checkAnswerUsingPostRequest)
+            const localVarPath = `/quiz/{quizId}/{questionId}/checkAnswer`
                 .replace(`{${"quizId"}}`, encodeURIComponent(String(quizId)))
-                .replace(`{${"questionId"}}`, encodeURIComponent(String(questionId)))
-                .replace(`{${"answerId"}}`, encodeURIComponent(String(answerId)));
+                .replace(`{${"questionId"}}`, encodeURIComponent(String(questionId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -465,15 +610,18 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(checkAnswerUsingPostRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -487,7 +635,7 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createQuizUsingPost: async (createQuizUsingPostRequest: CreateQuizUsingPostRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createQuizUsingPost: async (createQuizUsingPostRequest: CreateQuizUsingPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createQuizUsingPostRequest' is not null or undefined
             assertParamExists('createQuizUsingPost', 'createQuizUsingPostRequest', createQuizUsingPostRequest)
             const localVarPath = `/quiz/create`;
@@ -518,12 +666,46 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @summary Permette eliminare fisicamente un quiz dal database
+         * @param {string} quizId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteQuizUsingDelete: async (quizId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'quizId' is not null or undefined
+            assertParamExists('deleteQuizUsingDelete', 'quizId', quizId)
+            const localVarPath = `/quiz/delete/{quizId}`
+                .replace(`{${"quizId"}}`, encodeURIComponent(String(quizId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Recupera i risultati per un determinato userID
          * @param {string} userId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getQuizResultsByUserId: async (userId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getQuizResultsByUserId: async (userId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'userId' is not null or undefined
             assertParamExists('getQuizResultsByUserId', 'userId', userId)
             const localVarPath = `/quiz/results/{userId}`
@@ -557,7 +739,7 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getQuizUsingGet: async (topic: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getQuizUsingGet: async (topic: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'topic' is not null or undefined
             assertParamExists('getQuizUsingGet', 'topic', topic)
             const localVarPath = `/quiz/{topic}`
@@ -591,7 +773,7 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        saveQuizUsingPost: async (userQuizResultType?: UserQuizResultType, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        saveQuizUsingPost: async (userQuizResultType?: UserQuizResultType, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/quiz/saveQuiz`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -618,6 +800,40 @@ export const QuizApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary Permette di nascondere o mostrarre un quiz agli studenti
+         * @param {string} quizId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        showHideQuizUsingPut: async (quizId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'quizId' is not null or undefined
+            assertParamExists('showHideQuizUsingPut', 'quizId', quizId)
+            const localVarPath = `/quiz/show-hide/{quizId}`
+                .replace(`{${"quizId"}}`, encodeURIComponent(String(quizId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -633,13 +849,15 @@ export const QuizApiFp = function(configuration?: Configuration) {
          * @summary Permette di controllare le risposte
          * @param {string} quizId 
          * @param {string} questionId 
-         * @param {number} answerId 
+         * @param {CheckAnswerUsingPostRequest} checkAnswerUsingPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async checkAnswerUsingGet(quizId: string, questionId: string, answerId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.checkAnswerUsingGet(quizId, questionId, answerId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        async checkAnswerUsingPost(quizId: string, questionId: string, checkAnswerUsingPostRequest: CheckAnswerUsingPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.checkAnswerUsingPost(quizId, questionId, checkAnswerUsingPostRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['QuizApi.checkAnswerUsingPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -648,9 +866,24 @@ export const QuizApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createQuizUsingPost(createQuizUsingPostRequest: CreateQuizUsingPostRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+        async createQuizUsingPost(createQuizUsingPostRequest: CreateQuizUsingPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createQuizUsingPost(createQuizUsingPostRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['QuizApi.createQuizUsingPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Permette eliminare fisicamente un quiz dal database
+         * @param {string} quizId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteQuizUsingDelete(quizId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteQuizUsingDelete(quizId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['QuizApi.deleteQuizUsingDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -659,9 +892,11 @@ export const QuizApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getQuizResultsByUserId(userId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QuizResultsByUserIdResponse>> {
+        async getQuizResultsByUserId(userId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QuizResultsByUserIdResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getQuizResultsByUserId(userId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['QuizApi.getQuizResultsByUserId']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -670,9 +905,11 @@ export const QuizApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getQuizUsingGet(topic: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QuizResponse>> {
+        async getQuizUsingGet(topic: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QuizResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getQuizUsingGet(topic, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['QuizApi.getQuizUsingGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -681,9 +918,24 @@ export const QuizApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async saveQuizUsingPost(userQuizResultType?: UserQuizResultType, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+        async saveQuizUsingPost(userQuizResultType?: UserQuizResultType, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.saveQuizUsingPost(userQuizResultType, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['QuizApi.saveQuizUsingPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Permette di nascondere o mostrarre un quiz agli studenti
+         * @param {string} quizId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async showHideQuizUsingPut(quizId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.showHideQuizUsingPut(quizId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['QuizApi.showHideQuizUsingPut']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
@@ -700,12 +952,12 @@ export const QuizApiFactory = function (configuration?: Configuration, basePath?
          * @summary Permette di controllare le risposte
          * @param {string} quizId 
          * @param {string} questionId 
-         * @param {number} answerId 
+         * @param {CheckAnswerUsingPostRequest} checkAnswerUsingPostRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        checkAnswerUsingGet(quizId: string, questionId: string, answerId: number, options?: any): AxiosPromise<boolean> {
-            return localVarFp.checkAnswerUsingGet(quizId, questionId, answerId, options).then((request) => request(axios, basePath));
+        checkAnswerUsingPost(quizId: string, questionId: string, checkAnswerUsingPostRequest: CheckAnswerUsingPostRequest, options?: any): AxiosPromise<boolean> {
+            return localVarFp.checkAnswerUsingPost(quizId, questionId, checkAnswerUsingPostRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -716,6 +968,16 @@ export const QuizApiFactory = function (configuration?: Configuration, basePath?
          */
         createQuizUsingPost(createQuizUsingPostRequest: CreateQuizUsingPostRequest, options?: any): AxiosPromise<EsitoType> {
             return localVarFp.createQuizUsingPost(createQuizUsingPostRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Permette eliminare fisicamente un quiz dal database
+         * @param {string} quizId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteQuizUsingDelete(quizId: string, options?: any): AxiosPromise<EsitoType> {
+            return localVarFp.deleteQuizUsingDelete(quizId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -747,6 +1009,16 @@ export const QuizApiFactory = function (configuration?: Configuration, basePath?
         saveQuizUsingPost(userQuizResultType?: UserQuizResultType, options?: any): AxiosPromise<EsitoType> {
             return localVarFp.saveQuizUsingPost(userQuizResultType, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @summary Permette di nascondere o mostrarre un quiz agli studenti
+         * @param {string} quizId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        showHideQuizUsingPut(quizId: string, options?: any): AxiosPromise<EsitoType> {
+            return localVarFp.showHideQuizUsingPut(quizId, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -762,13 +1034,13 @@ export class QuizApi extends BaseAPI {
      * @summary Permette di controllare le risposte
      * @param {string} quizId 
      * @param {string} questionId 
-     * @param {number} answerId 
+     * @param {CheckAnswerUsingPostRequest} checkAnswerUsingPostRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof QuizApi
      */
-    public checkAnswerUsingGet(quizId: string, questionId: string, answerId: number, options?: AxiosRequestConfig) {
-        return QuizApiFp(this.configuration).checkAnswerUsingGet(quizId, questionId, answerId, options).then((request) => request(this.axios, this.basePath));
+    public checkAnswerUsingPost(quizId: string, questionId: string, checkAnswerUsingPostRequest: CheckAnswerUsingPostRequest, options?: RawAxiosRequestConfig) {
+        return QuizApiFp(this.configuration).checkAnswerUsingPost(quizId, questionId, checkAnswerUsingPostRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -779,8 +1051,20 @@ export class QuizApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof QuizApi
      */
-    public createQuizUsingPost(createQuizUsingPostRequest: CreateQuizUsingPostRequest, options?: AxiosRequestConfig) {
+    public createQuizUsingPost(createQuizUsingPostRequest: CreateQuizUsingPostRequest, options?: RawAxiosRequestConfig) {
         return QuizApiFp(this.configuration).createQuizUsingPost(createQuizUsingPostRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Permette eliminare fisicamente un quiz dal database
+     * @param {string} quizId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof QuizApi
+     */
+    public deleteQuizUsingDelete(quizId: string, options?: RawAxiosRequestConfig) {
+        return QuizApiFp(this.configuration).deleteQuizUsingDelete(quizId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -791,7 +1075,7 @@ export class QuizApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof QuizApi
      */
-    public getQuizResultsByUserId(userId: string, options?: AxiosRequestConfig) {
+    public getQuizResultsByUserId(userId: string, options?: RawAxiosRequestConfig) {
         return QuizApiFp(this.configuration).getQuizResultsByUserId(userId, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -803,7 +1087,7 @@ export class QuizApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof QuizApi
      */
-    public getQuizUsingGet(topic: string, options?: AxiosRequestConfig) {
+    public getQuizUsingGet(topic: string, options?: RawAxiosRequestConfig) {
         return QuizApiFp(this.configuration).getQuizUsingGet(topic, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -815,8 +1099,20 @@ export class QuizApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof QuizApi
      */
-    public saveQuizUsingPost(userQuizResultType?: UserQuizResultType, options?: AxiosRequestConfig) {
+    public saveQuizUsingPost(userQuizResultType?: UserQuizResultType, options?: RawAxiosRequestConfig) {
         return QuizApiFp(this.configuration).saveQuizUsingPost(userQuizResultType, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Permette di nascondere o mostrarre un quiz agli studenti
+     * @param {string} quizId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof QuizApi
+     */
+    public showHideQuizUsingPut(quizId: string, options?: RawAxiosRequestConfig) {
+        return QuizApiFp(this.configuration).showHideQuizUsingPut(quizId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -830,12 +1126,80 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
     return {
         /**
          * 
+         * @summary Permette cambiare la password di un utente
+         * @param {NominaAdminRequest} [nominaAdminRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addAdminUsingPost: async (nominaAdminRequest?: NominaAdminRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/manage-user/add-admin`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(nominaAdminRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Permette cambiare la password di un utente
+         * @param {ChangePasswordRequest} [changePasswordRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        changePasswordUsingPut: async (changePasswordRequest?: ChangePasswordRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/manage-user/changepassword`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(changePasswordRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Permette di creare un nuovo utente
          * @param {UserType} [userType] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createUserUsingPOST: async (userType?: UserType, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createUserUsingPOST: async (userType?: UserType, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/manage-user/create`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -864,12 +1228,76 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @summary Permette eliminare fisicamente un utente dal database
+         * @param {DeleteUserRequest} [deleteUserRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteUserUsingDelete: async (deleteUserRequest?: DeleteUserRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/manage-user/delete`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(deleteUserRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Permette cambiare la password di un utente
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAdminsUsingGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/manage-user/get-admins`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary POST api/manage-user/user
          * @param {UserType} userType 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserByUsername: async (userType: UserType, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getUserByUsername: async (userType: UserType, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'userType' is not null or undefined
             assertParamExists('getUserByUsername', 'userType', userType)
             const localVarPath = `/manage-user/user`;
@@ -910,14 +1338,67 @@ export const UserApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @summary Permette cambiare la password di un utente
+         * @param {NominaAdminRequest} [nominaAdminRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addAdminUsingPost(nominaAdminRequest?: NominaAdminRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addAdminUsingPost(nominaAdminRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.addAdminUsingPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Permette cambiare la password di un utente
+         * @param {ChangePasswordRequest} [changePasswordRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async changePasswordUsingPut(changePasswordRequest?: ChangePasswordRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.changePasswordUsingPut(changePasswordRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.changePasswordUsingPut']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Permette di creare un nuovo utente
          * @param {UserType} [userType] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createUserUsingPOST(userType?: UserType, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+        async createUserUsingPOST(userType?: UserType, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createUserUsingPOST(userType, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.createUserUsingPOST']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Permette eliminare fisicamente un utente dal database
+         * @param {DeleteUserRequest} [deleteUserRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteUserUsingDelete(deleteUserRequest?: DeleteUserRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EsitoType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserUsingDelete(deleteUserRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.deleteUserUsingDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Permette cambiare la password di un utente
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAdminsUsingGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResultAdminsResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAdminsUsingGet(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.getAdminsUsingGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -926,9 +1407,11 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUserByUsername(userType: UserType, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResultUserResponse>> {
+        async getUserByUsername(userType: UserType, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ResultUserResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getUserByUsername(userType, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.getUserByUsername']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
@@ -942,6 +1425,26 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
     return {
         /**
          * 
+         * @summary Permette cambiare la password di un utente
+         * @param {NominaAdminRequest} [nominaAdminRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addAdminUsingPost(nominaAdminRequest?: NominaAdminRequest, options?: any): AxiosPromise<EsitoType> {
+            return localVarFp.addAdminUsingPost(nominaAdminRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Permette cambiare la password di un utente
+         * @param {ChangePasswordRequest} [changePasswordRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        changePasswordUsingPut(changePasswordRequest?: ChangePasswordRequest, options?: any): AxiosPromise<EsitoType> {
+            return localVarFp.changePasswordUsingPut(changePasswordRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Permette di creare un nuovo utente
          * @param {UserType} [userType] 
          * @param {*} [options] Override http request option.
@@ -949,6 +1452,25 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          */
         createUserUsingPOST(userType?: UserType, options?: any): AxiosPromise<EsitoType> {
             return localVarFp.createUserUsingPOST(userType, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Permette eliminare fisicamente un utente dal database
+         * @param {DeleteUserRequest} [deleteUserRequest] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteUserUsingDelete(deleteUserRequest?: DeleteUserRequest, options?: any): AxiosPromise<EsitoType> {
+            return localVarFp.deleteUserUsingDelete(deleteUserRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Permette cambiare la password di un utente
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAdminsUsingGet(options?: any): AxiosPromise<ResultAdminsResponse> {
+            return localVarFp.getAdminsUsingGet(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -972,14 +1494,61 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
 export class UserApi extends BaseAPI {
     /**
      * 
+     * @summary Permette cambiare la password di un utente
+     * @param {NominaAdminRequest} [nominaAdminRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public addAdminUsingPost(nominaAdminRequest?: NominaAdminRequest, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).addAdminUsingPost(nominaAdminRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Permette cambiare la password di un utente
+     * @param {ChangePasswordRequest} [changePasswordRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public changePasswordUsingPut(changePasswordRequest?: ChangePasswordRequest, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).changePasswordUsingPut(changePasswordRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Permette di creare un nuovo utente
      * @param {UserType} [userType] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public createUserUsingPOST(userType?: UserType, options?: AxiosRequestConfig) {
+    public createUserUsingPOST(userType?: UserType, options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).createUserUsingPOST(userType, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Permette eliminare fisicamente un utente dal database
+     * @param {DeleteUserRequest} [deleteUserRequest] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public deleteUserUsingDelete(deleteUserRequest?: DeleteUserRequest, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).deleteUserUsingDelete(deleteUserRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Permette cambiare la password di un utente
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public getAdminsUsingGet(options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).getAdminsUsingGet(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -990,7 +1559,7 @@ export class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getUserByUsername(userType: UserType, options?: AxiosRequestConfig) {
+    public getUserByUsername(userType: UserType, options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).getUserByUsername(userType, options).then((request) => request(this.axios, this.basePath));
     }
 }

@@ -30,6 +30,7 @@
   --x-layout-background-color-variant-1: #e7e9f2;
   --x-layout-background-color-variant-2: white;
   --x-footer-nav-component-height: 80px;
+  --bs-btn-border-width: unset !important;
 }
 
 /* html element
@@ -52,4 +53,11 @@ body {
 
 code {
   font-family: "Courier New", monospace;
+}
+
+
+.btn {
+
+  --bs-btn-border-width: unset !important;
+  --bs-btn-border-color: transparent !important;
 }
