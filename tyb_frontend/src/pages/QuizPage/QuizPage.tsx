@@ -104,7 +104,7 @@ const QuizPage = () => {
                     setTimeout(() => {
                         //gestire le risposte corrette
                         setRemainingTime(prevState => (prevState - 15));
-                        loadNextQuestion();
+                      //  loadNextQuestion();
                         setUserResults((oldState) => {
                             const newState = {...oldState};
                             newState.totalScore = (newState.totalScore + 10);
@@ -121,7 +121,7 @@ const QuizPage = () => {
                     setTimeout(() => {
                         //gestire le risposte errate
                         //setRemainingTime(prevState => (prevState - 15));
-                        loadNextQuestion();
+                      //  loadNextQuestion();
                         setUserResults((oldState) => {
                             const newState = {...oldState};
                             newState.totalScore = (newState.totalScore - 10);
