@@ -89,12 +89,17 @@ public class QuizServiceImpl implements QuizService {
         } else {
             Quiz quiz = quizRepository.findQuizByTopic(topic);
             if (quiz != null) {
-                quiz.getQuestions().forEach(question -> question.getAnswers().forEach(answer -> answer.setIsCorrect(null)));
+                shuffleList(quiz.getQuestions()).forEach(question -> question.getAnswers().forEach(answer -> answer.setIsCorrect(null)));
                 quizList.add(quiz);
             }
         }
-        return new ResultQuizResponse(new Esito(EnumCodiceEsito.OK), quizList);
+        return new ResultQuizResponse(new Esito(EnumCodiceEsito.OK),shuffleList(quizList));
 
+    }
+
+    public static <T> List<T> shuffleList(List<T> list) {
+        Collections.shuffle(list);
+        return list;
     }
 
     /**
